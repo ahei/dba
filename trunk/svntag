@@ -1,0 +1,121 @@
+#!/bin/sh
+
+# Time-stamp: <03/08/2009 00:27:05 Sunday by ahei>
+
+readonly PROGRAM_NAME="svntag"
+readonly PROGRAM_VERSION="1.0"
+
+usage()
+{
+    echo "usage: ${PROGRAM_NAME} [OPTIONS]"
+    echo
+    echo "This shell script can help you create or merge svn current or release tag, "
+    echo "it's default behavior is merge svn current tag."
+    echo
+    echo "Options:"
+    echo "\t-c\tCreate svn tag."
+    echo "\t-r\tCreate or merge svn release tag."
+    echo "\t-t <TRUNK_DIR>"
+    echo "\t\tThe directory of trunk, default is \`trunk'."
+    echo "\t-T <TAGS_DIR>"
+    echo "\t\tThe directory of tags, default is \`tags'."
+    echo "\t-i\tInstall this shell script to your machine."
+    echo "\t-v\tOutput version info."
+    echo "\t-h\tOutput this help."
+    
+    exit 1
+}
+
+version()
+{
+    echo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
+    exit 1
+}
+
+install()
+{
+    cp "$0" "${installDir}"
+    ret=$?
+    if [ "${ret}" = 0 ]; then
+        echo "Install finished."
+    fi
+    exit "${ret}"
+}
+
+executeCommand()
+{
+    command="$@"
+    echo "Executing command \`${command}' ..."
+    eval "${command}"
+    if [ $? != 0 ]; then
+        echo "Execute command \`${command}' failed"
+        exit 1
+    fi
+}
+
+createTag=0
+tagName="current"
+installDir="/usr/bin"
+trunkDir="trunk"
+tagsDir="tags"
+
+while getopts :hvcrit:T: OPT; do
+    case "$OPT" in
+        c)
+            createTag=1
+            ;;
+            
+        r)
+            tagName="release"
+            ;;
+
+        i)
+            install
+            ;;
+            
+        t)
+            trunkDir="${OPTARG}"
+            ;;
+
+        T)
+            tagsDir="${OPTARG}"
+            ;;
+
+        v)
+            version
+            ;;
+
+        h)
+            usage
+            ;;
+
+        :)
+            echo "Option -${OPTARG} need argument."
+            usage
+            ;;
+
+        ?)
+            echo "Invalid option -${OPTARG}."
+            usage
+            ;;
+    esac
+done
+
+# create tag
+if [ "${createTag}" = "1" ]; then
+    if [ -d "${tagsDir}/${tagName}" ]; then
+        echo "Directory ${tagsDir}/${tagName} is exists, can not create tag \`${tagName}'."
+        exit 1
+    fi
+
+    revisionNo=`svn info "${trunkDir}" 2>/dev/null | grep "Revision: " | sed -r "s/Revision: ([[:digit:]]+)/\1/g"`
+    if [ "${revisionNo}" = "" ]; then
+        echo "Get revision number of ${trunkDir} failed."
+        exit 1
+    fi
+    
+    executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}"
+    executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\""
+fi
+
+# merge tag
