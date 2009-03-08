@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/08/2009 00:27:05 Sunday by ahei>
+# Time-stamp: <03/08/2009 06:32:36 Sunday by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -10,16 +10,18 @@ usage()
     echo "usage: ${PROGRAM_NAME} [OPTIONS]"
     echo
     echo "This shell script can help you create or merge svn current or release tag, "
-    echo "it's default behavior is merge svn current tag."
     echo
     echo "Options:"
-    echo "\t-c\tCreate svn tag."
+    echo "\t-c\tCreate or merge svn current tag."
     echo "\t-r\tCreate or merge svn release tag."
     echo "\t-t <TRUNK_DIR>"
     echo "\t\tThe directory of trunk, default is \`trunk'."
     echo "\t-T <TAGS_DIR>"
     echo "\t\tThe directory of tags, default is \`tags'."
     echo "\t-i\tInstall this shell script to your machine."
+    echo "\t-n\tDo not execute command, only print command to execute"
+    echo "\t-R <FILE>"
+    echo "\t\tRollback to prev revision"
     echo "\t-v\tOutput version info."
     echo "\t-h\tOutput this help."
     
@@ -44,25 +46,40 @@ install()
 
 executeCommand()
 {
-    command="$@"
+    command="$1"
+    isExecute="$2"
+
     echo "Executing command \`${command}' ..."
-    eval "${command}"
-    if [ $? != 0 ]; then
-        echo "Execute command \`${command}' failed"
-        exit 1
+    if [ "${isExecute}" = "1" ]; then
+        eval "${command}"
+        if [ $? != 0 ]; then
+            echo "Execute command \`${command}' failed"
+            exit 1
+        fi
     fi
 }
 
-createTag=0
-tagName="current"
+getRevisionNo()
+{
+    dir="$1"
+    LANG= svn info "${dir}" 2>/dev/null | grep "Revision: " | sed -r "s/^Revision: ([[:digit:]]+)$/\1/g"
+}
+
+rollback()
+{
+    executeCommand "svn merge -r HEAD:PREV $1" "$2"
+    exit $?
+}
+
 installDir="/usr/bin"
 trunkDir="trunk"
 tagsDir="tags"
+isExecute=1
 
-while getopts :hvcrit:T: OPT; do
+while getopts :hvcrit:T:nR: OPT; do
     case "$OPT" in
         c)
-            createTag=1
+            tagName="current"
             ;;
             
         r)
@@ -81,6 +98,14 @@ while getopts :hvcrit:T: OPT; do
             tagsDir="${OPTARG}"
             ;;
 
+        n)
+            isExecute=0
+            ;;
+
+        R)
+            rollbackFile="${OPTARG}"
+            ;;
+            
         v)
             version
             ;;
@@ -90,32 +115,71 @@ while getopts :hvcrit:T: OPT; do
             ;;
 
         :)
-            echo "Option -${OPTARG} need argument."
-            usage
-            ;;
+        case "${OPTARG}" in
+            R)
+                rollbackFile="."
+                ;;
+
+            ?)
+                echo "Option \`-${OPTARG}' need argument."
+                usage
+        esac
+        ;;
 
         ?)
-            echo "Invalid option -${OPTARG}."
+            echo "Invalid option \`-${OPTARG}'."
             usage
             ;;
     esac
 done
 
-# create tag
-if [ "${createTag}" = "1" ]; then
-    if [ -d "${tagsDir}/${tagName}" ]; then
-        echo "Directory ${tagsDir}/${tagName} is exists, can not create tag \`${tagName}'."
-        exit 1
-    fi
+[ -n "${rollbackFile}" ] && rollback "${rollbackFile}" "${isExecute}"
 
-    revisionNo=`svn info "${trunkDir}" 2>/dev/null | grep "Revision: " | sed -r "s/Revision: ([[:digit:]]+)/\1/g"`
-    if [ "${revisionNo}" = "" ]; then
-        echo "Get revision number of ${trunkDir} failed."
+if [ -z "${tagName}" ]; then
+    usage
+fi
+
+if [ -f "${tagsDir}/${tagName}" ]; then
+    echo "File ${tagsDir}/${tagName} is exists, can not create tag \`${tagName}'."
+    exit 1
+fi
+
+dateTimeRegexp="[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2} [[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2}"
+
+# merge tag
+if [ -d "${tagsDir}/${tagName}" ]; then
+    fromRevisionNo=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 4p | sed -r "s/^Create tag ${tagName} from trunk r([[:digit:]]+)\.$/\1/g" | grep -x -E "[[:digit:]]+"`
+    if [ -z "${fromRevisionNo}" ]; then
+        fromRevisionNo=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 4p | sed -r "s/^Merge trunk r[[:digit:]]+:([[:digit:]]+) to tag ${tagName}\.$/\1/g" | grep -x -E "[[:digit:]]+"`
+    fi
+    if [ -z "${fromRevisionNo}" ]; then
+        echo "Get from revision number of ${tagsDir}/${tagName} failed."
         exit 1
     fi
     
-    executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}"
-    executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\""
+    if [ "${tagName}" = "release" ]; then
+        dateTime=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 2p | sed -r "s/^r[[:digit:]]+ \| .+ \| (${dateTimeRegexp}).* \| .*$/\1/g" | grep -x -E "${dateTimeRegexp}" | sed "s/ /-/g"`
+        if [ -z "${dateTime}" ]; then
+            echo "Get date time of tag ${tagName} failed."
+            exit 1
+        fi
+            
+        executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}"
+    fi
+
+    toRevisionNo=`getRevisionNo "${trunkDir}"`
+    executeCommand "svn merge ${trunkDir} -r${fromRevisionNo}:${toRevisionNo} ${tagsDir}/${tagName}" "${isExecute}"
+    executeCommand "svn ci -m \"Merge trunk r${fromRevisionNo}:${toRevisionNo} to tag ${tagName}.\"" "${isExecute}"
+    
+    exit
 fi
 
-# merge tag
+# create tag
+revisionNo=`getRevisionNo "${trunkDir}"`
+if [ -z "${revisionNo}" ]; then
+    echo "Get revision number of ${trunkDir} failed."
+    exit 1
+fi
+
+executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" "${isExecute}"
+executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\"" "${isExecute}"
