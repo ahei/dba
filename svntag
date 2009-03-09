@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/08/2009 06:32:36 Sunday by ahei>
+# Time-stamp: <03/09/2009 18:12:05 星期一 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -62,7 +62,7 @@ executeCommand()
 getRevisionNo()
 {
     dir="$1"
-    LANG= svn info "${dir}" 2>/dev/null | grep "Revision: " | sed -r "s/^Revision: ([[:digit:]]+)$/\1/g"
+    LANG= svn info "${dir}" -r HEAD 2>/dev/null | grep "Revision: " | sed -r "s/^Revision: ([[:digit:]]+)$/\1/g"
 }
 
 rollback()
