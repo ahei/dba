@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/09/2009 18:12:05 星期一 by ahei>
+# Time-stamp: <03/13/2009 17:29:54 星期五 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -50,7 +50,7 @@ executeCommand()
     isExecute="$2"
 
     echo "Executing command \`${command}' ..."
-    if [ "${isExecute}" = "1" ]; then
+    if [ "${isExecute}" != "0" ]; then
         eval "${command}"
         if [ $? != 0 ]; then
             echo "Execute command \`${command}' failed"
@@ -156,7 +156,10 @@ if [ -d "${tagsDir}/${tagName}" ]; then
         echo "Get from revision number of ${tagsDir}/${tagName} failed."
         exit 1
     fi
-    
+
+    executeCommand "svn up ${trunkDir}" "${isExecute}"
+    executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}"
+
     if [ "${tagName}" = "release" ]; then
         dateTime=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 2p | sed -r "s/^r[[:digit:]]+ \| .+ \| (${dateTimeRegexp}).* \| .*$/\1/g" | grep -x -E "${dateTimeRegexp}" | sed "s/ /-/g"`
         if [ -z "${dateTime}" ]; then
@@ -164,7 +167,7 @@ if [ -d "${tagsDir}/${tagName}" ]; then
             exit 1
         fi
             
-        executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}"
+        executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}" "${isExecute}"
     fi
 
     toRevisionNo=`getRevisionNo "${trunkDir}"`
@@ -181,5 +184,7 @@ if [ -z "${revisionNo}" ]; then
     exit 1
 fi
 
+executeCommand "svn up ${trunkDir}" "${isExecute}"
+executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}"
 executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" "${isExecute}"
 executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\"" "${isExecute}"
