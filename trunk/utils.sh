@@ -1,12 +1,13 @@
 #!/bin/sh
 
-# Time-stamp: <03/07/2009 21:56:34 Saturday by ahei>
+# Time-stamp: <03/10/2009 17:56:24 星期二 by ahei>
 
 export PAGER='/usr/bin/most -s'
 export BROWSER='/usr/bin/most -s'
 export PS4='+$LINENO '
 export HISTSIZE=9999999
-export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007\n"'
+export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"'
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
 
 bce()
 {
