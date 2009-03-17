@@ -1,0 +1,11 @@
+% Color settings
+
+color normal lightgray black
+color status yellow blue
+color underline yellow black
+color overstrike brightblue black
+
+setkey down "j"
+setkey up "k"
+% setkey bob "<"
+% setkey eob ">"
