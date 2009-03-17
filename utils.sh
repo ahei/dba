@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/10/2009 17:56:24 星期二 by ahei>
+# Time-stamp: <03/17/2009 17:54:43 星期二 by ahei>
 
 export PAGER='/usr/bin/most -s'
 export BROWSER='/usr/bin/most -s'
@@ -14,6 +14,7 @@ bce()
 	bc <<< "scale=3; $@"
 }
 
+alias ll='ls -l'
 alias smth='screen ssh ahei0802@bbs.newsmth.net'
 alias e='emacsclient -n'
 alias cp='cp -r'

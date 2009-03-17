@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/13/2009 17:29:54 星期五 by ahei>
+# Time-stamp: <03/16/2009 19:39:25 星期一 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -121,13 +121,13 @@ while getopts :hvcrit:T:nR: OPT; do
                 ;;
 
             ?)
-                echo "Option \`-${OPTARG}' need argument."
+                echo "Option \`-${OPTARG}' need argument.\n"
                 usage
         esac
         ;;
 
         ?)
-            echo "Invalid option \`-${OPTARG}'."
+            echo "Invalid option \`-${OPTARG}'.\n"
             usage
             ;;
     esac
