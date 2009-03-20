@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/18/2009 17:43:20 星期三 by ahei>
+# Time-stamp: <03/20/2009 19:45:27 星期五 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -69,7 +69,11 @@ getRevisionNo()
 
 rollback()
 {
-    executeCommand "svn merge -r HEAD:PREV $1" "$2"
+    dir="$1"
+    isExecute="$2"
+    
+    executeCommand "svn up ${dir}" "${isExecute}"
+    executeCommand "svn merge -r HEAD:PREV ${dir}" "${isExecute}"
     exit $?
 }
 
