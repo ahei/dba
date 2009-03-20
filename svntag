@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/16/2009 19:39:25 星期一 by ahei>
+# Time-stamp: <03/18/2009 17:43:20 星期三 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -22,6 +22,8 @@ usage()
     echo "\t-n\tDo not execute command, only print command to execute"
     echo "\t-R <FILE>"
     echo "\t\tRollback to prev revision"
+    echo "\t-N <TAG_NAME>"
+    echo "\t\tSet tag name manual."
     echo "\t-v\tOutput version info."
     echo "\t-h\tOutput this help."
     
@@ -76,7 +78,7 @@ trunkDir="trunk"
 tagsDir="tags"
 isExecute=1
 
-while getopts :hvcrit:T:nR: OPT; do
+while getopts :hvcrit:T:nR:N: OPT; do
     case "$OPT" in
         c)
             tagName="current"
@@ -104,6 +106,10 @@ while getopts :hvcrit:T:nR: OPT; do
 
         R)
             rollbackFile="${OPTARG}"
+            ;;
+
+        N)
+            tagName="${OPTARG}"
             ;;
             
         v)
