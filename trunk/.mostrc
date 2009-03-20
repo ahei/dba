@@ -3,7 +3,7 @@
 color normal lightgray black
 color status yellow blue
 color underline yellow black
-color overstrike brightblue black
+color overstrike brightred black
 
 setkey down "j"
 setkey up "k"
