@@ -1,11 +1,7 @@
 #!/bin/sh
 
-# Time-stamp: <03/20/2009 19:24:32 星期五 by ahei>
+# Time-stamp: <03/20/2009 13:24:04 星期五 by ahei>
 
-if [ -e "/etc/gentoo-release" ]; then
-    export PAGER='/usr/bin/most -s'
-    export BROWSER='/usr/bin/most -s'
-fi
 export PS4='+$LINENO '
 export HISTSIZE=9999999
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"'
