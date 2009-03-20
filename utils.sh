@@ -1,13 +1,11 @@
 #!/bin/sh
 
-# Time-stamp: <03/17/2009 17:54:43 星期二 by ahei>
+# Time-stamp: <03/20/2009 13:24:04 星期五 by ahei>
 
-export PAGER='/usr/bin/most -s'
-export BROWSER='/usr/bin/most -s'
 export PS4='+$LINENO '
 export HISTSIZE=9999999
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"'
-export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h:\[\e[33m\]\w\[\e[0m\]\$ '
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\h\[\033[01;31m\]:\[\e[33m\]\w\[\e[0m\]\$ '
 
 bce()
 {
@@ -26,3 +24,19 @@ alias utol="tr '[A-Z]' '[a-z]'"
 alias trim='sed -r "s/^[[:space:]]*|[[:space:]]*$//g"'
 alias TRIM="trim | tr '[A-Z]' '[a-z]'"
 alias jip='java -javaagent:/usr/share/jip/profile/profile.jar -Dprofile.properties=/usr/share/jip/profile/profile.properties'
+
+# less color configure
+# blue
+export LESS_TERMCAP_mb=$'\E[01;34m'
+# red
+export LESS_TERMCAP_md=$'\E[01;31m'
+# magenta
+export LESS_TERMCAP_me=$'\E[01;35m'
+# write
+export LESS_TERMCAP_se=$'\E[0m'
+# yellow
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+# cyan
+export LESS_TERMCAP_ue=$'\E[01;36m'
+# green
+export LESS_TERMCAP_us=$'\E[01;32m'
