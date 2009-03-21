@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/20/2009 13:24:04 星期五 by ahei>
+# Time-stamp: <03/21/2009 20:59:42 Saturday by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -12,6 +12,7 @@ bce()
 	bc <<< "scale=3; $@"
 }
 
+alias ls='ls --color'
 alias ll='ls -l'
 alias smth='screen ssh ahei0802@bbs.newsmth.net'
 alias e='emacsclient -n'
