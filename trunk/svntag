@@ -1,31 +1,33 @@
 #!/bin/sh
 
-# Time-stamp: <03/20/2009 19:45:27 星期五 by ahei>
+# Time-stamp: <03/21/2009 19:19:38 Saturday by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
 
 usage()
 {
-    echo "usage: ${PROGRAM_NAME} [OPTIONS]"
-    echo
-    echo "This shell script can help you create or merge svn current or release tag, "
-    echo
-    echo "Options:"
-    echo "\t-c\tCreate or merge svn current tag."
-    echo "\t-r\tCreate or merge svn release tag."
-    echo "\t-t <TRUNK_DIR>"
-    echo "\t\tThe directory of trunk, default is \`trunk'."
-    echo "\t-T <TAGS_DIR>"
-    echo "\t\tThe directory of tags, default is \`tags'."
-    echo "\t-i\tInstall this shell script to your machine."
-    echo "\t-n\tDo not execute command, only print command to execute"
-    echo "\t-R <FILE>"
-    echo "\t\tRollback to prev revision"
-    echo "\t-N <TAG_NAME>"
-    echo "\t\tSet tag name manual."
-    echo "\t-v\tOutput version info."
-    echo "\t-h\tOutput this help."
+    cat << EOF
+usage: ${PROGRAM_NAME} [OPTIONS]
+
+This shell script can help you create or merge svn tag.
+
+Options:
+	-c	Create or merge svn current tag.
+	-r	Create or merge svn release tag.
+	-t <TRUNK_DIR>
+		The directory of trunk, default is \`trunk'.
+	-T <TAGS_DIR>
+		The directory of tags, default is \`tags'.
+	-i	Install this shell script to your machine.
+	-n	Do not really execute command, only print command to execute.
+	-R [<FILE>]
+		Rollback to prev revision, <FILE> default is \`.'.
+	-N <TAG_NAME>
+		Set tag name manual.
+	-v	Output version info.
+	-h	Output this help.
+EOF
     
     exit 1
 }
