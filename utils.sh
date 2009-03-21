@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/21/2009 20:59:42 Saturday by ahei>
+# Time-stamp: <03/21/2009 21:30:31 Saturday by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -9,7 +9,7 @@ export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\
 
 bce()
 {
-	bc <<< "scale=3; $@"
+	echo "scale=3; $@" | bc
 }
 
 alias ls='ls --color'
