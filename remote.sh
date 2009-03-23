@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/23/2009 23:08:48 星期一 by ahei>
+# Time-stamp: <03/23/2009 23:57:43 Monday by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -199,7 +199,7 @@ if [ -z "$isCopy" ]; then
 
     for i in `printf "$hosts"`; do
         [ -n "$user" ] && login=" -l $user"
-        executeCommand "ssh $i$login $command 2>&1 | sed \"s/^/$i: /\" &" "$isExecute" "$isQuiet" "$isStop"
+        executeCommand "ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" &" "$isExecute" "$isQuiet" "$isStop"
     done
 
     wait
