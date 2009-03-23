@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/21/2009 19:19:38 Saturday by ahei>
+# Time-stamp: <03/22/2009 23:53:41 星期日 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -50,14 +50,14 @@ install()
 
 executeCommand()
 {
-    command="$1"
-    isExecute="$2"
+    _command="$1"
+    _isExecute="$2"
 
-    echo "Executing command \`${command}' ..."
-    if [ "${isExecute}" != "0" ]; then
-        eval "${command}"
+    echo "Executing command \`${_command}' ..."
+    if [ "${_isExecute}" != "0" ]; then
+        eval "${_command}"
         if [ $? != 0 ]; then
-            echo "Execute command \`${command}' failed"
+            echo "Execute command \`${_command}' failed."
             exit 1
         fi
     fi
