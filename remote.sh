@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/23/2009 15:28:39 星期一 by ahei>
+# Time-stamp: <03/23/2009 23:08:48 星期一 by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -29,7 +29,7 @@ Options:
     -q  Quiet, do not write process info to standard output.
     -s  When execute command on one machine, stop execute command on others.
     -g  Execute command foreground.
-	-i	Install this shell script to your machine.
+    -i  Install this shell script to your machine.
     -v  Output version info.
     -h  Output this help.
 EOF
