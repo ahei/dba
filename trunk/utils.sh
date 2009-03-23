@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/21/2009 21:30:31 Saturday by ahei>
+# Time-stamp: <03/23/2009 16:00:28 星期一 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -25,6 +25,7 @@ alias utol="tr '[A-Z]' '[a-z]'"
 alias trim='sed -r "s/^[[:space:]]*|[[:space:]]*$//g"'
 alias TRIM="trim | tr '[A-Z]' '[a-z]'"
 alias jip='java -javaagent:/usr/share/jip/profile/profile.jar -Dprofile.properties=/usr/share/jip/profile/profile.properties'
+alias emerge='emerge -u'
 
 # less color configure
 # blue
