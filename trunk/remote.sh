@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/23/2009 00:32:03 星期一 by ahei>
+# Time-stamp: <03/23/2009 15:28:39 星期一 by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -10,24 +10,28 @@ usage()
     cat << EOF
 usage: ${PROGRAM_NAME} [OPTIONS] <HOST> <COMMAND>
        ${PROGRAM_NAME} [OPTIONS] -H <HOST> <COMMAND>
+       ${PROGRAM_NAME} [OPTIONS] -c <COMMAND> <HOSTS>
        ${PROGRAM_NAME} [OPTIONS] -f <HOSTS_FILE> <COMMAND>
-       ${PROGRAM_NAME} [OPTIONS] -F <FILE> -d <DST_FILE> <HOSTS>
+       ${PROGRAM_NAME} [OPTIONS] -F <FILE> [-d <DST_FILE>] <HOSTS>
 
 Options:
-	-H <HOST>
-		Add host.
-	-f <HOSTS_FILE>
-		Add the hosts file.
-	-F <FILE>
-		Add the file to copy.
-	-d <DST_FILE>
-		Set the destination file.
-	-l <LOGIN_NAME>
-		Specifies the user to log in as on the remote machine.
-	-n	Do not really execute command, only print command to execute.
-	-q	Quiet, do not write process info to standard output.
-	-v	Output version info.
-	-h	Output this help.
+    -H <HOST>
+        Add host.
+    -f <HOSTS_FILE>
+        Add the hosts file.
+    -F <FILE>
+        Add the file to copy.
+    -d <DST_FILE>
+        Set the destination file.
+    -l <LOGIN_NAME>
+        Specifies the user to log in as on the remote machine.
+    -n  Do not really execute command, only print command to execute.
+    -q  Quiet, do not write process info to standard output.
+    -s  When execute command on one machine, stop execute command on others.
+    -g  Execute command foreground.
+	-i	Install this shell script to your machine.
+    -v  Output version info.
+    -h  Output this help.
 EOF
 
     code=0
@@ -49,21 +53,35 @@ executeCommand()
     _command="$1"
     _isExecute="$2"
     _isQuiet="$3"
+    _isStop="$4"
     
     [ "$_isQuiet" != 1 ] && echo "Executing command \`${_command}' ..."
     if [ "${_isExecute}" != "0" ]; then
         eval "${_command}"
         if [ $? != 0 ]; then
             echo "Execute command \`${_command}' failed."
-            exit 1
+            if [ "$_isStop" = 1 ]; then
+                exit 1
+            fi
         fi
     fi
 }
 
-IFS=$'\n'
-isExecute=1
+install()
+{
+    cp "$0" "${installDir}"
+    ret=$?
+    if [ "${ret}" = 0 ]; then
+        echo "Install finished."
+    fi
+    exit "${ret}"
+}
 
-while getopts :hvH:f:F:d:l:nq OPT; do
+installDir="/usr/bin"
+isExecute=1
+IFS=$'\n'
+
+while getopts ":hvH:f:F:d:l:nqc:si" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"
@@ -103,7 +121,23 @@ while getopts :hvH:f:F:d:l:nq OPT; do
         q)
             isQuiet=1
             ;;
-            
+
+        c)
+            command="$OPTARG"
+            ;;
+
+        s)
+            isStop=1
+            ;;
+
+        g)
+            isForeground=1
+            ;;
+
+        i)
+            install
+            ;;
+        
         v)
             version
             ;;
@@ -139,21 +173,36 @@ if [ -z "$isCopy" ]; then
             usage 1
         fi
 
-        hosts="$hosts\n$1"
-        shift
-        command="$@"
+        if [ -n "$command" ]; then
+            for i in $@; do
+                hosts="$hosts\n$i"
+            done
+        else
+            hosts="$hosts\n$1"
+            shift
+            command="$@"
+        fi
     else
         if [ "$#" -lt 1 ]; then
             echo -e "No command specify.\n"
             usage 1
         fi
-        command="$@"
+
+        if [ -n "$command" ]; then
+            for i in $@; do
+                hosts="$hosts\n$i"
+            done
+        else
+            command="$@"
+        fi
     fi
 
     for i in `printf "$hosts"`; do
         [ -n "$user" ] && login=" -l $user"
-        executeCommand "ssh $i$login $command" "$isExecute" "$isQuiet"
+        executeCommand "ssh $i$login $command 2>&1 | sed \"s/^/$i: /\" &" "$isExecute" "$isQuiet" "$isStop"
     done
+
+    wait
     
     exit
 fi
@@ -171,5 +220,7 @@ for i in `printf "$hosts"`; do
         host="$user@$i"
     fi
 
-    executeCommand "scp -r $files $host:$dstFile" "$isExecute" "$isQuiet"
+    executeCommand "scp -r $files $host:$dstFile 2>&1 | sed \"s/^/$i: /\" &" "$isExecute" "$isQuiet" "$isStop"
 done
+
+wait
