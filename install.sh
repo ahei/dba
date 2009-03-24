@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/23/2009 15:43:47 星期一 by ahei>
+# Time-stamp: <03/24/2009 14:08:38 星期二 by ahei>
 
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
@@ -15,3 +15,4 @@ fi
 
 "$bin"/svntag -i
 "$bin"/remote.sh -i
+"$bin"/backupsvn.sh -i
