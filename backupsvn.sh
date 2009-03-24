@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/24/2009 14:17:43 星期二 by ahei>
+# Time-stamp: <03/24/2009 14:24:20 星期二 by ahei>
 
 readonly PROGRAM_NAME="backupsvn.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -32,7 +32,7 @@ install()
     cp "$0" "${installDir}"
     ret=$?
     if [ "${ret}" = 0 ]; then
-        echo "Install finished."
+        echo "Install backupsvn.sh finished."
     fi
     exit "${ret}"
 }

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/22/2009 23:53:41 星期日 by ahei>
+# Time-stamp: <03/24/2009 14:24:53 星期二 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -43,7 +43,7 @@ install()
     cp "$0" "${installDir}"
     ret=$?
     if [ "${ret}" = 0 ]; then
-        echo "Install finished."
+        echo "Install svntag finished."
     fi
     exit "${ret}"
 }

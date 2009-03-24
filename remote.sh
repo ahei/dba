@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/23/2009 23:57:43 Monday by ahei>
+# Time-stamp: <03/24/2009 14:24:41 星期二 by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -72,7 +72,7 @@ install()
     cp "$0" "${installDir}"
     ret=$?
     if [ "${ret}" = 0 ]; then
-        echo "Install finished."
+        echo "Install remote.sh finished."
     fi
     exit "${ret}"
 }
