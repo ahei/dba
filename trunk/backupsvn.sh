@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/24/2009 14:05:08 星期二 by ahei>
+# Time-stamp: <03/24/2009 14:17:43 星期二 by ahei>
 
 readonly PROGRAM_NAME="backupsvn.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -86,8 +86,9 @@ if [ "$#" -ge 2 ]; then
     dstFile="$2"
 fi
 
-cd `dirname "$svnRepository"` &&                            \
+reposName=`basename "$svnRepos"`
+cd `dirname "$svnRepos"` &&                                 \
     rm -rf "$svnRepos".bak &&                               \
     svnadmin hotcopy "$svnRepos" "$svnRepos".bak &&         \
     mv "$dstFile".tgz "$dstFile".tgz.bak > /dev/null 2>&1 ; \
-    tar czf "$dstFile".tgz "$svnRepos".bak
+    tar czf "$dstFile".tgz "$reposName".bak
