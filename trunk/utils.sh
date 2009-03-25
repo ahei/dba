@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/25/2009 13:39:25 星期三 by ahei>
+# Time-stamp: <03/25/2009 16:39:50 星期三 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -27,6 +27,7 @@ alias TRIM="trim | tr '[A-Z]' '[a-z]'"
 alias jip='java -javaagent:/usr/share/jip/profile/profile.jar -Dprofile.properties=/usr/share/jip/profile/profile.properties'
 alias emerge='emerge -u'
 alias psgrep='ps -ef | grep'
+alias nsgrep='netstat -nap | grep'
 
 # less color configure
 # blue
