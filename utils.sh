@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 15:27:06 星期日 by ahei>
+# Time-stamp: <03/29/2009 15:40:43 星期日 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -24,6 +24,7 @@ bce()
 	echo "scale=3; $@" | bc
 }
 
+# pkill with "-9"
 pkillf()
 {
     if [ $# -lt 1 ]; then
@@ -31,7 +32,7 @@ pkillf()
         return
     fi
 
-    pgrep "$*" | xargs kill -9
+    psgrep "$*" | awk '{print $2}' | xargs kill -9
 }
 
 delnonsvn()
