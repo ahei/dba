@@ -1,17 +1,11 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 15:40:43 星期日 by ahei>
+# Time-stamp: <03/29/2009 21:05:22 星期日 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
 export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"'
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\h\[\033[01;31m\]:\[\e[33m\]\w\[\e[0m\]\$ '
-
-# echo to stdout
-echoo()
-{
-    echo -e "$@"
-}
 
 # echo to stderr
 echoe()

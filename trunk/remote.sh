@@ -1,9 +1,14 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 11:37:18 星期日 by ahei>
+# Time-stamp: <03/29/2009 21:28:56 星期日 by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
+
+bin=`dirname "$0"`
+bin=`cd "$bin"; pwd`
+
+. "$bin"/common.sh
 
 usage()
 {
@@ -36,9 +41,10 @@ Options:
         Specifies the user to log in as on the remote machine.
     -n  Do not really execute command, only print command to execute.
     -q  Quiet, do not write process info to standard output.
-    -s  When execute command on one machine, stop execute command on others.
+    -s  When execute commands failed, stop execute other commands and exit.
     -g  Execute command foreground.
-    -i  Install this shell script to your machine.
+    -i [<INSTALL_DIR>]
+        Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -46,58 +52,10 @@ EOF
     exit "$code"
 }
 
-version()
-{
-    echoo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
-    exit
-}
-
-# echo to stdout
-echoo()
-{
-    echo -e "$@"
-}
-
-# echo to stderr
-echoe()
-{
-    echo -e "$@" 1>&2
-}
-
-executeCommand()
-{
-    _command="$1"
-    _isExecute="$2"
-    _isQuiet="$3"
-    _isStop="$4"
-    
-    [ "$_isQuiet" != 1 ] && echoo "Executing command \`${_command}' ..."
-    if [ "${_isExecute}" != "0" ]; then
-        eval "${_command}"
-        if [ $? != 0 ]; then
-            echoo "Execute command \`${_command}' failed."
-            if [ "$_isStop" = 1 ]; then
-                exit 1
-            fi
-        fi
-    fi
-}
-
-install()
-{
-    cp "$0" "${installDir}"
-    ret=$?
-    if [ "${ret}" = 0 ]; then
-        echoo "Install remote.sh finished."
-    fi
-    exit "${ret}"
-}
-
-installDir="/usr/bin"
 isExecute=1
 IFS=$'\n'
 
-while getopts ":hvH:f:F:d:l:nqc:si" OPT; do
+while getopts ":hvH:f:F:d:l:nqc:si:" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"

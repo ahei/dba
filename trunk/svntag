@@ -1,9 +1,14 @@
 #!/bin/sh
 
-# Time-stamp: <03/24/2009 14:24:53 星期二 by ahei>
+# Time-stamp: <03/29/2009 21:34:30 星期日 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
+
+bin=`dirname "$0"`
+bin=`cd "$bin"; pwd`
+
+. "$bin"/common.sh
 
 usage()
 {
@@ -13,54 +18,26 @@ usage: ${PROGRAM_NAME} [OPTIONS]
 This shell script can help you create or merge svn tag.
 
 Options:
-	-c	Create or merge svn current tag.
-	-r	Create or merge svn release tag.
-	-t <TRUNK_DIR>
-		The directory of trunk, default is \`trunk'.
-	-T <TAGS_DIR>
-		The directory of tags, default is \`tags'.
-	-i	Install this shell script to your machine.
-	-n	Do not really execute command, only print command to execute.
-	-R [<FILE>]
-		Rollback to prev revision, <FILE> default is \`.'.
-	-N <TAG_NAME>
-		Set tag name manual.
-	-v	Output version info.
-	-h	Output this help.
+    -c  Create or merge svn current tag.
+    -r  Create or merge svn release tag.
+    -t <TRUNK_DIR>
+        The directory of trunk, default is \`trunk'.
+    -T <TAGS_DIR>
+        The directory of tags, default is \`tags'.
+    -i [<INSTALL_DIR>]
+        Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
+    -n  Do not really execute command, only print command to execute.
+    -R [<FILE>]
+        Rollback to prev revision, <FILE> default is \`.'.
+    -N <TAG_NAME>
+        Set tag name manual.
+    -q  Quiet, do not write process info to standard output.
+    -s  When execute commands failed, stop execute other commands and exit.
+    -v  Output version info.
+    -h  Output this help.
 EOF
     
     exit 1
-}
-
-version()
-{
-    echo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
-    exit 1
-}
-
-install()
-{
-    cp "$0" "${installDir}"
-    ret=$?
-    if [ "${ret}" = 0 ]; then
-        echo "Install svntag finished."
-    fi
-    exit "${ret}"
-}
-
-executeCommand()
-{
-    _command="$1"
-    _isExecute="$2"
-
-    echo "Executing command \`${_command}' ..."
-    if [ "${_isExecute}" != "0" ]; then
-        eval "${_command}"
-        if [ $? != 0 ]; then
-            echo "Execute command \`${_command}' failed."
-            exit 1
-        fi
-    fi
 }
 
 getRevisionNo()
@@ -74,17 +51,16 @@ rollback()
     dir="$1"
     isExecute="$2"
     
-    executeCommand "svn up ${dir}" "${isExecute}"
-    executeCommand "svn merge -r HEAD:PREV ${dir}" "${isExecute}"
+    executeCommand "svn up ${dir}" "${isExecute}" "$isQuiet" "$isStop"
+    executeCommand "svn merge -r HEAD:PREV ${dir}" "${isExecute}" "$isQuiet" "$isStop"
     exit $?
 }
 
-installDir="/usr/bin"
 trunkDir="trunk"
 tagsDir="tags"
 isExecute=1
 
-while getopts :hvcrit:T:nR:N: OPT; do
+while getopts ":hvcri:t:T:nR:N:s" OPT; do
     case "$OPT" in
         c)
             tagName="current"
@@ -95,7 +71,7 @@ while getopts :hvcrit:T:nR:N: OPT; do
             ;;
 
         i)
-            install
+            install "$OPTARG"
             ;;
             
         t)
@@ -118,6 +94,14 @@ while getopts :hvcrit:T:nR:N: OPT; do
             tagName="${OPTARG}"
             ;;
             
+        q)
+            isQuiet=1
+            ;;
+
+        s)
+            isStop=1
+            ;;
+
         v)
             version
             ;;
@@ -128,6 +112,10 @@ while getopts :hvcrit:T:nR:N: OPT; do
 
         :)
         case "${OPTARG}" in
+            i)
+                install
+                ;;
+                
             R)
                 rollbackFile="."
                 ;;
@@ -169,8 +157,8 @@ if [ -d "${tagsDir}/${tagName}" ]; then
         exit 1
     fi
 
-    executeCommand "svn up ${trunkDir}" "${isExecute}"
-    executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}"
+    executeCommand "svn up ${trunkDir}" "${isExecute}" "$isQuiet" "$isStop"
+    executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
 
     if [ "${tagName}" = "release" ]; then
         dateTime=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 2p | sed -r "s/^r[[:digit:]]+ \| .+ \| (${dateTimeRegexp}).* \| .*$/\1/g" | grep -x -E "${dateTimeRegexp}" | sed "s/ /-/g"`
@@ -179,12 +167,12 @@ if [ -d "${tagsDir}/${tagName}" ]; then
             exit 1
         fi
             
-        executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}" "${isExecute}"
+        executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}" "${isExecute}" "$isQuiet" "$isStop"
     fi
 
     toRevisionNo=`getRevisionNo "${trunkDir}"`
-    executeCommand "svn merge ${trunkDir} -r${fromRevisionNo}:${toRevisionNo} ${tagsDir}/${tagName}" "${isExecute}"
-    executeCommand "svn ci -m \"Merge trunk r${fromRevisionNo}:${toRevisionNo} to tag ${tagName}.\"" "${isExecute}"
+    executeCommand "svn merge ${trunkDir} -r${fromRevisionNo}:${toRevisionNo} ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
+    executeCommand "svn ci -m \"Merge trunk r${fromRevisionNo}:${toRevisionNo} to tag ${tagName}.\"" "${isExecute}" "$isQuiet" "$isStop"
     
     exit
 fi
@@ -196,7 +184,7 @@ if [ -z "${revisionNo}" ]; then
     exit 1
 fi
 
-executeCommand "svn up ${trunkDir}" "${isExecute}"
-executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}"
-executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" "${isExecute}"
-executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\"" "${isExecute}"
+executeCommand "svn up ${trunkDir}" "${isExecute}" "$isQuiet" "$isStop"
+executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
+executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
+executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\"" "${isExecute}" "$isQuiet" "$isStop"
