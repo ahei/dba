@@ -1,6 +1,17 @@
 #!/bin/sh
 
-# Time-stamp: <03/24/2009 14:08:38 星期二 by ahei>
+# Time-stamp: <03/29/2009 18:14:45 Sunday by ahei>
+
+install()
+{
+    src="$1"
+    dst="$2"
+
+    line=". $src"
+    if ! grep -qFx "${line}" "$dst"; then
+        printf "\n$line" >> "$dst"
+    fi
+}
 
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
@@ -8,10 +19,8 @@ bin=`cd "$bin"; pwd`
 ln -sf "${bin}"/.mostrc ~
 ln -sf "${bin}"/.toprc ~
 
-line=". ${bin}/utils.sh"
-if ! grep -qFx "${line}" /etc/profile; then
-    printf "\n. ${bin}/utils.sh" >> /etc/profile
-fi
+install "$bin/utils.sh" "/etc/profile"
+install "$bin/temp.sh" "/etc/profile"
 
 "$bin"/svntag -i
 "$bin"/remote.sh -i
