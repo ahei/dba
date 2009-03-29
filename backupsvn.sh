@@ -1,9 +1,14 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 11:39:41 星期日 by ahei>
+# Time-stamp: <03/29/2009 21:28:38 星期日 by ahei>
 
 readonly PROGRAM_NAME="backupsvn.sh"
 readonly PROGRAM_VERSION="1.0"
+
+bin=`dirname "$0"`
+bin=`cd "$bin"; pwd`
+
+. "$bin"/common.sh
 
 usage()
 {
@@ -22,7 +27,8 @@ usage: ${PROGRAM_NAME} [OPTIONS] <REPOS_PATH> [<DST_FILE>]
 <DST_FILE> default is <REPOS_PATH>.
  
 Options:
-    -i  Install this shell script to your machine.
+    -i [<INSTALL_DIR>]
+        Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -30,37 +36,7 @@ EOF
     exit "$code"
 }
 
-version()
-{
-    echoo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
-    exit
-}
-
-# echo to stdout
-echoo()
-{
-    echo -e "$@"
-}
-
-# echo to stderr
-echoe()
-{
-    echo -e "$@" 1>&2
-}
-
-install()
-{
-    cp "$0" "${installDir}"
-    ret=$?
-    if [ "${ret}" = 0 ]; then
-        echoo "Install backupsvn.sh finished."
-    fi
-    exit "${ret}"
-}
-
-installDir="/usr/bin"
-
-while getopts ":ihv" OPT; do
+while getopts ":i:hv" OPT; do
     case "$OPT" in            
         v)
             version
@@ -71,11 +47,15 @@ while getopts ":ihv" OPT; do
             ;;
 
         i)
-            install
+            install "$OPTARG"
             ;;
 
         :)
         case "${OPTARG}" in
+            i)
+                install
+                ;;
+                
             ?)
                 echoe "Option \`-${OPTARG}' need argument.\n"
                 usage
