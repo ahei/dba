@@ -1,13 +1,22 @@
 #!/bin/sh
 
-# Time-stamp: <03/24/2009 14:24:41 星期二 by ahei>
+# Time-stamp: <03/29/2009 11:37:18 星期日 by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
 
 usage()
 {
-    cat << EOF
+    code=1
+    if [ $# -gt 0 ]; then
+        code="$1"
+    fi
+
+    if [ "$code" != 0 ]; then
+        redirect="1>&2"
+    fi
+
+    eval cat "$redirect" << EOF
 usage: ${PROGRAM_NAME} [OPTIONS] <HOST> <COMMAND>
        ${PROGRAM_NAME} [OPTIONS] -H <HOST> <COMMAND>
        ${PROGRAM_NAME} [OPTIONS] -c <COMMAND> <HOSTS>
@@ -34,18 +43,25 @@ Options:
     -h  Output this help.
 EOF
 
-    code=0
-    if [ $# -gt 0 ]; then
-        code="$1"
-    fi
-
     exit "$code"
 }
 
 version()
 {
-    echo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
+    echoo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
     exit
+}
+
+# echo to stdout
+echoo()
+{
+    echo -e "$@"
+}
+
+# echo to stderr
+echoe()
+{
+    echo -e "$@" 1>&2
 }
 
 executeCommand()
@@ -55,11 +71,11 @@ executeCommand()
     _isQuiet="$3"
     _isStop="$4"
     
-    [ "$_isQuiet" != 1 ] && echo "Executing command \`${_command}' ..."
+    [ "$_isQuiet" != 1 ] && echoo "Executing command \`${_command}' ..."
     if [ "${_isExecute}" != "0" ]; then
         eval "${_command}"
         if [ $? != 0 ]; then
-            echo "Execute command \`${_command}' failed."
+            echoo "Execute command \`${_command}' failed."
             if [ "$_isStop" = 1 ]; then
                 exit 1
             fi
@@ -72,7 +88,7 @@ install()
     cp "$0" "${installDir}"
     ret=$?
     if [ "${ret}" = 0 ]; then
-        echo "Install remote.sh finished."
+        echoo "Install remote.sh finished."
     fi
     exit "${ret}"
 }
@@ -89,8 +105,8 @@ while getopts ":hvH:f:F:d:l:nqc:si" OPT; do
 
         f)
             if [ ! -r "$OPTARG" ]; then
-                echo "Can not read file \`$OPTARG'."
-                exit 1
+                echoe "Can not read file \`$OPTARG'."
+                usage
             fi
             
             hosts="$hosts\n`cat $OPTARG`"
@@ -98,8 +114,8 @@ while getopts ":hvH:f:F:d:l:nqc:si" OPT; do
 
         F)
             if [ ! -r "$OPTARG" ]; then
-                echo "Can not read file \`$OPTARG'."
-                exit 1
+                echoe "Can not read file \`$OPTARG'."
+                usage
             fi
 
             isCopy=1
@@ -143,20 +159,20 @@ while getopts ":hvH:f:F:d:l:nqc:si" OPT; do
             ;;
 
         h)
-            usage
+            usage 0
             ;;
 
         :)
         case "${OPTARG}" in
             ?)
-                echo -e "Option \`-${OPTARG}' need argument.\n"
-                usage 1
+                echoe "Option \`-${OPTARG}' need argument.\n"
+                usage
         esac
         ;;
 
         ?)
-            echo -e "Invalid option \`-${OPTARG}'.\n"
-            usage 1
+            echoe "Invalid option \`-${OPTARG}'.\n"
+            usage
             ;;
     esac
 done
@@ -166,11 +182,11 @@ shift $((OPTIND - 1))
 if [ -z "$isCopy" ]; then
     if [ -z "$hosts" ]; then
         if [ "$#" -lt 1 ]; then
-            echo -e "No host and command specify.\n"
-            usage 1
+            echoe "No host and command specify.\n"
+            usage
         elif [ "$#" -lt 2 ]; then
-            echo -e "No command specify.\n"
-            usage 1
+            echoe "No command specify.\n"
+            usage
         fi
 
         if [ -n "$command" ]; then
@@ -184,8 +200,8 @@ if [ -z "$isCopy" ]; then
         fi
     else
         if [ "$#" -lt 1 ]; then
-            echo -e "No command specify.\n"
-            usage 1
+            echoe "No command specify.\n"
+            usage
         fi
 
         if [ -n "$command" ]; then

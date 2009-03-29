@@ -1,13 +1,22 @@
 #!/bin/sh
 
-# Time-stamp: <03/24/2009 14:24:20 星期二 by ahei>
+# Time-stamp: <03/29/2009 11:39:41 星期日 by ahei>
 
 readonly PROGRAM_NAME="backupsvn.sh"
 readonly PROGRAM_VERSION="1.0"
 
 usage()
 {
-    cat << EOF
+    code=1
+    if [ $# -gt 0 ]; then
+        code="$1"
+    fi
+
+    if [ "$code" != 0 ]; then
+        redirect="1>&2"
+    fi
+
+    eval cat "$redirect" << EOF
 usage: ${PROGRAM_NAME} [OPTIONS] <REPOS_PATH> [<DST_FILE>]
 
 <DST_FILE> default is <REPOS_PATH>.
@@ -18,13 +27,25 @@ Options:
     -h  Output this help.
 EOF
     
-    exit
+    exit "$code"
 }
 
 version()
 {
-    echo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
+    echoo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
     exit
+}
+
+# echo to stdout
+echoo()
+{
+    echo -e "$@"
+}
+
+# echo to stderr
+echoe()
+{
+    echo -e "$@" 1>&2
 }
 
 install()
@@ -32,7 +53,7 @@ install()
     cp "$0" "${installDir}"
     ret=$?
     if [ "${ret}" = 0 ]; then
-        echo "Install backupsvn.sh finished."
+        echoo "Install backupsvn.sh finished."
     fi
     exit "${ret}"
 }
@@ -46,7 +67,7 @@ while getopts ":ihv" OPT; do
             ;;
 
         h)
-            usage
+            usage 0
             ;;
 
         i)
@@ -56,13 +77,13 @@ while getopts ":ihv" OPT; do
         :)
         case "${OPTARG}" in
             ?)
-                echo -e "Option \`-${OPTARG}' need argument.\n"
+                echoe "Option \`-${OPTARG}' need argument.\n"
                 usage
         esac
         ;;
 
         ?)
-            echo -e "Invalid option \`-${OPTARG}'.\n"
+            echoe "Invalid option \`-${OPTARG}'.\n"
             usage
             ;;
     esac
@@ -71,14 +92,14 @@ done
 shift $((OPTIND - 1))
 
 if [ "$#" -lt 1 ]; then
-    echo -e "No svn repository specify.\n"
-    usage 1
+    echoe "No svn repository specify.\n"
+    usage
 fi
 
 svnRepos="$1"
 if [ ! -d "$svnRepos" ]; then
-    echo -e "\`$svnRepos' is a file, not a directory."
-    usage 1
+    echoe "\`$svnRepos' is a file, not a directory."
+    usage
 fi
 
 dstFile="$svnRepos"
