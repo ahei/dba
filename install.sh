@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 18:14:45 Sunday by ahei>
+# Time-stamp: <03/29/2009 15:29:04 星期日 by ahei>
 
 install()
 {
@@ -20,7 +20,7 @@ ln -sf "${bin}"/.mostrc ~
 ln -sf "${bin}"/.toprc ~
 
 install "$bin/utils.sh" "/etc/profile"
-install "$bin/temp.sh" "/etc/profile"
+install "$bin/temp/temp.sh" "/etc/profile"
 
 "$bin"/svntag -i
 "$bin"/remote.sh -i
