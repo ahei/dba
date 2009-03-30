@@ -7,13 +7,13 @@ version()
 # echo to stdout
 echoo()
 {
-    echo -e "$@"
+    printf "$*\n"
 }
 
 # echo to stderr
 echoe()
 {
-    echo -e "$@" 1>&2
+    printf "$*\n" 1>&2
 }
 
 # $1: installDir
