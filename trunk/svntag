@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 21:34:30 星期日 by ahei>
+# Time-stamp: <03/30/2009 14:26:18 星期一 by ahei>
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
@@ -12,7 +12,16 @@ bin=`cd "$bin"; pwd`
 
 usage()
 {
-    cat << EOF
+    code=1
+    if [ $# -gt 0 ]; then
+        code="$1"
+    fi
+
+    if [ "$code" != 0 ]; then
+        redirect="1>&2"
+    fi
+
+    eval cat "$redirect" << EOF
 usage: ${PROGRAM_NAME} [OPTIONS]
 
 This shell script can help you create or merge svn tag.
@@ -37,7 +46,7 @@ Options:
     -h  Output this help.
 EOF
     
-    exit 1
+    exit "$code"
 }
 
 getRevisionNo()
@@ -107,7 +116,7 @@ while getopts ":hvcri:t:T:nR:N:s" OPT; do
             ;;
 
         h)
-            usage
+            usage 0
             ;;
 
         :)
