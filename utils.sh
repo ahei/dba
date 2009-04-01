@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/30/2009 10:49:39 星期一 by ahei>
+# Time-stamp: <04/01/2009 18:23:46 星期三 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -59,6 +59,8 @@ alias emerge='emerge -u'
 alias psgrep='ps -ef | grep'
 alias nsgrep='netstat -nap | grep'
 alias scp='scp -r'
+
+ulimit -c unlimited
 
 # less color configure
 # blue
