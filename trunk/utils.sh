@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/01/2009 18:23:46 星期三 by ahei>
+# Time-stamp: <04/04/2009 18:54:58 星期六 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -33,7 +33,7 @@ pkillf()
 delnonsvn()
 {
     dir="$1"
-    svn st "$dir" | grep '?' | xargs rm -rf
+    svn st "$dir" | `which grep` -F '?' | xargs rm -rf
 }
 
 delbackup()

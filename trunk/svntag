@@ -1,6 +1,10 @@
 #!/bin/sh
 
-# Time-stamp: <03/30/2009 15:30:31 星期一 by ahei>
+# Time-stamp: <04/02/2009 16:39:36 星期四 by ahei>
+
+# @file svntag
+# @version 1.0
+# @author ahei
 
 readonly PROGRAM_NAME="svntag"
 readonly PROGRAM_VERSION="1.0"
