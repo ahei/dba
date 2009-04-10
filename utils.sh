@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/04/2009 18:54:58 星期六 by ahei>
+# Time-stamp: <04/11/2009 00:32:47 星期六 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -59,6 +59,8 @@ alias emerge='emerge -u'
 alias psgrep='ps -ef | grep'
 alias nsgrep='netstat -nap | grep'
 alias scp='scp -r'
+alias lld='ls -l | grep "^d"'
+alias llf='ls -l | grep "^-"'
 
 ulimit -c unlimited
 
