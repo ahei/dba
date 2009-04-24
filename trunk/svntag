@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/02/2009 16:39:36 星期四 by ahei>
+# Time-stamp: <04/23/2009 10:54:08 星期四 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -46,6 +46,7 @@ Options:
         Set tag name manual.
     -q  Quiet, do not write process info to standard output.
     -s  When execute commands failed, stop execute other commands and exit.
+    -d  Do not svn up trunk directory.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -56,7 +57,7 @@ EOF
 getRevisionNo()
 {
     dir="$1"
-    LANG= svn info "${dir}" -r HEAD 2>/dev/null | grep "Revision: " | sed -r "s/^Revision: ([[:digit:]]+)$/\1/g"
+    LANG= svn info "${dir}" 2>/dev/null | grep "Revision: " | sed -r "s/^Revision: ([[:digit:]]+)$/\1/g"
 }
 
 rollback()
@@ -73,7 +74,7 @@ trunkDir="trunk"
 tagsDir="tags"
 isExecute=1
 
-while getopts ":hvcri:t:T:nR:N:s" OPT; do
+while getopts ":hvcri:t:T:nR:N:sd" OPT; do
     case "$OPT" in
         c)
             tagName="current"
@@ -115,6 +116,10 @@ while getopts ":hvcri:t:T:nR:N:s" OPT; do
             isStop=1
             ;;
 
+        d)
+            notSvnup=1
+            ;;
+            
         v)
             version
             ;;
@@ -159,7 +164,7 @@ fi
 
 dateTimeRegexp="[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2} [[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2}"
 
-executeCommand "svn up ${trunkDir}" "${isExecute}" "$isQuiet" "$isStop"
+[ "$notSvnup" != 1 ] && executeCommand "svn up ${trunkDir}" "${isExecute}" "$isQuiet" "$isStop"
 
 # merge tag
 if [ -d "${tagsDir}/${tagName}" ]; then
