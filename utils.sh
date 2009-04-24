@@ -1,8 +1,9 @@
 #!/bin/sh
 
-# Time-stamp: <04/24/2009 16:42:11 星期五 by ahei>
+# Time-stamp: <04/24/2009 17:16:29 星期五 by ahei>
 
-export TIMESTAMP_HISTFILE="$HOME/.history_timestamp"
+export TIMESTAMP_HISTDIR="$HOME/.history"
+export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
 export TIMESTAMP_HIST_DUP=1
 
 getUserIP()
@@ -16,12 +17,19 @@ timestampHistory()
     echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"
     history -a
 
-    dateTime=`date '+%Y-%m-%d %H:%M:%S'`
+    if [ ! -d "$TIMESTAMP_HISTDIR" ]; then
+        [ -e "$TIMESTAMP_HISTDIR" ] && mv "$TIMESTAMP_HISTDIR" "$TIMESTAMP_HISTDIR".bak
+        mkdir "$TIMESTAMP_HISTDIR"
+    fi
 
+    dateTime=`date '+%Y-%m-%d %H:%M:%S'`
+    date=`date +%Y%m%d`
+
+    histFile="$TIMESTAMP_HISTFILE.$date"
     read x cmd <<< `history 1`
-    if [ -r "$TIMESTAMP_HISTFILE" ]; then
-        read x y lastCmd <<< `tail -n 1 "$TIMESTAMP_HISTFILE"`
+    if [ -r "$histFile" ]; then
         if [ "$TIMESTAMP_HIST_DUP" = 0 ]; then
+            read x y lastCmd <<< `tail -n 1 "$histFile"`
             trimCmd=`trim <<< "$cmd"`
             trimLastCmd=`trim <<< "$lastCmd"`
             if [ "$trimLastCmd" = "$trimCmd" ]; then
@@ -30,7 +38,7 @@ timestampHistory()
         fi
     fi
 
-    echo "[$dateTime $USER `getUserIP`] $cmd" >> "$TIMESTAMP_HISTFILE"
+    echo "[$dateTime $USER `getUserIP`] $cmd" >> "$histFile"
 }
 
 shopt -s histappend
