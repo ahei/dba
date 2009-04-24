@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/22/2009 09:56:12 星期三 by ahei>
+# Time-stamp: <04/24/2009 17:27:16 星期五 by ahei>
 
 alias sahei='ssh 172.0.1.208 -lahei'
 alias s48='ssh 172.0.1.248 -lroot'
@@ -19,7 +19,7 @@ alias s72='ssh 192.168.158.172 -lroot'
 alias s76='ssh 192.168.158.176 -lroot'
 alias s77='ssh 192.168.158.177 -lroot'
 alias s80='ssh 192.168.158.180 -lroot'
-alias s71a='ssh 192.168.158.171 -lroot'
+alias s71a='ssh 192.168.158.171 -lahei'
 alias s72a='ssh 192.168.158.172 -lahei'
 alias s76a='ssh 192.168.158.176 -lahei'
 alias s77a='ssh 192.168.158.177 -lahei'
