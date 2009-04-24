@@ -1,10 +1,37 @@
 #!/bin/sh
 
-# Time-stamp: <04/11/2009 00:32:47 星期六 by ahei>
+# Time-stamp: <04/24/2009 15:42:02 星期五 by ahei>
+
+export TIMESTAMP_HISTFILE="$HOME/.history_timestamp"
+export TIMESTAMP_HIST_DUP=1
+
+timestampHistory()
+{
+    echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"
+    history -a
+
+    dateTime=`date '+%Y-%m-%d %H:%M:%S'`
+
+    read x cmd <<< `history 1`
+    if [ -r "$TIMESTAMP_HISTFILE" ]; then
+        read x y lastCmd <<< `tail -n 1 "$TIMESTAMP_HISTFILE"`
+        if [ "$TIMESTAMP_HIST_DUP" = 0 ]; then
+            trimCmd=`trim <<< "$cmd"`
+            trimLastCmd=`trim <<< "$lastCmd"`
+            if [ "$trimLastCmd" = "$trimCmd" ]; then
+                return
+            fi
+        fi
+    fi
+
+    echo "[$dateTime] $cmd" >> "$TIMESTAMP_HISTFILE"
+}
+
+shopt -s histappend
+export PROMPT_COMMAND='timestampHistory'
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
-export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"'
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\h\[\033[01;31m\]:\[\e[33m\]\w\[\e[0m\]\$ '
 export EDITOR=vi
 
