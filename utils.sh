@@ -1,9 +1,15 @@
 #!/bin/sh
 
-# Time-stamp: <04/24/2009 15:42:02 星期五 by ahei>
+# Time-stamp: <04/24/2009 16:42:11 星期五 by ahei>
 
 export TIMESTAMP_HISTFILE="$HOME/.history_timestamp"
 export TIMESTAMP_HIST_DUP=1
+
+getUserIP()
+{
+    IFS=$'/' read x x pts <<< "`tty`"
+    who | grep "$pts" | sed -r 's/^.*\((.*)\)$/\1/g'
+}
 
 timestampHistory()
 {
@@ -24,7 +30,7 @@ timestampHistory()
         fi
     fi
 
-    echo "[$dateTime] $cmd" >> "$TIMESTAMP_HISTFILE"
+    echo "[$dateTime $USER `getUserIP`] $cmd" >> "$TIMESTAMP_HISTFILE"
 }
 
 shopt -s histappend
