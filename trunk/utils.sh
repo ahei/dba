@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/24/2009 17:16:29 星期五 by ahei>
+# Time-stamp: <04/26/2009 01:40:35 星期日 by ahei>
 
 export TIMESTAMP_HISTDIR="$HOME/.history"
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
@@ -102,6 +102,7 @@ alias nsgrep='netstat -nap | grep'
 alias scp='scp -r'
 alias lld='ls -l | grep "^d"'
 alias llf='ls -l | grep "^-"'
+alias ssh='ssh -o StrictHostKeyChecking=no'
 
 ulimit -c unlimited
 
@@ -120,3 +121,11 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[01;36m'
 # green
 export LESS_TERMCAP_us=$'\E[01;32m'
+
+# keychain
+applyKeychain()
+{
+    keychain ~/.ssh/id_rsa
+    . ~/.keychain/"$HOSTNAME"-sh
+}
+applyKeychain
