@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/26/2009 01:40:35 星期日 by ahei>
+# Time-stamp: <04/27/2009 10:32:06 星期一 by ahei>
 
 export TIMESTAMP_HISTDIR="$HOME/.history"
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
@@ -103,6 +103,8 @@ alias scp='scp -r'
 alias lld='ls -l | grep "^d"'
 alias llf='ls -l | grep "^-"'
 alias ssh='ssh -o StrictHostKeyChecking=no'
+alias apt-get='apt-get -y'
+alias aptg='apt-get'
 
 ulimit -c unlimited
 
