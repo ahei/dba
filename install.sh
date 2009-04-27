@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 21:33:25 星期日 by ahei>
+# Time-stamp: <04/27/2009 11:27:03 星期一 by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -89,6 +89,7 @@ ln -sf "${bin}"/.mostrc ~
 ln -sf "${bin}"/.toprc ~
 
 install "$bin/utils.sh" "$profile"
+install "$bin/history.sh" "$profile"
 install "$bin/temp/temp.sh" "$profile"
 
 cp "$bin"/common.sh "$installDir"
