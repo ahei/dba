@@ -1,48 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/27/2009 10:48:45 星期一 by ahei>
-
-export TIMESTAMP_HISTDIR="$HOME/.history"
-export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
-export TIMESTAMP_HIST_DUP=1
-
-getUserIP()
-{
-    IFS=$'/' read x x pts <<< "`tty`"
-    who | grep "$pts" | sed -r 's/^.*\((.*)\)$/\1/g'
-}
-
-timestampHistory()
-{
-    echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"
-    history -a
-
-    if [ ! -d "$TIMESTAMP_HISTDIR" ]; then
-        [ -e "$TIMESTAMP_HISTDIR" ] && mv "$TIMESTAMP_HISTDIR" "$TIMESTAMP_HISTDIR".bak
-        mkdir "$TIMESTAMP_HISTDIR"
-    fi
-
-    dateTime=`date '+%Y-%m-%d %H:%M:%S'`
-    date=`date +%Y%m%d`
-
-    histFile="$TIMESTAMP_HISTFILE.$date"
-    read x cmd <<< `history 1`
-    if [ -r "$histFile" ]; then
-        if [ "$TIMESTAMP_HIST_DUP" = 0 ]; then
-            read x y lastCmd <<< `tail -n 1 "$histFile"`
-            trimCmd=`trim <<< "$cmd"`
-            trimLastCmd=`trim <<< "$lastCmd"`
-            if [ "$trimLastCmd" = "$trimCmd" ]; then
-                return
-            fi
-        fi
-    fi
-
-    echo "[$dateTime $USER `getUserIP`] $cmd" >> "$histFile"
-}
-
-shopt -s histappend
-export PROMPT_COMMAND='timestampHistory'
+# Time-stamp: <04/27/2009 11:41:31 星期一 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -99,7 +57,7 @@ alias jip='java -javaagent:/usr/share/jip/profile/profile.jar -Dprofile.properti
 alias emerge='emerge -u'
 alias psgrep='ps -ef | grep'
 alias nsgrep='netstat -nap | grep'
-alias scp='scp -r'
+alias scp='scp -r -o StrictHostKeyChecking=no'
 alias lld='ls -l | grep "^d"'
 alias llf='ls -l | grep "^-"'
 alias ssh='ssh -o StrictHostKeyChecking=no'
@@ -129,7 +87,7 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # keychain
 applyKeychain()
 {
-    keychain ~/.ssh/id_rsa
+    keychain ~/.ssh/id_rsa -q --ignore-missing --noask
     . ~/.keychain/"$HOSTNAME"-sh
 }
 applyKeychain
