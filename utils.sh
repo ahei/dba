@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/27/2009 11:41:31 星期一 by ahei>
+# Time-stamp: <04/27/2009 12:49:47 星期一 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -87,7 +87,10 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # keychain
 applyKeychain()
 {
-    keychain ~/.ssh/id_rsa -q --ignore-missing --noask
-    . ~/.keychain/"$HOSTNAME"-sh
+    key=~/.ssh/id_rsa
+    if [ -r "$key" ]; then
+        keychain "$key" -q --ignore-missing --noask && \
+        . ~/.keychain/"$HOSTNAME"-sh
+    fi
 }
 applyKeychain
