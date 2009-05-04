@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/27/2009 12:49:47 星期一 by ahei>
+# Time-stamp: <05/05/2009 00:03:48 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -49,6 +49,7 @@ alias cp='cp -r'
 alias grep='grep --color'
 alias mysql='mysql --pager=more --prompt="\u@\h:\d>\_"'
 alias watch='watch -n 1 -d'
+alias eman='man -M /usr/share/man/'
 alias cman='man -M /usr/share/man/zh_CN/'
 alias utol="tr '[A-Z]' '[a-z]'"
 alias trim='sed -r "s/^[[:space:]]*|[[:space:]]*$//g"'
