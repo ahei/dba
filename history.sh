@@ -1,10 +1,11 @@
 #!/bin/sh
 
-# Time-stamp: <04/27/2009 11:42:35 星期一 by ahei>
+# Time-stamp: <05/06/2009 01:02:30 星期三 by ahei>
 
 export TIMESTAMP_HISTDIR=~/.history
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
 export TIMESTAMP_HIST_DUP=1
+export TIMESTAMP_HIST_PWD
 
 getUserIP()
 {
@@ -22,7 +23,7 @@ timestampHistory()
         mkdir "$TIMESTAMP_HISTDIR"
     fi
 
-    dateTime=`date '+%Y-%m-%d %H:%M:%S'`
+    dateTime=`date '+%F %A %T'`
     date=`date +%Y%m%d`
 
     histFile="$TIMESTAMP_HISTFILE.$date"
@@ -38,7 +39,8 @@ timestampHistory()
         fi
     fi
 
-    echo "[$dateTime $USER `getUserIP`] $cmd" >> "$histFile"
+    echo "[$dateTime $USER `getUserIP`] $cmd (wd: ${TIMESTAMP_HIST_PWD:-$PWD})" >> "$histFile"
+    TIMESTAMP_HIST_PWD="$PWD"
 }
 
 shopt -s histappend
