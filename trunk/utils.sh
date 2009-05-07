@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/05/2009 00:03:48 星期二 by ahei>
+# Time-stamp: <05/07/2009 15:49:47 星期四 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -27,6 +27,7 @@ pkillf()
     fi
 
     psgrep "$*" | awk '{print $2}' | xargs kill -9
+    psgrep "$*"
 }
 
 delnonsvn()
