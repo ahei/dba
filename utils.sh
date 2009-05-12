@@ -1,46 +1,11 @@
 #!/bin/sh
 
-# Time-stamp: <05/07/2009 15:49:47 星期四 by ahei>
+# Time-stamp: <05/12/2009 14:43:48 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\h\[\033[01;31m\]:\[\e[33m\]\w\[\e[0m\]\$ '
 export EDITOR=vi
-
-# echo to stderr
-echoe()
-{
-    echo -e "$@" 1>&2
-}
-
-bce()
-{
-	echo "scale=3; $@" | bc
-}
-
-# pkill with "-9"
-pkillf()
-{
-    if [ $# -lt 1 ]; then
-        echoe "No process name specify."
-        return
-    fi
-
-    psgrep "$*" | awk '{print $2}' | xargs kill -9
-    psgrep "$*"
-}
-
-delnonsvn()
-{
-    dir="$1"
-    svn st "$dir" | `which grep` -F '?' | xargs rm -rf
-}
-
-delbackup()
-{
-    dir="$1"
-    find $dir -name "*~" -type f | xargs rm -rf
-}
 
 alias ls='ls --color'
 alias ll='ls -l'
@@ -85,6 +50,41 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[01;36m'
 # green
 export LESS_TERMCAP_us=$'\E[01;32m'
+
+# echo to stderr
+echoe()
+{
+    echo -e "$@" 1>&2
+}
+
+bce()
+{
+	echo "scale=3; $@" | bc
+}
+
+# pkill with "-9"
+pkillf()
+{
+    if [ $# -lt 1 ]; then
+        echoe "No process name specify."
+        return
+    fi
+
+    psgrep "$*" | awk '{print $2}' | xargs kill -9
+    psgrep "$*"
+}
+
+delnonsvn()
+{
+    dir="$1"
+    svn st "$dir" | `which grep` -F '?' | xargs rm -rf
+}
+
+delbackup()
+{
+    dir="$1"
+    find $dir -name "*~" -type f | xargs rm -rf
+}
 
 # keychain
 applyKeychain()
