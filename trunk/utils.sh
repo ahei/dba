@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/12/2009 14:43:48 星期二 by ahei>
+# Time-stamp: <05/13/2009 10:51:56 星期三 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -32,6 +32,8 @@ alias apt-get='apt-get -y'
 alias aptg='apt-get'
 alias aptc='apt-cache'
 alias aptf='apt-file'
+alias path="echo -e ${PATH//:/'\n'}"
+alias cpath="echo -e ${CLASSPATH//:/'\n'}"
 
 ulimit -c unlimited
 
