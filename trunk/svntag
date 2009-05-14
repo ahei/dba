@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <04/23/2009 10:54:08 星期四 by ahei>
+# Time-stamp: <05/14/2009 11:00:24 星期四 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -175,7 +175,7 @@ if [ -d "${tagsDir}/${tagName}" ]; then
         fromRevisionNo=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 4p | sed -r "s/^Merge trunk r[[:digit:]]+:([[:digit:]]+) to tag ${tagName}\.$/\1/g" | grep -x -E "[[:digit:]]+"`
     fi
     if [ -z "${fromRevisionNo}" ]; then
-        executeCommand "svn rm ${tagsDir}/$tagName" "${isExecute}" "$isQuiet" "$isStop"
+        executeCommand "svn rm --force ${tagsDir}/$tagName" "${isExecute}" "$isQuiet" "$isStop"
         executeCommand "svn ci ${tagsDir}/$tagName -m \"Delete tag $tagName by $PROGRAM_NAME, because can not get revision from it's log.\"" "${isExecute}" "$isQuiet" "$isStop"
         createTag=1
     fi
