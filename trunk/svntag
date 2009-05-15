@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/14/2009 11:00:24 星期四 by ahei>
+# Time-stamp: <05/15/2009 17:12:01 星期五 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -45,7 +45,8 @@ Options:
     -N <TAG_NAME>
         Set tag name manual.
     -q  Quiet, do not write process info to standard output.
-    -s  When execute commands failed, stop execute other commands and exit.
+    -s  [IS_STOP]
+        When execute commands failed, stop execute other commands and exit.
     -d  Do not svn up trunk directory.
     -v  Output version info.
     -h  Output this help.
@@ -73,8 +74,9 @@ rollback()
 trunkDir="trunk"
 tagsDir="tags"
 isExecute=1
+isStop=1
 
-while getopts ":hvcri:t:T:nR:N:sd" OPT; do
+while getopts ":hvcri:t:T:nR:N:s:d" OPT; do
     case "$OPT" in
         c)
             tagName="current"
@@ -113,7 +115,7 @@ while getopts ":hvcri:t:T:nR:N:sd" OPT; do
             ;;
 
         s)
-            isStop=1
+            isStop="$OPTARG"
             ;;
 
         d)
@@ -129,20 +131,24 @@ while getopts ":hvcri:t:T:nR:N:sd" OPT; do
             ;;
 
         :)
-        case "${OPTARG}" in
-            i)
-                install
-                ;;
+            case "${OPTARG}" in
+                s)
+                    isStop=1
+                    ;;
                 
-            R)
-                rollbackFile="."
-                ;;
+                i)
+                    install
+                    ;;
+                
+                R)
+                    rollbackFile="."
+                    ;;
 
-            ?)
-                echo "Option \`-${OPTARG}' need argument.\n"
-                usage
-        esac
-        ;;
+                ?)
+                    echo "Option \`-${OPTARG}' need argument.\n"
+                    usage
+            esac
+            ;;
 
         ?)
             echo "Invalid option \`-${OPTARG}'.\n"
