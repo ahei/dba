@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/13/2009 10:51:56 星期三 by ahei>
+# Time-stamp: <05/22/2009 13:16:20 星期五 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -85,7 +85,7 @@ delnonsvn()
 delbackup()
 {
     dir="$1"
-    find $dir -name "*~" -type f | xargs rm -rf
+    find $dir '(' -name "*~" -o -name "#*#" ')' -type f | xargs rm -rf
 }
 
 # keychain
