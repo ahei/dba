@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-# Time-stamp: <05/08/2009 11:40:52 星期五 by ahei>
+# Time-stamp: <05/23/2009 17:35:25 星期六 by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
