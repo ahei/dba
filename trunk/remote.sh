@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <03/29/2009 21:28:56 星期日 by ahei>
+# Time-stamp: <05/30/2009 11:04:49 Saturday by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -54,8 +54,9 @@ EOF
 
 isExecute=1
 IFS=$'\n'
+background="&"
 
-while getopts ":hvH:f:F:d:l:nqc:si:" OPT; do
+while getopts ":hvH:f:F:d:l:nqc:si:g" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"
@@ -105,7 +106,7 @@ while getopts ":hvH:f:F:d:l:nqc:si:" OPT; do
             ;;
 
         g)
-            isForeground=1
+            background=
             ;;
 
         i)
@@ -173,7 +174,7 @@ if [ -z "$isCopy" ]; then
 
     for i in `printf "$hosts"`; do
         [ -n "$user" ] && login=" -l $user"
-        executeCommand "ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" &" "$isExecute" "$isQuiet" "$isStop"
+        executeCommand "ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
     done
 
     wait
@@ -194,7 +195,7 @@ for i in `printf "$hosts"`; do
         host="$user@$i"
     fi
 
-    executeCommand "scp -r $files $host:$dstFile 2>&1 | sed \"s/^/$i: /\" &" "$isExecute" "$isQuiet" "$isStop"
+    executeCommand "scp -r $files $host:$dstFile 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
 done
 
 wait
