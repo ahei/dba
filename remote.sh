@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/30/2009 11:04:49 Saturday by ahei>
+# Time-stamp: <06/09/2009 16:43:32 星期二 by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -56,7 +56,7 @@ isExecute=1
 IFS=$'\n'
 background="&"
 
-while getopts ":hvH:f:F:d:l:nqc:si:g" OPT; do
+while getopts ":hvH:f:F:d:l:nqc:sig" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"
