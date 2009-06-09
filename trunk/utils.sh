@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-# Time-stamp: <05/22/2009 13:16:20 星期五 by ahei>
+# Time-stamp: <06/01/2009 09:58:05 星期一 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
