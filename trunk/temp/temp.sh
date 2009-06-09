@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/12/2009 23:30:27 星期二 by ahei>
+# Time-stamp: <06/09/2009 16:43:19 星期二 by ahei>
 
 alias sahei='ssh 172.0.1.208 -lahei'
 alias saheir='ssh 172.0.1.208 -lroot'
@@ -17,9 +17,15 @@ alias s52a='ssh 172.0.1.252 -lahei'
 
 alias s71='ssh 192.168.158.171 -lroot'
 alias s72='ssh 192.168.158.172 -lroot'
+alias s73='ssh 192.168.158.173 -lroot'
+alias s75='ssh 192.168.158.175 -lroot'
+alias s75a='ssh 192.168.158.175 -lahei'
 alias s76='ssh 192.168.158.176 -lroot'
 alias s77='ssh 192.168.158.177 -lroot'
 alias s80='ssh 192.168.158.180 -lroot'
+alias s81='ssh 192.168.158.181 -lroot'
+alias s82='ssh 192.168.158.182 -lroot'
+alias s83='ssh 192.168.158.183 -lroot'
 alias s71a='ssh 192.168.158.171 -lahei'
 alias s72a='ssh 192.168.158.172 -lahei'
 alias s76a='ssh 192.168.158.176 -lahei'
@@ -27,3 +33,5 @@ alias s77a='ssh 192.168.158.177 -lahei'
 alias s80a='ssh 192.168.158.180 -lahei'
 
 alias remoteall='remote.sh -lroot -f /etc/shell/temp/servers/all-servers.txt'
+alias remotee='remote.sh -lroot -f /etc/shell/temp/servers/english-servers.txt'
+alias remotel='remote.sh -lroot -f /etc/shell/temp/servers/local-servers.txt'
