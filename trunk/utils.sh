@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <06/01/2009 09:58:05 星期一 by ahei>
+# Time-stamp: <06/16/2009 10:27:05 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -9,7 +9,7 @@ export EDITOR=vi
 
 alias ls='ls --color'
 alias ll='ls -l'
-alias smth='screen ssh ahei0802@bbs.newsmth.net'
+alias smth='luit -encoding gb18030 ssh bbs.newsmth.net'
 alias e='emacsclient -n'
 alias cp='cp -r'
 alias grep='grep --color'
@@ -86,6 +86,14 @@ delbackup()
 {
     dir="$1"
     find $dir '(' -name "*~" -o -name "#*#" ')' -type f | xargs rm -rf
+}
+
+genproxy()
+{
+    ip="$1"
+    user="$2"
+    
+    ssh "$ip" -l "$user" -D 8888 -N -f
 }
 
 # keychain
