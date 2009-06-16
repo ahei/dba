@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <06/16/2009 10:36:16 星期二 by ahei>
+# Time-stamp: <06/16/2009 11:30:24 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -58,6 +58,12 @@ svnd()
     svn revert "$file"
     rm -rf "$file"
 }
+
+alias antc='ant clean'
+alias antco='ant compile'
+alias antd='ant dist'
+alias antj='ant jar'
+alias antt='ant test'
 
 alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
