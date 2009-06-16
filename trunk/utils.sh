@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <06/16/2009 10:27:05 星期二 by ahei>
+# Time-stamp: <06/16/2009 10:36:16 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -28,10 +28,37 @@ alias scp='scp -r -o StrictHostKeyChecking=no'
 alias lld='ls -l | grep "^d"'
 alias llf='ls -l | grep "^-"'
 alias ssh='ssh -o StrictHostKeyChecking=no'
+
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
 alias aptc='apt-cache'
 alias aptf='apt-file'
+
+alias svni='svn info'
+alias svns='svn st'
+alias svnh='svn help'
+alias svndi='svn di'
+alias svna='svn add'
+alias svnm='svn mkdir'
+alias svnu='svn up'
+alias svnc='svn cleanup'
+alias svnrm='svn rm'
+alias svnr='svn revert'
+svnt()
+{
+    file="$1"
+
+    touch "$file"
+    svn add "$file"
+}
+svnd()
+{
+    file="$1"
+
+    svn revert "$file"
+    rm -rf "$file"
+}
+
 alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
 
