@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <06/16/2009 11:30:24 星期二 by ahei>
+# Time-stamp: <06/19/2009 09:36:51 星期五 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -64,6 +64,10 @@ alias antco='ant compile'
 alias antd='ant dist'
 alias antj='ant jar'
 alias antt='ant test'
+
+alias makec='make clean'
+alias maket='make check'
+alias makei='make install'
 
 alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
