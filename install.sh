@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# Time-stamp: <05/23/2009 17:35:25 星期六 by ahei>
+# Time-stamp: <06/23/2009 15:12:59 星期二 by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
 
 HOSTS_FILE=/etc/hosts
 
-bin=`dirname "$0"`
-bin=`cd "$bin"; pwd`
+home=`dirname "$0"`
+home=`cd "$home"; pwd`
 
-. "$bin"/common.sh
+. "$home"/common.sh
 
 usage()
 {
@@ -86,20 +86,22 @@ if [ $# -ge 1 ]; then
     installDir="$1"
 fi
 
-ln -sf "${bin}"/.mostrc ~
-ln -sf "${bin}"/.toprc ~
+ln -sf "${home}"/.mostrc ~
+ln -sf "${home}"/.toprc ~
 
-writeToFile ". $bin/utils.sh" "$profile"
-writeToFile ". $bin/history.sh" "$profile"
-writeToFile ". $bin/temp/temp.sh" "$profile"
+writeToFile ". $home/utils.sh" "$profile"
+writeToFile ". $home/history.sh" "$profile"
+writeToFile ". $home/temp/temp.sh" "$profile"
 
 IFS=$'\n'
-for i in `cat "$bin"/temp/temp-hosts`; do
+for i in `cat "$home"/temp/temp-hosts`; do
     writeToFile "$i" "$HOSTS_FILE"
 done
     
-cp "$bin"/common.sh "$installDir"
+cp "$home"/common.sh "$installDir"
+cp "$home"/temp/luke "$installDir"
+cp "$home"/temp/lukeall-*.jar "$installDir"
 
-"$bin"/svntag -i "$installDir"
-"$bin"/remote.sh -i "$installDir"
-"$bin"/backupsvn.sh -i "$installDir"
+"$home"/svntag -i "$installDir"
+"$home"/remote.sh -i "$installDir"
+"$home"/backupsvn.sh -i "$installDir"
