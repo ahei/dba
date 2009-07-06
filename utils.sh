@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <06/19/2009 09:36:51 星期五 by ahei>
+# Time-stamp: <07/05/2009 13:20:30 星期日 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -46,17 +46,25 @@ alias svnrm='svn rm'
 alias svnr='svn revert'
 svnt()
 {
-    file="$1"
+    file="$@"
 
-    touch "$file"
-    svn add "$file"
+    touch $file
+    svn add $file
+}
+svntx()
+{
+    file="$@"
+
+    touch $file
+    chmod +x $file
+    svn add $file
 }
 svnd()
 {
-    file="$1"
+    file="$@"
 
-    svn revert "$file"
-    rm -rf "$file"
+    svn revert $file
+    rm -rf $file
 }
 
 alias antc='ant clean'
