@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <07/05/2009 13:20:30 星期日 by ahei>
+# Time-stamp: <07/15/2009 15:44:21 星期三 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -79,6 +79,8 @@ alias makei='make install'
 
 alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
+
+alias updaterc='. ~/.bashrc'
 
 ulimit -c unlimited
 
