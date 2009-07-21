@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <07/20/2009 11:16:33 星期一 by ahei>
+# Time-stamp: <07/21/2009 17:05:23 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -44,7 +44,7 @@ alias svnm='svn mkdir'
 alias svnu='svn up'
 alias svnc='svn cleanup'
 alias svnrm='svn rm'
-alias svnr='svn revert'
+alias svnr='svn revert -R'
 svnt()
 {
     file="$@"
