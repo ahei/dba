@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/15/2009 17:12:01 星期五 by ahei>
+# Time-stamp: <07/21/2009 17:02:13 星期二 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -210,6 +210,15 @@ revisionNo=`getRevisionNo "${trunkDir}"`
 if [ -z "${revisionNo}" ]; then
     echo "Get revision number of ${trunkDir} failed."
     exit 1
+fi
+
+if [[ ! -e "$tagsDir" ]]; then
+    if svn info $tagsDir >/dev/null 2>&1; then
+        executeCommand "svn up $tagsDir" "$isExecute" "$isQuiet" "isStop"
+    else
+        executeCommand "svn mkdir $tagsDir" "$isExecute" "$isQuiet" "isStop"
+    fi
+
 fi
 
 executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
