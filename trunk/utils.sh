@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <07/21/2009 17:05:23 星期二 by ahei>
+# Time-stamp: <07/22/2009 11:42:48 星期三 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -32,7 +32,10 @@ alias type='type -a'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
+alias aptgi='aptg install'
+alias aptgu='aptg update'
 alias aptc='apt-cache'
+alias aptcs='aptc search'
 alias aptf='apt-file'
 
 alias svni='svn info'
