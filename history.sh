@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <05/06/2009 01:02:30 星期三 by ahei>
+# Time-stamp: <07/30/2009 15:04:37 星期四 by ahei>
 
 export TIMESTAMP_HISTDIR=~/.history
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
@@ -39,7 +39,7 @@ timestampHistory()
         fi
     fi
 
-    echo "[$dateTime $USER `getUserIP`] $cmd (wd: ${TIMESTAMP_HIST_PWD:-$PWD})" >> "$histFile"
+    echo "[$dateTime $USER `getUserIP`] ${TIMESTAMP_HIST_PWD:-$PWD}$ $cmd" >> "$histFile"
     TIMESTAMP_HIST_PWD="$PWD"
 }
 
