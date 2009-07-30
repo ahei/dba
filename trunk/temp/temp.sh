@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <06/16/2009 10:08:01 星期二 by ahei>
+# Time-stamp: <07/28/2009 16:09:47 星期二 by ahei>
 
 alias sahei='ssh 172.0.1.208 -lahei'
 alias saheir='ssh 172.0.1.208 -lroot'
@@ -39,5 +39,6 @@ alias remoteall='remote.sh -lroot -f /etc/shell/temp/servers/all-servers.txt'
 alias remotee='remote.sh -lroot -f /etc/shell/temp/servers/english-servers.txt'
 alias remotel='remote.sh -lroot -f /etc/shell/temp/servers/local-servers.txt'
 alias remotes='remote.sh -lroot -f /etc/shell/temp/servers/english-search-servers.txt'
+alias remotess='remote.sh -lroot -f /etc/shell/temp/servers/english-search-servers.txt'
 
 alias genproxy52='genproxy s52 root'
