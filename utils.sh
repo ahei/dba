@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <07/24/2009 11:46:49 星期五 by ahei>
+# Time-stamp: <07/31/2009 16:29:41 星期五 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -29,6 +29,7 @@ alias lld='ls -l | grep "^d"'
 alias llf='ls -l | grep "^-"'
 alias ssh='ssh -o StrictHostKeyChecking=no'
 alias type='type -a'
+alias md='mkdir'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
