@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/02/2009 10:47:17 星期日 by ahei>
+# Time-stamp: <08/03/2009 14:41:16 星期一 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -150,6 +150,23 @@ genproxy()
     user="$2"
     
     ssh "$ip" -l "$user" -D 8888 -N -f
+}
+
+resolveLink()
+{
+    this="$1"
+
+    while [[ -L "$this" && -r "$this" ]]; do
+        link=$(readlink "$this")
+        link=$(dirname "$link")/$(basename "$link")
+        if [[ "${link:0:1}" = "/" ]]; then
+            this="$link"
+        else
+            this=`dirname "$this"`/"$link"
+        fi
+    done
+
+    echo "$this"
 }
 
 # keychain
