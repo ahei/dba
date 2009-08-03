@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/03/2009 10:07:07 星期一 by ahei>
+# Time-stamp: <08/03/2009 10:16:49 星期一 by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -105,4 +105,4 @@ cp "$home"/temp/lukeall-*.jar "$installDir"
 "$home"/svntag -i "$installDir"
 "$home"/remote.sh -i "$installDir"
 "$home"/backupsvn.sh -i "$installDir"
-"$home"/temp/test-diskio.sh -i "$installDir"
+"$home"/test-diskio.sh -i "$installDir"
