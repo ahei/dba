@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/03/2009 10:10:43 星期一 by ahei>
+# Time-stamp: <08/03/2009 10:39:08 星期一 by ahei>
 
 # @file test-diskio.sh
 # @version 1.0
@@ -89,6 +89,8 @@ done
 shift $((OPTIND - 1))
 
 tempFile=`mktemp`
+
+echo "Test with bs=$bs count=$count ..."
 
 echo "Test write performance ..."
 dd if=/dev/zero of="$tempFile" bs="$bs" count="$count"
