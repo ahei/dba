@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/03/2009 14:41:16 星期一 by ahei>
+# Time-stamp: <08/04/2009 00:57:34 星期二 by ahei>
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -158,11 +158,16 @@ resolveLink()
 
     while [[ -L "$this" && -r "$this" ]]; do
         link=$(readlink "$this")
-        link=$(dirname "$link")/$(basename "$link")
+        dir=$(dirname "$this")
+        if [[ "$dir" != "." ]]; then
+            link=$dir/$(basename "$link")
+        fi
         if [[ "${link:0:1}" = "/" ]]; then
             this="$link"
+        elif [[ "$dir" != "." ]]; then
+            this="$dir/$link"
         else
-            this=`dirname "$this"`/"$link"
+            this="$link"
         fi
     done
 
