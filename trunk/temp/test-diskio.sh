@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/03/2009 10:07:26 星期一 by ahei>
+# Time-stamp: <08/03/2009 10:10:43 星期一 by ahei>
 
 # @file test-diskio.sh
 # @version 1.0
@@ -12,7 +12,7 @@ readonly PROGRAM_VERSION="1.0.0"
 home=`dirname "$0"`
 home=`cd "$home" && pwd`
 
-. "$home"/../common.sh
+. "$home"/common.sh
 
 usage()
 {
