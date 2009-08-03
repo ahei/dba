@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/03/2009 09:59:00 星期一 by ahei>
+# Time-stamp: <08/03/2009 10:07:26 星期一 by ahei>
 
 # @file test-diskio.sh
 # @version 1.0
@@ -11,6 +11,8 @@ readonly PROGRAM_VERSION="1.0.0"
 
 home=`dirname "$0"`
 home=`cd "$home" && pwd`
+
+. "$home"/../common.sh
 
 usage()
 {
@@ -31,6 +33,8 @@ Options:
         Specify bs.
     -c COUNT
         Specify count.
+    -i [<INSTALL_DIR>]
+        Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -38,29 +42,15 @@ EOF
     exit "$code"
 }
 
-version()
-{
-    echoo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
-    exit
-}
-
-# echo to stdout
-echoo()
-{
-    printf "$*\n"
-}
-
-# echo to stderr
-echoe()
-{
-    printf "$*\n" 1>&2
-}
-
 bs=1024
 count=1048576
 
-while getopts ":hvb:c:" OPT; do
+while getopts ":hvb:c:i:" OPT; do
     case "$OPT" in
+        i)
+            install "$OPTARG"
+            ;;
+        
         b)
             bs="$OPTARG"
             ;;
@@ -79,6 +69,10 @@ while getopts ":hvb:c:" OPT; do
 
         :)
             case "${OPTARG}" in
+                i)
+                    install
+                    ;;
+
                 ?)
                     echoe "Option \`-${OPTARG}' need argument.\n"
                     usage
