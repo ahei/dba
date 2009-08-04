@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Time-stamp: <08/04/2009 01:07:33 星期二 by ahei>
+# Time-stamp: <08/04/2009 09:39:31 星期二 by ahei>
+
+. common.sh
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
@@ -109,12 +111,6 @@ export LESS_TERMCAP_ue=$'\E[01;36m'
 # green
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-# echo to stderr
-echoe()
-{
-    echo -e "$@" 1>&2
-}
-
 bce()
 {
 	echo "scale=3; $@" | bc
@@ -158,13 +154,7 @@ resolveLink()
 
     while [[ -L "$this" && -r "$this" ]]; do
         link=$(readlink "$this")
-
-        dir=$(dirname "$link")
-        if [[ "$dir" != "." ]]; then
-            link=$dir/$(basename "$link")
-        else
-            link=$(basename "$link")
-        fi
+        link=$(normalizePath "$link")
         
         if [[ "${link:0:1}" = "/" ]]; then
             this="$link"
