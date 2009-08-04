@@ -50,3 +50,17 @@ executeCommand()
         fi
     fi
 }
+
+normalizePath()
+{
+    local path="$1"
+
+    dir=$(dirname "$path")
+    if [[ "$dir" != "." ]]; then
+        path=$dir/$(basename "$path")
+    else
+        path=$(basename "$path")
+    fi
+
+    echo "$path"
+}
