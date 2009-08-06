@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/04/2009 09:39:31 星期二 by ahei>
+# Time-stamp: <08/06/2009 10:58:24 星期四 by ahei>
 
 . common.sh
 
@@ -137,7 +137,8 @@ delnonsvn()
 delbackup()
 {
     dir="$1"
-    find $dir '(' -name "*~" -o -name "#*#" ')' -type f | xargs rm -rf
+    shift 1
+    find $dir "$@" '(' -name "*~" -o -name "#*#" ')' -type f | xargs rm -rf
 }
 
 genproxy()
