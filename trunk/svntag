@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <08/07/2009 17:02:55 星期五 by ahei>
+# Time-stamp: <08/07/2009 17:05:23 星期五 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -148,6 +148,10 @@ while getopts ":hvcri:t:T:nR:N:s:dB:" OPT; do
                 
                 R)
                     rollbackFile="."
+                    ;;
+
+                B)
+                    isBackupTag=1
                     ;;
 
                 ?)
