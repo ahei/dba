@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <07/21/2009 17:02:13 星期二 by ahei>
+# Time-stamp: <08/07/2009 17:02:55 星期五 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -47,6 +47,8 @@ Options:
     -q  Quiet, do not write process info to standard output.
     -s  [IS_STOP]
         When execute commands failed, stop execute other commands and exit.
+    -B [IS_BACKUP]
+        Specify backup tag or not.
     -d  Do not svn up trunk directory.
     -v  Output version info.
     -h  Output this help.
@@ -76,7 +78,7 @@ tagsDir="tags"
 isExecute=1
 isStop=1
 
-while getopts ":hvcri:t:T:nR:N:s:d" OPT; do
+while getopts ":hvcri:t:T:nR:N:s:dB:" OPT; do
     case "$OPT" in
         c)
             tagName="current"
@@ -121,7 +123,11 @@ while getopts ":hvcri:t:T:nR:N:s:d" OPT; do
         d)
             notSvnup=1
             ;;
-            
+
+        B)
+            isBackupTag="$OPTARG"
+            ;;
+        
         v)
             version
             ;;
@@ -168,21 +174,23 @@ if [ -f "${tagsDir}/${tagName}" ]; then
     exit 1
 fi
 
+ecArgs="$isExecute $isQuiet $isStop"
+
 dateTimeRegexp="[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2} [[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2}"
 
-[ "$notSvnup" != 1 ] && executeCommand "svn up ${trunkDir}" "${isExecute}" "$isQuiet" "$isStop"
+[ "$notSvnup" != 1 ] && executeCommand "svn up ${trunkDir}" $ecArgs
 
 # merge tag
 if [ -d "${tagsDir}/${tagName}" ]; then
-    executeCommand "svn up ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
+    executeCommand "svn up ${tagsDir}/${tagName}" $ecArgs
 
     fromRevisionNo=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 4p | sed -r "s/^Create tag ${tagName} from trunk r([[:digit:]]+)\.$/\1/g" | grep -x -E "[[:digit:]]+"`
     if [ -z "${fromRevisionNo}" ]; then
         fromRevisionNo=`svn log "${tagsDir}/${tagName}" -r COMMITTED | sed -n 4p | sed -r "s/^Merge trunk r[[:digit:]]+:([[:digit:]]+) to tag ${tagName}\.$/\1/g" | grep -x -E "[[:digit:]]+"`
     fi
     if [ -z "${fromRevisionNo}" ]; then
-        executeCommand "svn rm --force ${tagsDir}/$tagName" "${isExecute}" "$isQuiet" "$isStop"
-        executeCommand "svn ci ${tagsDir}/$tagName -m \"Delete tag $tagName by $PROGRAM_NAME, because can not get revision from it's log.\"" "${isExecute}" "$isQuiet" "$isStop"
+        executeCommand "svn rm --force ${tagsDir}/$tagName" $ecArgs
+        executeCommand "svn ci ${tagsDir}/$tagName -m \"Delete tag $tagName by $PROGRAM_NAME, because can not get revision from it's log.\"" $ecArgs
         createTag=1
     fi
 
@@ -193,13 +201,15 @@ if [ -d "${tagsDir}/${tagName}" ]; then
                 echo "Get date time of tag ${tagName} failed."
                 exit 1
             fi
-            
-            executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}" "${isExecute}" "$isQuiet" "$isStop"
+
+            if [[ "$isBackupTag" != 0 ]]; then
+                executeCommand "svn cp ${tagsDir}/${tagName} ${tagsDir}/${tagName}_${dateTime}" $ecArgs
+            fi
         fi
 
         toRevisionNo=`getRevisionNo "${trunkDir}"`
-        executeCommand "svn merge ${trunkDir} -r${fromRevisionNo}:${toRevisionNo} ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
-        executeCommand "svn ci -m \"Merge trunk r${fromRevisionNo}:${toRevisionNo} to tag ${tagName}.\"" "${isExecute}" "$isQuiet" "$isStop"
+        executeCommand "svn merge ${trunkDir} -r${fromRevisionNo}:${toRevisionNo} ${tagsDir}/${tagName}" $ecArgs
+        executeCommand "svn ci -m \"Merge trunk r${fromRevisionNo}:${toRevisionNo} to tag ${tagName}.\"" $ecArgs
         
         exit
     fi
@@ -221,5 +231,5 @@ if [[ ! -e "$tagsDir" ]]; then
 
 fi
 
-executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" "${isExecute}" "$isQuiet" "$isStop"
-executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\"" "${isExecute}" "$isQuiet" "$isStop"
+executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" $ecArgs
+executeCommand "svn ci -m \"Create tag ${tagName} from trunk r${revisionNo}.\"" $ecArgs
