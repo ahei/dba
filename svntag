@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <08/07/2009 17:05:23 星期五 by ahei>
+# Time-stamp: <08/07/2009 17:08:12 星期五 by ahei>
 
 # @file svntag
 # @version 1.0
@@ -77,6 +77,7 @@ trunkDir="trunk"
 tagsDir="tags"
 isExecute=1
 isStop=1
+isQuiet=0
 
 while getopts ":hvcri:t:T:nR:N:s:dB:" OPT; do
     case "$OPT" in
