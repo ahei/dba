@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/20/2009 13:38:52 星期四 by ahei>
+# Time-stamp: <08/20/2009 18:18:34 星期四 by ahei>
 
 . common.sh
 
@@ -56,6 +56,7 @@ alias svnc='svn cleanup'
 alias svnci='svn ci -m'
 alias svnrm='svn rm'
 alias svnr='svn revert -R'
+alias svnl='svn log'
 svnt()
 {
     file="$@"
