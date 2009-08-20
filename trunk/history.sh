@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <07/30/2009 17:23:15 星期四 by ahei>
+# Time-stamp: <08/07/2009 23:44:28 星期五 by ahei>
 
 export TIMESTAMP_HISTDIR=~/.history
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
@@ -20,7 +20,7 @@ timestampHistory()
 
     if [ ! -d "$TIMESTAMP_HISTDIR" ]; then
         [ -e "$TIMESTAMP_HISTDIR" ] && mv "$TIMESTAMP_HISTDIR" "$TIMESTAMP_HISTDIR".bak
-        mkdir "$TIMESTAMP_HISTDIR"
+        mkdir "$TIMESTAMP_HISTDIR" -p
     fi
 
     dateTime=`date '+%F %A %T'`
