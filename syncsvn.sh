@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/21/2009 18:32:53 Friday by ahei>
+# Time-stamp: <08/22/2009 00:31:18 Saturday by ahei>
 
 # @file syncsvn.sh
 # @version 1.0
@@ -45,6 +45,8 @@ Options:
         Specify commit or not.
     -d [IS_DIFF]
         Specify diff or not.
+    -a [IS_ADD]
+        Specify add or not.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -66,8 +68,9 @@ dstDir="."
 isPatch=1
 isCommit=1
 isDiff=0
+isAdd=0
 
-while getopts ":hvi:s:e:qnp:c:d:" OPT; do
+while getopts ":hvi:s:e:qnp:c:d:a:" OPT; do
     case "$OPT" in
         i)
             install "$OPTARG"
@@ -100,7 +103,11 @@ while getopts ":hvi:s:e:qnp:c:d:" OPT; do
         d)
             isDiff="$OPTARG"
             ;;
-            
+
+        a)
+            isAdd="$OPTARG"
+            ;;
+
         v)
             version
             ;;
@@ -126,7 +133,11 @@ while getopts ":hvi:s:e:qnp:c:d:" OPT; do
                 d)
                     isDiff=1
                     ;;
-                    
+
+                a)
+                    isAdd=1
+                    ;;
+
                 ?)
                     echoe "Option \`-${OPTARG}' need argument.\n"
                     usage
@@ -171,6 +182,13 @@ for ((i = srcStartRev; i <= srcEndRev; i++)); do
 
     if [[ "$isPatch" != 0 ]]; then
 	    executeCommand "patch -d $dstDir -p0 < <(cd $srcDir && svn di -r$((i-1)):$i)" $ecArgs
+    fi
+
+    if [[ "$isAdd" != 0 ]]; then
+        files=$(svn st "$dstDir" | grep -F '?')
+        if [[ -n "$files" ]]; then
+            executeCommand "echo \"$files\" | awk '{print \$2}' | xargs svn add" $ecArgs
+        fi
     fi
 
     if [[ "$isDiff" != 0 ]]; then
