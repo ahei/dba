@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/21/2009 15:19:06 Friday by ahei>
+# Time-stamp: <08/21/2009 18:32:53 Friday by ahei>
 
 # @file syncsvn.sh
 # @version 1.0
@@ -65,7 +65,7 @@ isStop=1
 dstDir="."
 isPatch=1
 isCommit=1
-isDiff=1
+isDiff=0
 
 while getopts ":hvi:s:e:qnp:c:d:" OPT; do
     case "$OPT" in
@@ -174,6 +174,7 @@ for ((i = srcStartRev; i <= srcEndRev; i++)); do
     fi
 
     if [[ "$isDiff" != 0 ]]; then
+        executeCommand "svn up $srcDir -r$i" $ecArgs
         executeCommand "diff $srcDir $dstDir --exclude=.svn -r" $ecArgs
     fi
     
