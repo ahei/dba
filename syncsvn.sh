@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/21/2009 11:23:47 Friday by ahei>
+# Time-stamp: <08/21/2009 15:19:06 Friday by ahei>
 
 # @file syncsvn.sh
 # @version 1.0
@@ -39,6 +39,12 @@ Options:
         Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
     -q  Quiet, do not write process info to standard output.
     -n  Do not really execute command, only print command to execute.
+    -p [IS_PATCH]
+        Specify patch or not.
+    -c [IS_COMMIT]
+        Specify commit or not.
+    -d [IS_DIFF]
+        Specify diff or not.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -57,8 +63,11 @@ isQuiet=0
 isStop=1
 
 dstDir="."
+isPatch=1
+isCommit=1
+isDiff=1
 
-while getopts ":hvi:s:e:qn" OPT; do
+while getopts ":hvi:s:e:qnp:c:d:" OPT; do
     case "$OPT" in
         i)
             install "$OPTARG"
@@ -80,6 +89,18 @@ while getopts ":hvi:s:e:qn" OPT; do
             isExecute=0
             ;;
 
+        p)
+            isPatch="$OPTARG"
+            ;;
+
+        c)
+            isCommit="$OPTARG"
+            ;;
+
+        d)
+            isDiff="$OPTARG"
+            ;;
+            
         v)
             version
             ;;
@@ -93,7 +114,19 @@ while getopts ":hvi:s:e:qn" OPT; do
                 i)
                     install
                     ;;
-                
+
+                p)
+                    isPatch=1
+                    ;;
+
+                c)
+                    isCommit=1
+                    ;;
+
+                d)
+                    isDiff=1
+                    ;;
+                    
                 ?)
                     echoe "Option \`-${OPTARG}' need argument.\n"
                     usage
@@ -136,8 +169,18 @@ for ((i = srcStartRev; i <= srcEndRev; i++)); do
 
     log=${log//\`/\\\`}
 
-	executeCommand "patch -d $dstDir -p0 < <(cd $srcDir && svn di -r$((i-1)):$i)" $ecArgs
+    if [[ "$isPatch" != 0 ]]; then
+	    executeCommand "patch -d $dstDir -p0 < <(cd $srcDir && svn di -r$((i-1)):$i)" $ecArgs
+    fi
 
+    if [[ "$isDiff" != 0 ]]; then
+        executeCommand "diff $srcDir $dstDir --exclude=.svn -r" $ecArgs
+    fi
+    
+    if [[ "$isCommit" = 0 ]]; then
+        continue
+    fi
+    
     if grep -sq "'" <<< "$log"; then
         command="svn ci $dstDir -m \"$log\""
     else
