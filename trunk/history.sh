@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <08/07/2009 23:44:28 星期五 by ahei>
+# Time-stamp: <08/24/2009 09:57:23 Monday by ahei>
 
 export TIMESTAMP_HISTDIR=~/.history
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
@@ -15,7 +15,12 @@ getUserIP()
 
 timestampHistory()
 {
-    echo -ne "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007\n"
+    if [[ "$TERM" = "eterm" || "$TERM" = "eterm-color" ]]; then
+        echo
+    else
+        echo -e "\033]0;${USER}@${HOSTNAME}:${PWD/$HOME/~}\007"
+    fi
+    
     history -a
 
     if [ ! -d "$TIMESTAMP_HISTDIR" ]; then
