@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/26/2009 15:09:37 星期三 by ahei>
+# Time-stamp: <08/26/2009 04:59:45 Wednesday by ahei>
 
 . common.sh
 
@@ -95,6 +95,7 @@ alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
 
 alias updaterc='. ~/.bashrc'
+alias erc='vi ~/.bashrc'
 
 ulimit -c unlimited
 
