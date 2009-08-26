@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <08/06/2009 09:39:25 星期四 by ahei>
+# Time-stamp: <08/26/2009 15:11:15 星期三 by ahei>
 
 alias sahei='ssh 172.0.1.208 -lahei'
 alias saheir='ssh 172.0.1.208 -lroot'
@@ -42,6 +42,8 @@ alias s85a='ssh 192.168.158.185 -lahei'
 alias remoteall='remote.sh -lroot -f /etc/shell/temp/servers/all-servers.txt'
 alias remotee='remote.sh -lroot -f /etc/shell/temp/servers/english-servers.txt'
 alias remotel='remote.sh -lroot -f /etc/shell/temp/servers/local-servers.txt'
+alias remotelu='remote.sh -lroot -f /etc/shell/temp/servers/local-ubuntu-servers.txt'
+alias remotelg='remote.sh -lroot -f /etc/shell/temp/servers/local-gentoo-servers.txt'
 alias remotes='remote.sh -lroot -f /etc/shell/temp/servers/english-search-servers.txt'
 alias remotess='remote.sh -lroot -f /etc/shell/temp/servers/english-search-servers.txt'
 
