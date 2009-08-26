@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/20/2009 18:18:34 星期四 by ahei>
+# Time-stamp: <08/26/2009 15:09:37 星期三 by ahei>
 
 . common.sh
 
@@ -53,6 +53,7 @@ alias svna='svn add'
 alias svnm='svn mkdir'
 alias svnu='svn up'
 alias svnc='svn cleanup'
+alias svncp='svn cp'
 alias svnci='svn ci -m'
 alias svnrm='svn rm'
 alias svnr='svn revert -R'
