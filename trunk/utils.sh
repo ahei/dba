@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/26/2009 04:59:45 Wednesday by ahei>
+# Time-stamp: <08/27/2009 20:07:05 星期四 by ahei>
 
 . common.sh
 
@@ -174,6 +174,16 @@ resolveLink()
     done
 
     echo "$this"
+}
+
+addkey()
+{
+    key="$1"
+    server="subkeys.pgp.net"
+    (( $# > 1 )) && server="$2"
+
+    gpg --keyserver subkeys.pgp.net --recv "$key"
+    gpg --export --armor "$key" | apt-key add -
 }
 
 # keychain
