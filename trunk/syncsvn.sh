@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/29/2009 09:43:09 Saturday by ahei>
+# Time-stamp: <08/29/2009 11:05:24 Saturday by ahei>
 
 # @file syncsvn.sh
 # @version 1.0
@@ -68,7 +68,7 @@ dstDir="."
 isPatch=1
 isCommit=1
 isDiff=0
-isAdd=0
+isAdd=1
 
 while getopts ":hvi:s:e:qnp:c:d:a:" OPT; do
     case "$OPT" in
