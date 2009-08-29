@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/22/2009 00:31:18 Saturday by ahei>
+# Time-stamp: <08/29/2009 09:43:09 Saturday by ahei>
 
 # @file syncsvn.sh
 # @version 1.0
@@ -152,6 +152,8 @@ while getopts ":hvi:s:e:qnp:c:d:a:" OPT; do
 done
 
 shift $((OPTIND - 1))
+
+(( $# < 1 )) && usage
 
 srcDir="$1"
 [ -n "$2" ] && dstDir="$2"
