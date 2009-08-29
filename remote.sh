@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <06/09/2009 16:43:32 星期二 by ahei>
+# Time-stamp: <08/29/2009 09:54:50 Saturday by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -138,6 +138,10 @@ done
 
 shift $((OPTIND - 1))
 
+sshOpts="-o StrictHostKeyChecking=no"
+ssh="ssh $sshOpts"
+scp="scp $sshOpts"
+
 if [ -z "$isCopy" ]; then
     if [ -z "$hosts" ]; then
         if [ "$#" -lt 1 ]; then
@@ -174,7 +178,7 @@ if [ -z "$isCopy" ]; then
 
     for i in `printf "$hosts"`; do
         [ -n "$user" ] && login=" -l $user"
-        executeCommand "ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
+        executeCommand "$ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
     done
 
     wait
@@ -195,7 +199,7 @@ for i in `printf "$hosts"`; do
         host="$user@$i"
     fi
 
-    executeCommand "scp -r $files $host:$dstFile 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
+    executeCommand "$scp -r $files $host:$dstFile 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
 done
 
 wait
