@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/28/2009 11:10:20 星期五 by ahei>
+# Time-stamp: <09/02/2009 14:23:10 星期三 by ahei>
 
 . common.sh
 
@@ -197,3 +197,14 @@ applyKeychain()
     fi
 }
 applyKeychain
+
+delaccount()
+{
+    user="$1"
+    shift
+    opts="$@"
+
+    userdel $opts "$user"
+
+    sed -r "/^[[:space:]]*$user[[:space:]]+ALL[[:space:]]*=[[:space:]]*\([[:space:]]*ALL[[:space:]]*\)[[:space:]]+ALL[[:space:]]*$/ d" -i".bak" /etc/sudoers
+}
