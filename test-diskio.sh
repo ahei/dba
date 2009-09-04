@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/03/2009 10:39:08 星期一 by ahei>
+# Time-stamp: <09/04/2009 11:27:29 星期五 by ahei>
 
 # @file test-diskio.sh
 # @version 1.0
@@ -35,6 +35,8 @@ Options:
         Specify count.
     -i [<INSTALL_DIR>]
         Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
+    -p TEMP_PREFIX
+        Specify prefix of mktemp command.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -45,7 +47,7 @@ EOF
 bs=1024
 count=1048576
 
-while getopts ":hvb:c:i:" OPT; do
+while getopts ":hvb:c:i:p:" OPT; do
     case "$OPT" in
         i)
             install "$OPTARG"
@@ -57,6 +59,10 @@ while getopts ":hvb:c:i:" OPT; do
         
         c)
             count="$OPTARG"
+            ;;
+
+        p)
+            tempPrefix="$OPTARG"
             ;;
         
         v)
@@ -88,7 +94,8 @@ done
 
 shift $((OPTIND - 1))
 
-tempFile=`mktemp`
+[ -n "$tempPrefix" ] && opts="-p $tempPrefix"
+tempFile=`mktemp $opts`
 
 echo "Test with bs=$bs count=$count ..."
 
