@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <09/27/2009 09:57:26 星期日 by ahei>
+# Time-stamp: <09/27/2009 10:00:25 星期日 by ahei>
 
 . common.sh
 
@@ -34,6 +34,7 @@ alias ssh='ssh -o StrictHostKeyChecking=no'
 alias type='type -a'
 alias md='mkdir'
 alias tial='tail'
+alias mroe='more'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
