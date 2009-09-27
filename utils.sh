@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <09/02/2009 14:23:10 星期三 by ahei>
+# Time-stamp: <09/27/2009 09:57:26 星期日 by ahei>
 
 . common.sh
 
@@ -13,6 +13,7 @@ alias ls='ls --color'
 alias ll='ls -l'
 alias smth='luit -encoding gb18030 ssh bbs.newsmth.net'
 alias e='emacsclient -n'
+alias ec='emacsclient -nc'
 alias cp='cp -r'
 alias grep='grep --color'
 alias mysql='mysql --pager=more --prompt="\u@\h:\d>\_"'
