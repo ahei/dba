@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <09/27/2009 10:00:25 星期日 by ahei>
+# Time-stamp: <10/13/2009 14:27:52 星期二 by ahei>
 
 . common.sh
 
@@ -33,6 +33,7 @@ alias llf='ls -l | grep "^-"'
 alias ssh='ssh -o StrictHostKeyChecking=no'
 alias type='type -a'
 alias md='mkdir'
+alias suu='sudo su'
 alias tial='tail'
 alias mroe='more'
 
