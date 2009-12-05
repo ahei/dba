@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <10/13/2009 14:27:52 星期二 by ahei>
+# Time-stamp: <2009-12-05 13:28:10 Saturday by ahei>
 
 . common.sh
 
@@ -211,3 +211,5 @@ delaccount()
 
     sed -r "/^[[:space:]]*$user[[:space:]]+ALL[[:space:]]*=[[:space:]]*\([[:space:]]*ALL[[:space:]]*\)[[:space:]]+ALL[[:space:]]*$/ d" -i".bak" /etc/sudoers
 }
+
+alias emacs='emacs -nw --debug-init'
