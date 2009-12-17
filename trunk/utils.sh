@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2009-12-15 00:12:12 Tuesday by ahei>
+# Time-stamp: <2009-12-17 14:35:12 Thursday by ahei>
 
 . common.sh
 
@@ -12,6 +12,7 @@ export EDITOR=vi
 alias ls='ls --color'
 alias ll='ls -l'
 alias smth='luit -encoding gb18030 ssh bbs.newsmth.net'
+alias asmth='luit -encoding gb18030 ssh bbs.newsmth.net -lahei0802'
 alias e='emacsclient -n'
 alias ec='emacsclient -nc'
 alias cp='cp -r'
@@ -214,3 +215,4 @@ delaccount()
 
 alias rcd='cd .. && cd - &>/dev/null'
 alias emacs='emacs -nw --debug-init'
+alias install-font='mkfontscale && mkfontdir && fc-cache'
