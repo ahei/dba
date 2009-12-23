@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <2009-12-23 15:48:35 Wednesday by ahei>
+# Time-stamp: <2009-12-23 15:51:56 Wednesday by ahei>
 
 # @version 1.0
 # @author ahei
@@ -76,7 +76,10 @@ TXN="$2"
 # Make sure that the log message contains some text.
 SVNLOOK=/usr/bin/svnlook
 $SVNLOOK log -t "$TXN" "$REPOS" | grep "[a-zA-Z0-9]" > /dev/null || \
-echo "Hi, guy, I'm ahei, you must provide log when you commit. Any questions? send email to ahei0802@126.com" 1>&2
+    {
+    echo "Hi, guy, I'm ahei, you must provide log when you commit. Any questions? send email to ahei0802@126.com" 1>&2
+    exit 1
+}
 
 # Exit on all errors.
 set -e
