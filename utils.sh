@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2009-12-17 14:35:12 Thursday by ahei>
+# Time-stamp: <2010-01-08 10:28:57 Friday by ahei>
 
 . common.sh
 
@@ -216,3 +216,14 @@ delaccount()
 alias rcd='cd .. && cd - &>/dev/null'
 alias emacs='emacs -nw --debug-init'
 alias install-font='mkfontscale && mkfontdir && fc-cache'
+
+if uname -a | grep gentoo >/dev/null; then
+	command_not_found_handle()
+    {
+		echo "-bash: $1: command not found"
+        e-file &>/dev/null
+        if [[ "$?" != 127 ]]; then
+		    e-file $1
+        fi
+	}
+fi
