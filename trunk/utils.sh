@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-01-08 10:28:57 Friday by ahei>
+# Time-stamp: <2010-01-12 09:52:26 Tuesday by ahei>
 
 . common.sh
 
@@ -141,6 +141,12 @@ delnonsvn()
 {
     dir="$1"
     svn st "$dir" | `which grep` -F '?' | xargs rm -rf
+}
+
+delsvn()
+{
+    dir="$1"
+    find $dir -name ".svn" -type d "$@" | xargs rm -rf
 }
 
 delbackup()
