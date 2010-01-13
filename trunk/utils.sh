@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-01-12 09:52:26 Tuesday by ahei>
+# Time-stamp: <2010-01-13 11:42:04 Wednesday by ahei>
 
 . common.sh
 
@@ -11,6 +11,7 @@ export EDITOR=vi
 
 alias ls='ls --color'
 alias ll='ls -l'
+alias l=ll
 alias smth='luit -encoding gb18030 ssh bbs.newsmth.net'
 alias asmth='luit -encoding gb18030 ssh bbs.newsmth.net -lahei0802'
 alias e='emacsclient -n'
@@ -63,6 +64,7 @@ alias svnci='svn ci -m'
 alias svnrm='svn rm'
 alias svnr='svn revert -R'
 alias svnl='svn log'
+alias ..='cd ..'
 svnt()
 {
     file="$@"
@@ -233,3 +235,10 @@ if uname -a | grep gentoo >/dev/null; then
         fi
 	}
 fi
+
+# 删除除某个文件外的所有文件
+rme()
+{
+    exclude="$1"
+    find -maxdepth 1 ! -name "$exclude" | xargs rm -rf
+}
