@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-01-13 11:44:31 Wednesday by ahei>
+# Time-stamp: <2010-01-13 11:46:10 Wednesday by ahei>
 
 . common.sh
 
@@ -241,5 +241,5 @@ rme()
 {
     exclude="$1"
     rmArgs="$@"
-    find -maxdepth 1 ! -name "$exclude" | xargs rm $rmArgs
+    find -mindepth 1 -maxdepth 1 ! -name "$exclude" | xargs rm $rmArgs
 }
