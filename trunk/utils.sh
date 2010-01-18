@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-01-14 14:12:49 Thursday by ahei>
+# Time-stamp: <2010-01-18 14:16:31 Monday by ahei>
 
 . common.sh
 
@@ -148,6 +148,7 @@ delnonsvn()
 delsvn()
 {
     dir="$1"
+    shift
     find $dir -name ".svn" -type d "$@" | xargs rm -rf
 }
 
