@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-01-18 14:16:31 Monday by ahei>
+# Time-stamp: <2010-02-02 15:56:37 Tuesday by ahei>
 
 . common.sh
 
@@ -167,27 +167,18 @@ genproxy()
     ssh "$ip" -l "$user" -D 8888 -N -f
 }
 
-resolveLink()
+normalizePath()
 {
-    this="$1"
+    local path="$1"
 
-    while [[ -L "$this" && -r "$this" ]]; do
-        link=$(readlink "$this")
-        link=$(normalizePath "$link")
-        
-        if [[ "${link:0:1}" = "/" ]]; then
-            this="$link"
-        else
-            dir=$(dirname "$this")
-            if [[ "$dir" != "." ]]; then
-                this="$dir/$link"
-            else
-                this="$link"
-            fi
-        fi
-    done
+    dir=$(dirname "$path")
+    if [[ "$dir" != "." ]]; then
+        path=$dir/$(basename "$path")
+    else
+        path=$(basename "$path")
+    fi
 
-    echo "$this"
+    echo "$path"
 }
 
 addkey()
