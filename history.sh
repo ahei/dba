@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Time-stamp: <08/24/2009 09:57:23 Monday by ahei>
+# Time-stamp: <2010-02-22 10:25:58 Monday by ahei>
+
+# @version 1.0
+# @author ahei
 
 export TIMESTAMP_HISTDIR=~/.history
 export TIMESTAMP_HISTFILE="$TIMESTAMP_HISTDIR/.history_timestamp"
