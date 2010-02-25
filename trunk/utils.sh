@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-02-02 15:56:37 Tuesday by ahei>
+# Time-stamp: <2010-02-23 16:35:59 Tuesday by ahei>
 
 . common.sh
 
@@ -236,4 +236,10 @@ rme()
     rmArgs="$@"
     exclude=`sed -r "s#(.*)/#\1#g" <<< "$exclude"`
     find -mindepth 1 -maxdepth 1 ! -name "$exclude" | xargs rm $rmArgs
+}
+
+# 显示内存
+mem()
+{
+    echo $(bce $(grep "MemTotal:" /proc/meminfo | awk '{print $2}')/1024/1024)G
 }
