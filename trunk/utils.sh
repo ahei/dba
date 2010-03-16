@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-02-23 16:35:59 Tuesday by ahei>
+# Time-stamp: <2010-03-15 12:53:51 Monday by ahei>
 
 . common.sh
 
@@ -8,6 +8,7 @@ export PS4='+$LINENO '
 export HISTSIZE=9999999
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\h\[\033[01;31m\]:\[\e[33m\]\w\[\e[0m\]\$ '
 export EDITOR=vi
+export LESS="-FXs"
 
 alias ls='ls --color'
 alias ll='ls -l'
@@ -20,7 +21,7 @@ alias cp='cp -r'
 alias grep='grep --color'
 alias mysql='mysql --pager=more --prompt="\u@\h:\d>\_"'
 alias watch='watch -n 1 -d'
-alias eman='man -M /usr/share/man/'
+alias man='LESS=-X man -M /usr/share/man/'
 alias cman='man -M /usr/share/man/zh_CN/'
 alias utol="tr '[A-Z]' '[a-z]'"
 alias trim='sed -r "s/^[[:space:]]*|[[:space:]]*$//g"'
