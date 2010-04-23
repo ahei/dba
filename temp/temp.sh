@@ -1,19 +1,19 @@
 #!/bin/sh
 
-# Time-stamp: <2010-02-25 10:01:09 Thursday by ahei>
+# Time-stamp: <2010-04-23 17:57:03 Friday by ahei>
 
-alias sahei='ssh 172.0.1.208 -lahei'
-alias saheir='ssh 172.0.1.208 -lroot'
-alias s48='ssh 172.0.1.248 -lroot'
-alias s48a='ssh 172.0.1.248 -lahei'
-alias s49='ssh 172.0.1.249 -lahei'
-alias s49r='ssh 172.0.1.249 -lroot'
-alias s50='ssh 172.0.1.250 -lroot'
-alias s51='ssh 172.0.1.251 -lroot'
-alias s52='ssh 172.0.1.252 -lroot'
-alias s50a='ssh 172.0.1.250 -lahei'
-alias s51a='ssh 172.0.1.251 -lahei'
-alias s52a='ssh 172.0.1.252 -lahei'
+alias sahei='ssh 172.0.8.208 -lahei'
+alias saheir='ssh 172.0.8.208 -lroot'
+alias s48='ssh 172.0.8.248 -lroot'
+alias s48a='ssh 172.0.8.248 -lahei'
+alias s49='ssh 172.0.8.249 -lahei'
+alias s49r='ssh 172.0.8.249 -lroot'
+alias s50='ssh 172.0.8.250 -lroot'
+alias s51='ssh 172.0.8.251 -lroot'
+alias s52='ssh 172.0.8.252 -lroot'
+alias s50a='ssh 172.0.8.250 -lahei'
+alias s51a='ssh 172.0.8.251 -lahei'
+alias s52a='ssh 172.0.8.252 -lahei'
 
 alias s61='ssh 192.168.158.161 -lroot'
 alias s61a='ssh 192.168.158.161 -lahei'
