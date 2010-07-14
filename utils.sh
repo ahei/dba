@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-03-15 12:53:51 Monday by ahei>
+# Time-stamp: <2010-07-14 10:36:41 Wednesday by taoshanwen>
 
 . common.sh
 
@@ -10,7 +10,7 @@ export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\
 export EDITOR=vi
 export LESS="-FXs"
 
-alias ls='ls --color'
+alias ls='ls --color -N --show-control-chars'
 alias ll='ls -l'
 alias l=ll
 alias smth='luit -encoding gb18030 ssh bbs.newsmth.net'
