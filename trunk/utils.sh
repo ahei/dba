@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-07-14 10:36:41 Wednesday by taoshanwen>
+# Time-stamp: <2010-08-03 09:52:58 Tuesday by taoshanwen>
 
 . common.sh
 
@@ -244,3 +244,8 @@ mem()
 {
     echo $(bce $(grep "MemTotal:" /proc/meminfo | awk '{print $2}')/1024/1024)G
 }
+
+terminalFile=`which gnome-terminal 2>/dev/null`
+if [ $? = 0 ]; then
+    ln -sf "$terminalFile" /usr/bin/terminal
+fi
