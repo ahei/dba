@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Time-stamp: <2010-08-03 09:52:58 Tuesday by taoshanwen>
+# Time-stamp: <2010-09-06 14:25:59 Monday by taoshanwen>
 
 . common.sh
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
-export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\h\[\033[01;31m\]:\[\e[33m\]\w\[\e[0m\]\$ '
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\H\[\033[01;31m\] \[\e[33m\]\w\[\e[0m\]\$ '
 export EDITOR=vi
 export LESS="-FXs"
 
