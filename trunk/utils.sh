@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-09-06 14:25:59 Monday by taoshanwen>
+# Time-stamp: <2010-09-12 14:37:11 Sunday by taoshanwen>
 
 . common.sh
 
@@ -66,6 +66,11 @@ alias svnrm='svn rm'
 alias svnr='svn revert -R'
 alias svnl='svn log'
 alias ..='cd ..'
+
+# url encode
+alias url='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.quote(\"\".join(a))"'
+# url decode
+alias unurl='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.unquote(\"\".join(a))"'
 svnt()
 {
     file="$@"
