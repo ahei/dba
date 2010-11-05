@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-09-12 14:37:11 Sunday by taoshanwen>
+# Time-stamp: <2010-11-05 13:28:21 Friday by taoshanwen>
 
 . common.sh
 
@@ -18,7 +18,7 @@ alias asmth='luit -encoding gb18030 ssh bbs.newsmth.net -lahei0802'
 alias e='emacsclient -n'
 alias ec='emacsclient -nc'
 alias cp='cp -r'
-alias grep='grep --color'
+alias grep='egrep --color'
 alias mysql='mysql --pager=more --prompt="\u@\h:\d>\_"'
 alias watch='watch -n 1 -d'
 alias man='LESS=-X man -M /usr/share/man/'
@@ -249,8 +249,3 @@ mem()
 {
     echo $(bce $(grep "MemTotal:" /proc/meminfo | awk '{print $2}')/1024/1024)G
 }
-
-terminalFile=`which gnome-terminal 2>/dev/null`
-if [ $? = 0 ]; then
-    ln -sf "$terminalFile" /usr/bin/terminal
-fi

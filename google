@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Time-stamp: <2010-10-12 23:12:09 Tuesday by taoshanwen>
+
+# @version 1.0
+# @author ahei
+
+chrome http://google.com

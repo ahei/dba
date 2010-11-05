@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <08/21/2009 11:24:23 Friday by ahei>
+# Time-stamp: <2010-10-25 11:41:24 Monday by taoshanwen>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -88,6 +88,7 @@ fi
 
 ln -sf "${home}"/.mostrc ~
 ln -sf "${home}"/.toprc ~
+ln -sf "${home}"/.screenrc ~
 
 writeToFile ". $home/utils.sh" "$profile"
 writeToFile ". $home/history.sh" "$profile"
@@ -107,3 +108,9 @@ cp "$home"/temp/lukeall-*.jar "$installDir"
 "$home"/backupsvn.sh -i "$installDir"
 "$home"/test-diskio.sh -i "$installDir"
 "$home"/syncsvn.sh -i "$installDir"
+cp baidu baike google "$installDir"
+
+terminalFile=`which gnome-terminal 2>/dev/null`                                                                                                              
+if [ $? = 0 ]; then
+    ln -sf "$terminalFile" /usr/bin/terminal
+fi
