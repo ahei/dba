@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Time-stamp: <08/07/2009 17:08:12 星期五 by ahei>
+# Time-stamp: <2010-11-28 12:03:46 Sunday by taoshanwen>
 
 # @file svntag
 # @version 1.0
@@ -233,7 +233,6 @@ if [[ ! -e "$tagsDir" ]]; then
     else
         executeCommand "svn mkdir $tagsDir" "$isExecute" "$isQuiet" "isStop"
     fi
-
 fi
 
 executeCommand "svn cp ${trunkDir} ${tagsDir}/${tagName}" $ecArgs
