@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-10-25 11:41:24 Monday by taoshanwen>
+# Time-stamp: <2011-01-20 16:27:53 Thursday by taoshanwen>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -108,7 +108,7 @@ cp "$home"/temp/lukeall-*.jar "$installDir"
 "$home"/backupsvn.sh -i "$installDir"
 "$home"/test-diskio.sh -i "$installDir"
 "$home"/syncsvn.sh -i "$installDir"
-cp baidu baike google "$installDir"
+cp baidu baike google cmb "$installDir"
 
 terminalFile=`which gnome-terminal 2>/dev/null`                                                                                                              
 if [ $? = 0 ]; then

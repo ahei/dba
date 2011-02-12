@@ -54,12 +54,17 @@ executeCommand()
 normalizePath()
 {
     local path="$1"
+    local dir=$(dirname "$path")
+    local basename=$(basename "$path")
 
-    dir=$(dirname "$path")
-    if [[ "$dir" != "." ]]; then
-        path=$dir/$(basename "$path")
+    if [ ! -r "$path" ]; then
+        if [[ "$dir" != "." ]]; then
+            path="$dir/$basename"
+        else
+            path="$basename"                                                                                                               
+        fi
     else
-        path=$(basename "$path")
+        path="$(cd "$dir" && pwd)/$basename"
     fi
 
     echo "$path"

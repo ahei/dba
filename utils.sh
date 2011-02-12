@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2010-11-05 13:28:21 Friday by taoshanwen>
+# Time-stamp: <2010-12-15 18:30:26 Wednesday by taoshanwen>
 
 . common.sh
 
@@ -39,6 +39,10 @@ alias md='mkdir'
 alias suu='sudo su'
 alias tial='tail'
 alias mroe='more'
+function mcd()
+{
+    mkdir $1 -p && cd $1
+}
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
