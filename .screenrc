@@ -1,0 +1,4 @@
+# escape ^`^`
+escape ^^^^
+# 关闭烦人的启动画面
+startup_message off
