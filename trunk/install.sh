@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2011-01-20 16:27:53 Thursday by taoshanwen>
+# Time-stamp: <2011-02-18 17:58:16 Friday by taoshanwen>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -92,7 +92,6 @@ ln -sf "${home}"/.screenrc ~
 
 writeToFile ". $home/utils.sh" "$profile"
 writeToFile ". $home/history.sh" "$profile"
-writeToFile ". $home/temp/temp.sh" "$profile"
 
 IFS=$'\n'
 for i in `cat "$home"/temp/temp-hosts`; do
