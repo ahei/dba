@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Time-stamp: <2010-12-15 18:30:26 Wednesday by taoshanwen>
+# Time-stamp: <2011-02-18 18:02:32 Friday by taoshanwen>
 
-. common.sh
+. common.sh 2>/dev/null
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
