@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2010-02-22 10:25:58 Monday by ahei>
+# Time-stamp: <2011-03-01 11:41:29 Tuesday by taoshanwen>
 
 # @version 1.0
 # @author ahei
@@ -32,9 +32,9 @@ timestampHistory()
     fi
 
     dateTime=`date '+%F %A %T'`
-    date=`date +%Y%m%d`
+    curDate=`date +%Y%m%d`
 
-    histFile="$TIMESTAMP_HISTFILE.$date"
+    histFile="$TIMESTAMP_HISTFILE.$curDate"
     read x cmd <<< `history 1`
     if [ -r "$histFile" ]; then
         if [ "$TIMESTAMP_HIST_DUP" = 0 ]; then
