@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Time-stamp: <08/29/2009 09:54:50 Saturday by ahei>
+# Time-stamp: <2011-05-28 18:02:10 Saturday by taoshanwen>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -45,6 +45,8 @@ Options:
     -g  Execute command foreground.
     -i [<INSTALL_DIR>]
         Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
+    -o SSH_OPTIONS
+        Set ssh options.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -56,7 +58,7 @@ isExecute=1
 IFS=$'\n'
 background="&"
 
-while getopts ":hvH:f:F:d:l:nqc:sig" OPT; do
+while getopts ":hvH:f:F:d:l:nqc:sigo:" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"
@@ -112,6 +114,10 @@ while getopts ":hvH:f:F:d:l:nqc:sig" OPT; do
         i)
             install
             ;;
+
+        o)
+            sshOptions="$OPTARG"
+            ;;
         
         v)
             version
@@ -138,7 +144,7 @@ done
 
 shift $((OPTIND - 1))
 
-sshOpts="-o StrictHostKeyChecking=no"
+sshOpts="-o StrictHostKeyChecking=no $sshOptions"
 ssh="ssh $sshOpts"
 scp="scp $sshOpts"
 

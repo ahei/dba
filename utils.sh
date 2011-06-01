@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2011-02-18 18:02:32 Friday by taoshanwen>
+# Time-stamp: <2011-05-05 16:29:30 Thursday by taoshanwen>
 
 . common.sh 2>/dev/null
 
@@ -226,6 +226,8 @@ delaccount()
 alias rcd='cd .. && cd - &>/dev/null'
 alias emacs='emacs -nw --debug-init'
 alias install-font='mkfontscale && mkfontdir && fc-cache'
+
+alias all='awk "{sum += $ 0}END{print sum}"'
 
 if uname -a | grep gentoo >/dev/null; then
 	command_not_found_handle()
