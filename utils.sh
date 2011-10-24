@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2011-05-05 16:29:30 Thursday by taoshanwen>
+# Time-stamp: <2011-06-01 20:57:26 Wednesday by taoshanwen>
 
 . common.sh 2>/dev/null
 
@@ -132,9 +132,17 @@ export LESS_TERMCAP_ue=$'\E[01;36m'
 # green
 export LESS_TERMCAP_us=$'\E[01;32m'
 
+alias espeak='espeak 2>/dev/null'
+
 bce()
 {
 	echo "scale=3; $@" | bc
+}
+
+ebce()
+{
+    espeak <<< "$@="
+    echo "scale=3; $@" | bc | espeak
 }
 
 # pkill with "-9"
