@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2011-02-18 17:58:16 Friday by taoshanwen>
+# Time-stamp: <2012-03-06 18:34:06 Tuesday by taoshanwen>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -93,11 +93,6 @@ ln -sf "${home}"/.screenrc ~
 writeToFile ". $home/utils.sh" "$profile"
 writeToFile ". $home/history.sh" "$profile"
 
-IFS=$'\n'
-for i in `cat "$home"/temp/temp-hosts`; do
-    writeToFile "$i" "$HOSTS_FILE"
-done
-    
 cp "$home"/common.sh "$installDir"
 cp "$home"/temp/luke "$installDir"
 cp "$home"/temp/lukeall-*.jar "$installDir"
@@ -107,7 +102,7 @@ cp "$home"/temp/lukeall-*.jar "$installDir"
 "$home"/backupsvn.sh -i "$installDir"
 "$home"/test-diskio.sh -i "$installDir"
 "$home"/syncsvn.sh -i "$installDir"
-cp baidu baike google cmb "$installDir"
+cp baidu baike google cmb json "$installDir"
 
 terminalFile=`which gnome-terminal 2>/dev/null`                                                                                                              
 if [ $? = 0 ]; then

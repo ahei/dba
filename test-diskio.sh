@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <09/04/2009 11:27:29 星期五 by ahei>
+# Time-stamp: <2012-03-05 17:07:01 Monday by taoshanwen>
 
 # @file test-diskio.sh
 # @version 1.0
@@ -96,6 +96,7 @@ shift $((OPTIND - 1))
 
 [ -n "$tempPrefix" ] && opts="-p $tempPrefix"
 tempFile=`mktemp $opts`
+tempFile2=`mktemp $opts`
 
 echo "Test with bs=$bs count=$count ..."
 
@@ -106,4 +107,6 @@ echo "Test read performance ..."
 dd if="$tempFile" of=/dev/null bs="$bs" count="$count"
 
 echo "Test read and write performance ..."
-dd if="$tempFile" of=`mktemp` bs="$bs" count="$count"
+dd if="$tempFile" of="$tempFile2" bs="$bs" count="$count"
+
+rm -rf "$tempFile" "$tempFile2"
