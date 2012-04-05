@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Time-stamp: <2012-01-11 19:31:12 Wednesday by taoshanwen>
+
+# @version 1.0
+# @author ahei
+
+import sys
+import json
+
+def toUtf8(s):
+    """s也可能是int等类型."""
+    
+    if isinstance(s, unicode):
+        return s.encode("utf8", "ignore")
+
+    return str(s)
+
+def prettyObject(o, args = {"indent":4, "ensure_ascii":False}):
+    return toUtf8(json.dumps(o, **args))
+
+def main():
+    if len(sys.argv) == 1:
+        infile = sys.stdin
+        outfile = sys.stdout
+    elif len(sys.argv) == 2:
+        infile = open(sys.argv[1], 'rb')
+        outfile = sys.stdout
+    else:
+        raise SystemExit(sys.argv[0] + " [infile]")
+    
+    try:
+        obj = json.load(infile)
+    except ValueError, e:
+        raise SystemExit(e)
+
+    print prettyObject(obj)
+
+if __name__ == '__main__':
+    main()

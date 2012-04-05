@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2011-06-01 20:57:26 Wednesday by taoshanwen>
+# Time-stamp: <2012-02-27 15:02:24 Monday by taoshanwen>
 
 . common.sh 2>/dev/null
 
@@ -71,8 +71,13 @@ alias svnr='svn revert -R'
 alias svnl='svn log'
 alias ..='cd ..'
 
+if `colordiff -v &>/dev/null`; then
+    alias diff=colordiff
+    alias svndi='svn di --diff-cmd=colordiff'
+fi
+
 # url encode
-alias url='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.quote(\"\".join(a))"'
+alias url='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.quote(\"\".join(a), \":/@\")"'
 # url decode
 alias unurl='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.unquote(\"\".join(a))"'
 svnt()

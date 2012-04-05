@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2010-11-26 10:28:04 Friday by taoshanwen>
+# Time-stamp: <2012-03-06 18:32:49 Tuesday by taoshanwen>
 
 # @version 1.0
 # @author ahei
 
-chrome http://google.com.hk
+chrome https://google.com.hk
