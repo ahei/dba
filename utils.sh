@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2012-02-27 15:02:24 Monday by taoshanwen>
+# Time-stamp: <2013-09-18 15:52:30 Wednesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -39,6 +39,7 @@ alias md='mkdir'
 alias suu='sudo su'
 alias tial='tail'
 alias mroe='more'
+alias tccr='tcc -run'
 function mcd()
 {
     mkdir $1 -p && cd $1
@@ -179,7 +180,7 @@ delbackup()
 {
     dir="$1"
     shift 1
-    find $dir "$@" '(' -name "*~" -o -name "#*#" ')' -type f | xargs rm -rf
+    find $dir "$@" '(' -name "*~" -o -name "#*#" ')' -type f -exec rm -rf '{}' ';'
 }
 
 genproxy()
@@ -190,17 +191,62 @@ genproxy()
     ssh "$ip" -l "$user" -D 8888 -N -f
 }
 
+joinPath()
+{
+    local path="$1"
+    local name="$2"
+
+    if [[ "${path:-1:1}" = "/" ]]; then
+        echo "${path}${name}"
+    else
+        echo "${path}/${name}"
+    fi
+}
+
+baseName()
+{
+    local path="$1"
+
+    if [[ "$path" = ".." ]] || [[ "$path" = "/" ]]; then
+        echo "."
+    else
+        basename "$path"
+    fi
+}
+
+dirName()
+{
+    local path="$1"
+
+    if [[ "$path" = ".." ]]; then
+        echo ".."
+    else
+        dirname "$path"
+    fi
+}
+
 normalizePath()
 {
     local path="$1"
 
-    dir=$(dirname "$path")
-    if [[ "$dir" != "." ]]; then
-        path=$dir/$(basename "$path")
-    else
-        path=$(basename "$path")
+    if [ -d "$path" ]; then
+        echo "$(cd $path && pwd)"
+        return
     fi
 
+    local dir=$(dirname "$path")
+    local basename=$(basename "$path")
+    
+    if [ -r "$dir" ]; then
+        dir="$(cd $dir && pwd)"
+    fi
+
+    if [[ "$basename" != "." ]]; then
+        path="$(joinPath $dir $basename)"
+    else
+        path="$dir"
+    fi
+    
     echo "$path"
 }
 
@@ -237,7 +283,6 @@ delaccount()
 }
 
 alias rcd='cd .. && cd - &>/dev/null'
-alias emacs='emacs -nw --debug-init'
 alias install-font='mkfontscale && mkfontdir && fc-cache'
 
 alias all='awk "{sum += $ 0}END{print sum}"'
@@ -267,4 +312,68 @@ rme()
 mem()
 {
     echo $(bce $(grep "MemTotal:" /proc/meminfo | awk '{print $2}')/1024/1024)G
+}
+
+y()
+{
+    local optInd=1
+    local delay=.1
+    local loop
+    
+    OPTIND=1
+    
+    while getopts ":d:l:" OPT; do
+        case "$OPT" in
+            d)
+                delay="$OPTARG"
+                let optInd+=2
+                ;;
+
+            l)
+                loop="$OPTARG"
+                let optInd+=2
+                ;;
+        esac
+    done
+    
+    shift $((optInd - 1))
+
+    local str="$@"
+    local i=0
+    
+    [ "$str" ] || str=y
+
+    while [ ! "$loop" ] || ((i < loop)); do
+        echo "$str"
+        sleep "$delay"
+
+        let i++
+    done
+}
+
+efind()
+{
+    local len="${#@}"
+
+    if [ "$len" = 1 ]; then
+        find -regextype posix-extended -regex "$@"
+        return
+    fi
+
+    local dir="$1"
+
+    shift
+    find "$dir" -regextype posix-extended -regex "$@"
+}
+
+efindd()
+{
+    local len="${#@}"
+    
+    if [ "$len" = 1 ]; then
+        find -regextype posix-extended -regex "$@"
+        return
+    fi
+    
+    find "${@:1:len-1}" -regextype posix-extended -regex "${@:len}"
 }
