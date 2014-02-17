@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2013-09-18 15:52:30 Wednesday by ahei>
+# Time-stamp: <2013-12-26 11:04:39 Thursday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -10,7 +10,7 @@ export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\
 export EDITOR=vi
 export LESS="-FXs"
 
-alias ls='ls --color -N --show-control-chars'
+alias ls='ls --color=auto -N --show-control-chars'
 alias ll='ls -l'
 alias l=ll
 alias smth='luit -encoding gb18030 ssh bbs.newsmth.net'
@@ -29,6 +29,7 @@ alias TRIM="trim | tr '[A-Z]' '[a-z]'"
 alias jip='java -javaagent:/usr/share/jip/profile/profile.jar -Dprofile.properties=/usr/share/jip/profile/profile.properties'
 alias emerge='emerge -u'
 alias psgrep='ps -ef | grep'
+alias netgrep='netstat -nap | grep'
 alias nsgrep='netstat -nap | grep'
 alias scp='scp -r -o StrictHostKeyChecking=no'
 alias lld='ls -l | grep "^d"'
@@ -72,6 +73,13 @@ alias svnr='svn revert -R'
 alias svnl='svn log'
 alias ..='cd ..'
 
+alias gits='git status'
+alias gitc='git checkout'
+alias gitl='git log --name-status'
+alias gitp='git pull'
+alias gitd='git diff'
+alias gitb='git branch'
+
 if `colordiff -v &>/dev/null`; then
     alias diff=colordiff
     alias svndi='svn di --diff-cmd=colordiff'
@@ -113,6 +121,11 @@ alias antt='ant test'
 alias makec='make clean'
 alias maket='make check'
 alias makei='make install'
+
+alias mvnc='mvn clean'
+alias mvnm='mvn compile'
+alias mvnp='mvn package'
+alias mvni='mvn install'
 
 alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
@@ -376,4 +389,46 @@ efindd()
     fi
     
     find "${@:1:len-1}" -regextype posix-extended -regex "${@:len}"
+}
+
+# run java class
+# usage: runjava -p PATH CLASS [ARGUMENTS]
+# -p JAR_FILE | JAR_PATH
+runjava()
+{
+    local optInd=1
+    local paths
+    local classpath
+    
+    OPTIND=1
+    
+    while getopts ":p:" OPT; do
+        case "$OPT" in
+            p)
+                paths="$OPTARG"
+                let optInd+=2
+                ;;
+        esac
+    done
+
+    if [ "$paths" ]; then
+        for p in $paths; do
+            # jar目录
+            for jar in $(ls $p/*.jar 2>/dev/null); do
+                classpath=$classpath:$jar
+            done
+            classpath=$classpath:$p
+        done
+    fi
+    
+    shift $((optInd - 1))
+
+    local class="$1"
+    local command="java"
+
+    if [ "$classpath" ]; then
+        command="$command -cp $classpath"
+    fi
+
+    $command $@
 }
