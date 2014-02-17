@@ -34,10 +34,10 @@ install()
 
 executeCommand()
 {
-    _command="$1"
-    _isExecute="$2"
-    _isQuiet="$3"
-    _isStop="$4"
+    local _command="$1"
+    local _isExecute="$2"
+    local _isQuiet="$3"
+    local _isStop="$4"
     
     [ "$_isQuiet" != 1 ] && echoo "Executing command \`${_command}' ..."
     if [ "${_isExecute}" != "0" ]; then
