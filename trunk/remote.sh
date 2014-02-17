@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Time-stamp: <2011-05-28 18:02:10 Saturday by taoshanwen>
+# Time-stamp: <2013-12-26 20:13:00 Thursday by ahei>
 
 readonly PROGRAM_NAME="remote.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -33,14 +33,14 @@ Options:
         Add host.
     -f <HOSTS_FILE>
         Add the hosts file.
-    -F <FILE>
-        Add the file to copy.
+    -F <LOCAL_FILE>
+        Add the local file to copy.
     -d <DST_FILE>
         Set the destination file.
     -l <LOGIN_NAME>
         Specifies the user to log in as on the remote machine.
     -n  Do not really execute command, only print command to execute.
-    -q  Quiet, do not write process info to standard output.
+    -V  Output command to be executed to standard output.
     -s  When execute commands failed, stop execute other commands and exit.
     -g  Execute command foreground.
     -i [<INSTALL_DIR>]
@@ -57,8 +57,9 @@ EOF
 isExecute=1
 IFS=$'\n'
 background="&"
+isQuiet=1
 
-while getopts ":hvH:f:F:d:l:nqc:sigo:" OPT; do
+while getopts ":hvH:f:F:d:l:nVc:sigo:" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"
@@ -95,8 +96,8 @@ while getopts ":hvH:f:F:d:l:nqc:sigo:" OPT; do
             isExecute=0
             ;;
 
-        q)
-            isQuiet=1
+        V)
+            isQuiet=0
             ;;
 
         c)

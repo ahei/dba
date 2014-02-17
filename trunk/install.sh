@@ -89,6 +89,7 @@ fi
 ln -sf "${home}"/.mostrc ~
 ln -sf "${home}"/.toprc ~
 ln -sf "${home}"/.screenrc ~
+ln -sf "${home}"/.xmodmap ~
 
 writeToFile ". $home/utils.sh" "$profile"
 writeToFile ". $home/history.sh" "$profile"
