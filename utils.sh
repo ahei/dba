@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2013-12-26 11:04:39 Thursday by ahei>
+# Time-stamp: <2014-06-17 10:16:40 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -79,6 +79,7 @@ alias gitl='git log --name-status'
 alias gitp='git pull'
 alias gitd='git diff'
 alias gitb='git branch'
+alias pushmaster='git push origin master'
 
 if `colordiff -v &>/dev/null`; then
     alias diff=colordiff
@@ -119,13 +120,20 @@ alias antj='ant jar'
 alias antt='ant test'
 
 alias makec='make clean'
-alias maket='make check'
+alias maket='make test'
 alias makei='make install'
 
 alias mvnc='mvn clean'
 alias mvnm='mvn compile'
 alias mvnp='mvn package'
 alias mvni='mvn install'
+alias mvnt='mvn test -DskipTests=false'
+alias mvnd='mvn deploy'
+alias mvnmu='mvn compile -U'
+alias mvnpu='mvn package -U'
+alias mvniu='mvn install -U'
+alias mvntu='mvn test -DskipTests=false -U'
+alias mvndu='mvn deploy -U'
 
 alias path="echo -e ${PATH//:/'\n'}"
 alias cpath="echo -e ${CLASSPATH//:/'\n'}"
@@ -423,9 +431,11 @@ runjava()
     
     shift $((optInd - 1))
 
-    local class="$1"
     local command="java"
-
+    if [ $1 == "--" ]; then
+        shift
+    fi
+    
     if [ "$classpath" ]; then
         command="$command -cp $classpath"
     fi
