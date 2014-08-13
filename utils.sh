@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2014-06-17 10:16:40 Tuesday by ahei>
+# Time-stamp: <2014-08-13 11:43:15 Wednesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -80,6 +80,19 @@ alias gitp='git pull'
 alias gitd='git diff'
 alias gitb='git branch'
 alias pushmaster='git push origin master'
+
+mmaster()
+{
+    local branch=$(gitb | fgrep '*' | cut -d " " -f2)
+    
+    gitc master && gitp && gitc $branch && git merge master
+}
+
+alias aheif='gitc ahei-feature'
+alias aheim='gitc xmpush-ahei 2>/dev/null || gitc ahei'
+alias master='gitc master'
+alias pushf='aheif && git push origin ahei-feature'
+alias pushm='aheim && ( git push origin ahei 2>/dev/null || git push origin xmpush-ahei )'
 
 if `colordiff -v &>/dev/null`; then
     alias diff=colordiff
