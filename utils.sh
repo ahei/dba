@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2014-08-13 11:43:15 Wednesday by ahei>
+# Time-stamp: <2014-08-19 10:59:19 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -19,6 +19,7 @@ alias e='emacsclient -n'
 alias ec='emacsclient -nc'
 alias cp='cp -r'
 alias grep='egrep --color'
+alias fgrep='fgrep --color'
 alias mysql='mysql --pager=more --prompt="\u@\h:\d>\_"'
 alias watch='watch -n 1 -d'
 alias man='LESS=-X man -M /usr/share/man/'
