@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2014-08-19 10:59:19 Tuesday by ahei>
+# Time-stamp: <2014-08-21 10:53:58 Thursday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -80,7 +80,15 @@ alias gitl='git log --name-status'
 alias gitp='git pull'
 alias gitd='git diff'
 alias gitb='git branch'
+alias gitr='git checkout -- .'
 alias pushmaster='git push origin master'
+
+pushc()
+{
+    local branch=$(gitb | fgrep '*' | cut -d " " -f2)
+
+    git push origin $branch
+}
 
 mmaster()
 {
