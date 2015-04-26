@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Time-stamp: <2014-08-21 10:53:58 Thursday by ahei>
+# Time-stamp: <2015-04-23 09:58:25 Thursday by ahei>
 
 . common.sh 2>/dev/null
 
 export PS4='+$LINENO '
 export HISTSIZE=9999999
-export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\H\[\033[01;31m\] \[\e[33m\]\w\[\e[0m\]\$ '
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\H\[\033[01;31m\] \[\e[33m\]\w\[\e[0m\] \$ '
 export EDITOR=vi
 export LESS="-FXs"
 
@@ -81,6 +81,8 @@ alias gitp='git pull'
 alias gitd='git diff'
 alias gitb='git branch'
 alias gitr='git checkout -- .'
+alias gstash='git stash'
+alias gstashp='git stash pop'
 alias pushmaster='git push origin master'
 
 pushc()
@@ -445,7 +447,7 @@ runjava()
         for p in $paths; do
             # jar目录
             for jar in $(ls $p/*.jar 2>/dev/null); do
-                classpath=$classpath:$jar
+                    classpath=$classpath:$jar
             done
             classpath=$classpath:$p
         done
@@ -459,7 +461,7 @@ runjava()
     fi
     
     if [ "$classpath" ]; then
-        command="$command -cp $classpath"
+        command="$command -cp ${classpath:1}"
     fi
 
     $command $@

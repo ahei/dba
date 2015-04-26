@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2012-03-06 18:34:06 Tuesday by taoshanwen>
+# Time-stamp: <2015-01-06 10:55:30 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -90,6 +90,7 @@ ln -sf "${home}"/.mostrc ~
 ln -sf "${home}"/.toprc ~
 ln -sf "${home}"/.screenrc ~
 ln -sf "${home}"/.xmodmap ~
+ln -sf "${home}"/ssh-config ~/.ssh/config
 
 writeToFile ". $home/utils.sh" "$profile"
 writeToFile ". $home/history.sh" "$profile"
