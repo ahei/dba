@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-01-06 10:55:30 Tuesday by ahei>
+# Time-stamp: <2015-05-04 15:57:19 Monday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -110,3 +110,6 @@ terminalFile=`which gnome-terminal 2>/dev/null`
 if [ $? = 0 ]; then
     ln -sf "$terminalFile" /usr/bin/terminal
 fi
+
+mkdir -p ~/.config/terminator/
+ln -sf "${home}"/terminator-config ~/.config/terminator/config
