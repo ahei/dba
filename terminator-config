@@ -1,11 +1,14 @@
 [global_config]
-  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
-  window_state = 'fullscreen'
+  enabled_plugins = InactivityWatch, CustomCommandsMenu, TestPlugin, ActivityWatch, TerminalShot, LaunchpadCodeURLHandler, APTURLHandler, MavenPluginURLHandler, LaunchpadBugURLHandler
+  window_state = maximise
+  title_transmit_bg_color = "#ff0000"
 [keybindings]
   toggle_zoom = <Ctrl><Shift>u
   cycle_next = <Ctrl><Shift>i
+  paste = <Ctrl><Shift>y
   next_tab = <Ctrl><Shift>n
   new_terminator = None
+  new_window = None
   prev_tab = <Ctrl><Shift>p
   move_tab_right = <Ctrl>colon
   close_term = <Ctrl><Shift>k
@@ -13,8 +16,7 @@
   new_tab = <Ctrl><Shift>m
   split_vert = <Ctrl><Shift>j
   go_next = None
-  paste = <Ctrl><Shift>y
-  new_window = None
+  hide_window = <Super>space
 [profiles]
   [[default]]
     use_system_font = False

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-04 15:57:19 Monday by ahei>
+# Time-stamp: <2015-05-05 20:55:05 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -90,6 +90,7 @@ ln -sf "${home}"/.mostrc ~
 ln -sf "${home}"/.toprc ~
 ln -sf "${home}"/.screenrc ~
 ln -sf "${home}"/.xmodmap ~
+ln -sf "${home}"/.tmux.conf ~
 ln -sf "${home}"/ssh-config ~/.ssh/config
 
 writeToFile ". $home/utils.sh" "$profile"
