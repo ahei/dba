@@ -12,6 +12,11 @@ export TIMESTAMP_HIST_PWD
 
 getUserIP()
 {
+	if [ "$(uname)" = "Darwin" ]; then
+		echo ""
+		return
+	fi
+
     IFS=$'/' read x x pts <<< "`tty`"
     who | grep "$pts" | sed -r 's/^.*\((.*)\)$/\1/g'
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-04-23 09:58:25 Thursday by ahei>
+# Time-stamp: <2015-05-16 21:31:56 Saturday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -57,7 +57,11 @@ alias aptgu='aptg upgrade'
 alias aptc='apt-cache'
 alias aptcs='aptc search'
 alias aptf='apt-file'
-
+if [ "$(uname)" = "Darwin" ]; then
+    alias aptcs='brew search'
+    alias aptgi='brew install'
+fi
+    
 alias svni='svn info'
 alias svns='svn st'
 alias svnh='svn help'
@@ -95,7 +99,7 @@ pushc()
 mmaster()
 {
     local branch=$(gitb | fgrep '*' | cut -d " " -f2)
-    
+
     gitc master && gitp && gitc $branch && git merge master
 }
 
@@ -187,7 +191,7 @@ alias espeak='espeak 2>/dev/null'
 
 bce()
 {
-	echo "scale=3; $@" | bc
+    echo "scale=3; $@" | bc
 }
 
 ebce()
@@ -232,7 +236,7 @@ genproxy()
 {
     ip="$1"
     user="$2"
-    
+
     ssh "$ip" -l "$user" -D 8888 -N -f
 }
 
@@ -281,7 +285,7 @@ normalizePath()
 
     local dir=$(dirname "$path")
     local basename=$(basename "$path")
-    
+
     if [ -r "$dir" ]; then
         dir="$(cd $dir && pwd)"
     fi
@@ -291,7 +295,7 @@ normalizePath()
     else
         path="$dir"
     fi
-    
+
     echo "$path"
 }
 
@@ -333,14 +337,14 @@ alias install-font='mkfontscale && mkfontdir && fc-cache'
 alias all='awk "{sum += $ 0}END{print sum}"'
 
 if uname -a | grep gentoo >/dev/null; then
-	command_not_found_handle()
+    command_not_found_handle()
     {
-		echo "-bash: $1: command not found"
+        echo "-bash: $1: command not found"
         e-file &>/dev/null
         if [[ "$?" != 127 ]]; then
-		    e-file $1
+            e-file $1
         fi
-	}
+    }
 fi
 
 # 删除除某个文件外的所有文件
@@ -364,9 +368,9 @@ y()
     local optInd=1
     local delay=.1
     local loop
-    
+
     OPTIND=1
-    
+
     while getopts ":d:l:" OPT; do
         case "$OPT" in
             d)
@@ -380,12 +384,12 @@ y()
                 ;;
         esac
     done
-    
+
     shift $((optInd - 1))
 
     local str="$@"
     local i=0
-    
+
     [ "$str" ] || str=y
 
     while [ ! "$loop" ] || ((i < loop)); do
@@ -414,12 +418,12 @@ efind()
 efindd()
 {
     local len="${#@}"
-    
+
     if [ "$len" = 1 ]; then
         find -regextype posix-extended -regex "$@"
         return
     fi
-    
+
     find "${@:1:len-1}" -regextype posix-extended -regex "${@:len}"
 }
 
@@ -431,9 +435,9 @@ runjava()
     local optInd=1
     local paths
     local classpath
-    
+
     OPTIND=1
-    
+
     while getopts ":p:" OPT; do
         case "$OPT" in
             p)
@@ -452,14 +456,14 @@ runjava()
             classpath=$classpath:$p
         done
     fi
-    
+
     shift $((optInd - 1))
 
     local command="java"
     if [ $1 == "--" ]; then
         shift
     fi
-    
+
     if [ "$classpath" ]; then
         command="$command -cp ${classpath:1}"
     fi
