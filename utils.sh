@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-16 21:31:56 Saturday by ahei>
+# Time-stamp: <2015-05-16 22:51:07 Saturday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -9,6 +9,7 @@ export HISTSIZE=9999999
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\H\[\033[01;31m\] \[\e[33m\]\w\[\e[0m\] \$ '
 export EDITOR=vi
 export LESS="-FXs"
+[ -z "$TMUX" ] && export TERM=xterm-256color
 
 alias ls='ls --color=auto -N --show-control-chars'
 alias ll='ls -l'
@@ -46,6 +47,7 @@ function mcd()
 {
     mkdir $1 -p && cd $1
 }
+alias tmuxr='tmux attach'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'

@@ -1,4 +1,13 @@
 # escape ^`^`
-escape ^^^^
+escape ^x^x
 # 关闭烦人的启动画面
 startup_message off
+caption always "%{=b my}%-w%{=b rw}%50>%n %t %h %{-}%+w%<"
+
+bind 1 only
+bind 2 split -v
+bind o focus
+bind b windowlist -b
+bind ^b windows
+bind ^x copy
+bind y paste .

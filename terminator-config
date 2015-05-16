@@ -1,0 +1,38 @@
+[global_config]
+  enabled_plugins = InactivityWatch, CustomCommandsMenu, TestPlugin, ActivityWatch, TerminalShot, LaunchpadCodeURLHandler, APTURLHandler, MavenPluginURLHandler, LaunchpadBugURLHandler
+  window_state = maximise
+  title_transmit_bg_color = "#ff0000"
+[keybindings]
+  toggle_zoom = <Ctrl><Shift>u
+  cycle_next = <Ctrl><Shift>i
+  paste = <Ctrl><Shift>y
+  next_tab = <Ctrl><Shift>n
+  new_terminator = None
+  new_window = None
+  prev_tab = <Ctrl><Shift>p
+  move_tab_right = <Ctrl>colon
+  close_term = <Ctrl><Shift>k
+  move_tab_left = <Ctrl><Shift>h
+  new_tab = <Ctrl><Shift>m
+  split_vert = <Ctrl><Shift>j
+  go_next = None
+  hide_window = <Super>space
+[profiles]
+  [[default]]
+    use_system_font = False
+    font = Monospace 11
+    cursor_color = "#00ff00"
+    foreground_color = "#ffffff"
+    copy_on_selection = True
+    allow_bold = False
+    scrollback_infinite = True
+[layouts]
+  [[default]]
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+      profile = default
+    [[[window0]]]
+      type = Window
+      parent = ""
+[plugins]
