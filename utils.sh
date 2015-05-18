@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-06 16:45:05 Wednesday by ahei>
+# Time-stamp: <2015-05-18 16:23:34 Monday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -77,7 +77,7 @@ alias svnl='svn log'
 alias ..='cd ..'
 
 alias gits='git status'
-alias gitc='git checkout'
+alias gitc='git clone'
 alias gitl='git log --name-status'
 alias gitp='git pull'
 alias gitd='git diff'
@@ -98,7 +98,7 @@ mmaster()
 {
     local branch=$(gitb | fgrep '*' | cut -d " " -f2)
     
-    gitc master && gitp && gitc $branch && git merge master
+    git checkout master && gitp && git checkout $branch && git merge master
 }
 
 alias aheif='gitc ahei-feature'
