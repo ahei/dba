@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-26 16:21:39 Tuesday by ahei>
+# Time-stamp: <2015-05-26 17:12:08 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -46,7 +46,7 @@ function mcd()
 {
     mkdir $1 -p && cd $1
 }
-alias tmuxr='tmux attach'
+alias tmuxr='tmux attach || tmux new'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
