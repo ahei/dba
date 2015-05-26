@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-18 16:58:25 Monday by ahei>
+# Time-stamp: <2015-05-26 16:21:39 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -9,7 +9,6 @@ export HISTSIZE=9999999
 export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;31m\]@\[\033[01;36m\]\H\[\033[01;31m\] \[\e[33m\]\w\[\e[0m\] \$ '
 export EDITOR=vi
 export LESS="-FXs"
-[ -z "$TMUX" ] && export TERM=xterm-256color
 
 alias ls='ls --color=auto -N --show-control-chars'
 alias ll='ls -l'
@@ -63,7 +62,11 @@ if [ "$(uname)" = "Darwin" ]; then
     alias aptcs='brew search'
     alias aptgi='brew install'
 fi
-    
+if [ -f /etc/redhat-release ]; then
+    alias aptcs='yum search'
+    alias aptgi='yum install'
+fi
+
 alias svni='svn info'
 alias svns='svn st'
 alias svnh='svn help'
@@ -105,9 +108,9 @@ mmaster()
     git checkout master && gitp && git checkout $branch && git merge master
 }
 
-alias aheif='gitc ahei-feature'
-alias aheim='gitc xmpush-ahei 2>/dev/null || gitc ahei'
-alias master='gitc master'
+alias aheif='git checkout ahei-feature'
+alias aheim='git checkout xmpush-ahei 2>/dev/null || git checkout ahei'
+alias master='git checkout master'
 alias pushf='aheif && git push origin ahei-feature'
 alias pushm='aheim && ( git push origin ahei 2>/dev/null || git push origin xmpush-ahei )'
 

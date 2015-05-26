@@ -20,10 +20,12 @@
 [profiles]
   [[default]]
     use_system_font = False
-    font = Monospace 11
+    copy_on_selection = True
+    custom_command = tmux
     cursor_color = "#00ff00"
     foreground_color = "#ffffff"
-    copy_on_selection = True
+    use_custom_command = True
+    font = Monospace 11
     allow_bold = False
     scrollback_infinite = True
 [layouts]
