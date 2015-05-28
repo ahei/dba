@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2013-12-26 20:13:00 Thursday by ahei>
+# Time-stamp: <2015-05-28 19:41:05 Thursday by ahei>
 
-readonly PROGRAM_NAME="remote.sh"
+readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
 
 bin=`dirname "$0"`
@@ -12,13 +12,13 @@ bin=`cd "$bin"; pwd`
 
 usage()
 {
-    code=1
+    local code=1
     if [ $# -gt 0 ]; then
         code="$1"
     fi
 
     if [ "$code" != 0 ]; then
-        redirect="1>&2"
+        local redirect="1>&2"
     fi
 
     eval cat "$redirect" << EOF
@@ -47,6 +47,7 @@ Options:
         Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
     -o SSH_OPTIONS
         Set ssh options.
+    -N  If hosts you specified contain current host, do not execute or scp files.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -59,7 +60,7 @@ IFS=$'\n'
 background="&"
 isQuiet=1
 
-while getopts ":hvH:f:F:d:l:nVc:sigo:" OPT; do
+while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts\n$OPTARG"
@@ -118,6 +119,10 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:" OPT; do
 
         o)
             sshOptions="$OPTARG"
+            ;;
+
+        N)
+            excludeCurrent=1
             ;;
         
         v)
@@ -185,6 +190,13 @@ if [ -z "$isCopy" ]; then
 
     for i in `printf "$hosts"`; do
         [ -n "$user" ] && login=" -l $user"
+        
+        if [ -n "$excludeCurrent" ]; then
+            if [ "$HOSTNAME" = "$(ssh $i$login hostname)" ]; then
+                continue
+            fi
+        fi
+        
         executeCommand "$ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
     done
 
@@ -206,6 +218,12 @@ for i in `printf "$hosts"`; do
         host="$user@$i"
     fi
 
+    if [ -n "$excludeCurrent" ]; then
+        if [ "$HOSTNAME" = "$(ssh $host hostname)" ]; then
+            continue
+        fi
+    fi
+    
     executeCommand "$scp -r $files $host:$dstFile 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
 done
 

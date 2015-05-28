@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-26 17:12:08 Tuesday by ahei>
+# Time-stamp: <2015-05-28 10:13:26 Thursday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -50,21 +50,21 @@ alias tmuxr='tmux attach || tmux new'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
-alias aptgi='aptg install'
 alias aptgr='aptg remove'
 alias aptgp='aptg purge'
 alias aptgud='aptg update'
 alias aptgu='aptg upgrade'
 alias aptc='apt-cache'
-alias aptcs='aptc search'
+alias psearch='aptc search'
+alias pinstall='aptg install'
 alias aptf='apt-file'
 if [ "$(uname)" = "Darwin" ]; then
-    alias aptcs='brew search'
-    alias aptgi='brew install'
+    alias psearch='brew search'
+    alias pinstall='brew install'
 fi
 if [ -f /etc/redhat-release ]; then
-    alias aptcs='yum search'
-    alias aptgi='yum install'
+    alias psearch='yum search'
+    alias pinstall='yum install -y'
 fi
 
 alias svni='svn info'
@@ -93,6 +93,7 @@ alias gitr='git checkout -- .'
 alias gstash='git stash'
 alias gstashp='git stash pop'
 alias pushmaster='git push origin master'
+alias gita='git add'
 
 pushc()
 {
