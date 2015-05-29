@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-28 10:13:26 Thursday by ahei>
+# Time-stamp: <2015-05-29 14:10:53 Friday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -92,28 +92,15 @@ alias gitb='git branch'
 alias gitr='git checkout -- .'
 alias gstash='git stash'
 alias gstashp='git stash pop'
+alias pushm='git push origin ahei'
 alias pushmaster='git push origin master'
 alias gita='git add'
-
-pushc()
-{
-    local branch=$(gitb | fgrep '*' | cut -d " " -f2)
-
-    git push origin $branch
-}
-
-mmaster()
-{
-    local branch=$(gitb | fgrep '*' | cut -d " " -f2)
-    
-    git checkout master && gitp && git checkout $branch && git merge master
-}
-
+alias mmaster='branch=$(gitb | fgrep "*" | cut -d " " -f2) && git checkout master && gitp && git checkout $branch && git merge master && unset branch'
 alias aheif='git checkout ahei-feature'
 alias aheim='git checkout xmpush-ahei 2>/dev/null || git checkout ahei'
 alias master='git checkout master'
 alias pushf='aheif && git push origin ahei-feature'
-alias pushm='aheim && ( git push origin ahei 2>/dev/null || git push origin xmpush-ahei )'
+alias pushc='git push origin $(gitb | fgrep "*" | cut -d " " -f2)'
 
 if `colordiff -v &>/dev/null`; then
     alias diff=colordiff
@@ -320,8 +307,7 @@ applyKeychain()
 {
     key=~/.ssh/id_rsa
     if [ -r "$key" ]; then
-        keychain "$key" -q --ignore-missing --noask && \
-        . ~/.keychain/"$HOSTNAME"-sh
+        (keychain "$key" -q --ignore-missing --noask && . ~/.keychain/"$HOSTNAME"-sh) 2>/dev/null
     fi
 }
 applyKeychain
