@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-05 20:55:05 Tuesday by ahei>
+# Time-stamp: <2015-05-29 14:19:58 Friday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -101,7 +101,7 @@ cp "$home"/temp/luke "$installDir"
 cp "$home"/temp/lukeall-*.jar "$installDir"
 
 "$home"/svntag -i "$installDir"
-"$home"/remote.sh -i "$installDir"
+"$home"/remote -i "$installDir"
 "$home"/backupsvn.sh -i "$installDir"
 "$home"/test-diskio.sh -i "$installDir"
 "$home"/syncsvn.sh -i "$installDir"
