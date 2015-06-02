@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-29 14:19:58 Friday by ahei>
+# Time-stamp: <2015-06-02 20:52:20 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -48,7 +48,11 @@ writeToFile()
     fi
 }
 
-profile="/etc/profile"
+if [ "$USER" = root ]; then
+    profile="/etc/profile"
+else
+    profile=~/.bashrc
+fi
 
 while getopts ":hvp:" OPT; do
     case "$OPT" in            
@@ -93,23 +97,13 @@ ln -sf "${home}"/.xmodmap ~
 ln -sf "${home}"/.tmux.conf ~
 ln -sf "${home}"/ssh-config ~/.ssh/config
 
-writeToFile ". $home/utils.sh" "$profile"
-writeToFile ". $home/history.sh" "$profile"
+writeToFile ". $home/utils.sh" $profile
+writeToFile ". $home/history.sh" $profile
+writeToFile "export PATH=$home:"'$PATH' $profile
 
-cp "$home"/common.sh "$installDir"
-cp "$home"/temp/luke "$installDir"
-cp "$home"/temp/lukeall-*.jar "$installDir"
-
-"$home"/svntag -i "$installDir"
-"$home"/remote -i "$installDir"
-"$home"/backupsvn.sh -i "$installDir"
-"$home"/test-diskio.sh -i "$installDir"
-"$home"/syncsvn.sh -i "$installDir"
-cp baidu baike google cmb json "$installDir"
-
-terminalFile=`which gnome-terminal 2>/dev/null`                                                                                                              
+terminalFile=`which gnome-terminal 2>/dev/null`
 if [ $? = 0 ]; then
-    ln -sf "$terminalFile" /usr/bin/terminal
+    ln -sf "$terminalFile" "$home/terminal"
 fi
 
 mkdir -p ~/.config/terminator/

@@ -51,21 +51,50 @@ executeCommand()
     fi
 }
 
+joinPath()
+{
+    local path="$1"
+    local name="$2"
+
+    if [[ "${path:-1:1}" = "/" ]]; then
+        echo "${path}${name}"
+    else
+        echo "${path}/${name}"
+    fi
+}
+
 normalizePath()
 {
     local path="$1"
+
+    if [ -d "$path" ]; then
+        echo "$(cd $path && pwd)"
+        return
+    fi
+
     local dir=$(dirname "$path")
     local basename=$(basename "$path")
 
-    if [ ! -r "$path" ]; then
-        if [[ "$dir" != "." ]]; then
-            path="$dir/$basename"
-        else
-            path="$basename"                                                                                                               
-        fi
+    if [ -r "$dir" ]; then
+        dir="$(cd $dir && pwd)"
+    fi
+
+    if [[ "$basename" != "." ]]; then
+        path="$(joinPath $dir $basename)"
     else
-        path="$(cd "$dir" && pwd)/$basename"
+        path="$dir"
     fi
 
     echo "$path"
+}
+
+# $1: path
+toAbsPath()
+{
+    local path="$1"
+    if [ "${path:0:1}" != "/" ]; then
+        path=$(pwd)/"$path"
+    fi
+
+    normalizePath "$path"
 }

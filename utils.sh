@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-06-01 15:54:50 Monday by ahei>
+# Time-stamp: <2015-06-02 20:03:20 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -47,6 +47,7 @@ function mcd()
     mkdir $1 -p && cd $1
 }
 alias tmuxr='tmux attach || tmux new'
+alias rcp='remote -F'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
@@ -265,31 +266,6 @@ dirName()
     else
         dirname "$path"
     fi
-}
-
-normalizePath()
-{
-    local path="$1"
-
-    if [ -d "$path" ]; then
-        echo "$(cd $path && pwd)"
-        return
-    fi
-
-    local dir=$(dirname "$path")
-    local basename=$(basename "$path")
-
-    if [ -r "$dir" ]; then
-        dir="$(cd $dir && pwd)"
-    fi
-
-    if [[ "$basename" != "." ]]; then
-        path="$(joinPath $dir $basename)"
-    else
-        path="$dir"
-    fi
-
-    echo "$path"
 }
 
 addkey()

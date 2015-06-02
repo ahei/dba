@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-02 16:30:12 Tuesday by ahei>
+# Time-stamp: <2015-06-02 20:44:20 Tuesday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -9,7 +9,6 @@ bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 
 . "$bin"/common.sh
-. "~/.remoterc" 2>/dev/null
 
 usage()
 {
@@ -23,11 +22,9 @@ usage()
     fi
 
     eval cat "$redirect" << EOF
-usage: ${PROGRAM_NAME} [OPTIONS] <HOST> <COMMAND>
-       ${PROGRAM_NAME} [OPTIONS] -H <HOST> <COMMAND>
-       ${PROGRAM_NAME} [OPTIONS] -c <COMMAND> <HOSTS>
-       ${PROGRAM_NAME} [OPTIONS] -f <HOSTS_FILE> <COMMAND>
-       ${PROGRAM_NAME} [OPTIONS] -F <FILE> [-d <DST_FILE>] <HOSTS>
+usage: ${PROGRAM_NAME} [OPTIONS] <CLUSTER> <COMMAND>
+       ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | -f <HOSTS_FILE>) <COMMAND>
+       ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | -f <HOSTS_FILE>) -F <FILE> [<DST_FILE>]
 
 Options:
     -H <HOST>
@@ -36,19 +33,17 @@ Options:
         Add the hosts file.
     -F <LOCAL_FILE>
         Add the local file to copy.
-    -d <DST_FILE>
-        Set the destination file.
     -l <LOGIN_NAME>
         Specifies the user to log in as on the remote machine.
     -n  Do not really execute command, only print command to execute.
     -V  Output command to be executed to standard output.
+    -q  Quiet; do not write anything to standard output.
     -s  When execute commands failed, stop execute other commands and exit.
     -g  Execute command foreground.
-    -i [<INSTALL_DIR>]
-        Install this shell script to your machine, INSTALL_DIR default is /usr/bin.
     -o SSH_OPTIONS
         Set ssh options.
     -N  If hosts you specified contain current host, do not execute or scp files.
+    -c  When execute command on remote server, force change directory to work directory on current host.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -60,15 +55,18 @@ EOF
 isCurrentHost()
 {
     local host="$1"
-    [ "$HOSTNAME" = "$host" ] || [ "$HOSTNAME" = "$(ssh $host hostname)" ]
+    [ "$HOSTNAME" = "$host" ] || LANG= ifconfig | egrep "inet addr:[^ ]+" -o | cut -d: -f2 | fgrep -x "$host" -q
 }
 
 isExecute=1
 background="&"
-isQuiet=1
+isQuiet=0
 fileNb=0
 
-while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
+. ~/.remoterc 2>/dev/null
+. ~/.remoterc 2>/dev/null
+
+while getopts ":hvH:f:F:l:Vqsigo:Ncn" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts $OPTARG"
@@ -89,7 +87,6 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
                 usage
             fi
 
-            isCopy=1
             if [ -z "$files" ]; then
                 files="$OPTARG"
             else
@@ -98,10 +95,6 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
             let fileNb++
             ;;
 
-        d)
-            dstFile="$OPTARG"
-            ;;
-            
         l)
             user="$OPTARG"
             ;;
@@ -114,8 +107,8 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
             isQuiet=0
             ;;
 
-        c)
-            command="$OPTARG"
+        q)
+            isQuiet=1
             ;;
 
         s)
@@ -126,16 +119,16 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
             background=
             ;;
 
-        i)
-            install
-            ;;
-
         o)
             sshOptions="$OPTARG"
             ;;
 
         N)
             excludeCurrent=1
+            ;;
+
+        c)
+            forceCD=1
             ;;
         
         v)
@@ -167,7 +160,8 @@ sshOpts="-o StrictHostKeyChecking=no $sshOptions"
 ssh="ssh $sshOpts"
 scp="scp $sshOpts"
 
-if [ -z "$isCopy" ]; then
+# 执行命令
+if [ -z "$files" ]; then
     if [ -z "$hosts" ]; then
         if [ "$#" -lt 1 ]; then
             echoe "No host and command specify.\n"
@@ -177,35 +171,34 @@ if [ -z "$isCopy" ]; then
             usage
         fi
 
-        if [ -n "$command" ]; then
-            for i in $@; do
-                hosts="$hosts $i"
-            done
-        else
-            hosts="$hosts $1"
-            shift
-            command="$@"
+        cluster=$1
+        hosts="$(eval echo \$$cluster)"
+        if [ -z "$hosts" ]; then
+            echoe "Cluster $cluster is empty!"
+            usage
         fi
+        shift
+        command="$@"
     else
         if [ "$#" -lt 1 ]; then
             echoe "No command specify.\n"
             usage
         fi
 
-        if [ -n "$command" ]; then
-            for i in $@; do
-                hosts="$hosts $i"
-            done
-        else
-            command="$@"
-        fi
+        command="$@"
+    fi
+
+    if [ "$forceCD" ]; then
+        command="cd $(pwd) && $command"
+    else
+        command="cd $(pwd); $command"
     fi
 
     for i in $hosts; do
         [ -n "$user" ] && login=" -l $user"
         
         if [ -n "$excludeCurrent" ]; then
-            if isCurrentHost "$i$login"; then
+            if isCurrentHost "$i"; then
                 continue
             fi
         fi
@@ -218,12 +211,12 @@ if [ -z "$isCopy" ]; then
     exit
 fi
 
-for i in $@; do
-    hosts="$hosts $i"
-done
+# 拷贝文件
+dstFile="$1"
+[ "$dstFile" ] && dstFile=$(toAbsPath "$dstFile")
 
 if [ -z "$dstFile" ] && (( fileNb == 1 )); then
-    dstFile=$(normalizePath "$files")
+    dstFile=$(dirname $(normalizePath "$files"))
     excludeCurrent=1
 fi
     
