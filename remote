@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-05-28 19:41:05 Thursday by ahei>
+# Time-stamp: <2015-06-02 12:58:29 Tuesday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -59,6 +59,7 @@ isExecute=1
 IFS=$'\n'
 background="&"
 isQuiet=1
+fileNb=0
 
 while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
     case "$OPT" in
@@ -82,7 +83,12 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
             fi
 
             isCopy=1
-            files="$files $OPTARG"
+            if [ -z "$files" ]; then
+                files="$OPTARG"
+            else
+                files="$files $OPTARG"
+            fi
+            let fileNb++
             ;;
 
         d)
@@ -210,6 +216,11 @@ for i in $@; do
     hosts="$hosts\n$i"
 done
 
+if [ -z "$dstFile" ] && (( fileNb == 1 )); then
+    dstFile=$(normalizePath "$files")
+    excludeCurrent=1
+fi
+    
 IFS=$'\n'
 for i in `printf "$hosts"`; do
     if [ -z "$user" ]; then
@@ -219,7 +230,7 @@ for i in `printf "$hosts"`; do
     fi
 
     if [ -n "$excludeCurrent" ]; then
-        if [ "$HOSTNAME" = "$(ssh $host hostname)" ]; then
+        if [ "$HOSTNAME" = "$host" ] || [ "$HOSTNAME" = "$(ssh $host hostname)" ]; then
             continue
         fi
     fi

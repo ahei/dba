@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-05-29 14:10:53 Friday by ahei>
+# Time-stamp: <2015-06-01 15:54:50 Monday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -162,7 +162,7 @@ alias cpath="echo -e ${CLASSPATH//:/'\n'}"
 alias updaterc='. ~/.bashrc'
 alias erc='vi ~/.bashrc'
 
-ulimit -c unlimited
+ulimit -c unlimited 2>/dev/null
 
 # less color configure
 # blue
