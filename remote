@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-02 13:06:42 Tuesday by ahei>
+# Time-stamp: <2015-06-02 16:30:12 Tuesday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -9,6 +9,7 @@ bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 
 . "$bin"/common.sh
+. "~/.remoterc" 2>/dev/null
 
 usage()
 {
@@ -63,7 +64,6 @@ isCurrentHost()
 }
 
 isExecute=1
-IFS=$'\n'
 background="&"
 isQuiet=1
 fileNb=0
@@ -71,7 +71,7 @@ fileNb=0
 while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
     case "$OPT" in
         H)
-            hosts="$hosts\n$OPTARG"
+            hosts="$hosts $OPTARG"
             ;;
 
         f)
@@ -80,7 +80,7 @@ while getopts ":hvH:f:F:d:l:nVc:sigo:N" OPT; do
                 usage
             fi
             
-            hosts="$hosts\n`cat $OPTARG`"
+            hosts="$hosts `cat $OPTARG`"
             ;;
 
         F)
@@ -179,10 +179,10 @@ if [ -z "$isCopy" ]; then
 
         if [ -n "$command" ]; then
             for i in $@; do
-                hosts="$hosts\n$i"
+                hosts="$hosts $i"
             done
         else
-            hosts="$hosts\n$1"
+            hosts="$hosts $1"
             shift
             command="$@"
         fi
@@ -194,18 +194,18 @@ if [ -z "$isCopy" ]; then
 
         if [ -n "$command" ]; then
             for i in $@; do
-                hosts="$hosts\n$i"
+                hosts="$hosts $i"
             done
         else
             command="$@"
         fi
     fi
 
-    for i in `printf "$hosts"`; do
+    for i in $hosts; do
         [ -n "$user" ] && login=" -l $user"
         
         if [ -n "$excludeCurrent" ]; then
-            if isCurrentHost "$host"; then
+            if isCurrentHost "$i$login"; then
                 continue
             fi
         fi
@@ -218,9 +218,8 @@ if [ -z "$isCopy" ]; then
     exit
 fi
 
-IFS=
 for i in $@; do
-    hosts="$hosts\n$i"
+    hosts="$hosts $i"
 done
 
 if [ -z "$dstFile" ] && (( fileNb == 1 )); then
@@ -228,8 +227,7 @@ if [ -z "$dstFile" ] && (( fileNb == 1 )); then
     excludeCurrent=1
 fi
     
-IFS=$'\n'
-for i in `printf "$hosts"`; do
+for i in $hosts; do
     if [ -z "$user" ]; then
         host="$i"
     else
