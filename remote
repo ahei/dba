@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-02 20:44:20 Tuesday by ahei>
+# Time-stamp: <2015-06-03 10:28:28 Wednesday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -212,6 +212,21 @@ if [ -z "$files" ]; then
 fi
 
 # 拷贝文件
+if [ -z "$hosts" ]; then
+    if [ "$#" -lt 1 ]; then
+        echoe "No cluster specify.\n"
+        usage
+    fi
+    cluster=$1
+    hosts="$(eval echo \$$cluster)"
+    if [ -z "$hosts" ]; then
+        echoe "Cluster $cluster is empty!"
+        usage
+    fi
+
+    shift
+fi
+
 dstFile="$1"
 [ "$dstFile" ] && dstFile=$(toAbsPath "$dstFile")
 
