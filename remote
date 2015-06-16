@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-03 11:00:51 Wednesday by ahei>
+# Time-stamp: <2015-06-12 15:34:21 Friday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
 
-bin=`dirname "$0"`
-bin=`cd "$bin"; pwd`
+bin=`cd $(dirname "$0"); pwd`
 
 . "$bin"/common.sh
 
@@ -44,6 +43,8 @@ Options:
     -N  If hosts you specified contain current host, do not execute or scp files.
     -c  Use file copy mode.
     -C  When execute command on remote server, force change directory to work directory on current host.
+    -W  No wait for command finish.
+    -P  When output, do not insert host prefix.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -65,7 +66,7 @@ isQuiet=0
 . ~/.remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 
-while getopts ":hvH:f:l:Vqsigo:NcCn" OPT; do
+while getopts ":hvH:f:l:Vqsigo:NcCnWP" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts $OPTARG"
@@ -118,6 +119,14 @@ while getopts ":hvH:f:l:Vqsigo:NcCn" OPT; do
 
         c)
             copyMode=1
+            ;;
+
+        W)
+            noWait=1
+            ;;
+
+        P)
+            noHostPrefix=1
             ;;
         
         v)
@@ -181,6 +190,8 @@ if [ -z "$copyMode" ]; then
         command="cd $(pwd) 2>/dev/null; $command"
     fi
 
+    commandEscaped=$(echo "$command" | sed 's/"/\\"/g')
+    
     for i in $hosts; do
         [ -n "$user" ] && login=" -l $user"
         
@@ -190,10 +201,14 @@ if [ -z "$copyMode" ]; then
             fi
         fi
         
-        executeCommand "$ssh $i$login \"$command\" 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
+        command="$ssh $i$login \"$commandEscaped\" 2>&1"
+        if [ -z "$noHostPrefix" ]; then
+            command="$command | sed \"s/^/$i: /\""
+        fi
+        executeCommand "$command $background" "$isExecute" "$isQuiet" "$isStop"
     done
 
-    wait
+    [ -z "$noWait" ] && wait
     
     exit
 fi
@@ -224,7 +239,7 @@ shift
 dstFile="$1"
 [ "$dstFile" ] && dstFile=$(toAbsPath "$dstFile")
 if [ -z "$dstFile" ]; then
-    dstFile=$(dirname $(normalizePath "$srcFile"))
+    dstFile=$(dirname $(normalizePath "$srcFile"))/
     excludeCurrent=1
 fi
     
@@ -244,4 +259,4 @@ for i in $hosts; do
     executeCommand "$scp -r $srcFile $host:$dstFile 2>&1 | sed \"s/^/$i: /\" $background" "$isExecute" "$isQuiet" "$isStop"
 done
 
-wait
+[ -z "$noWait" ] && wait

@@ -4,32 +4,10 @@ version()
     exit 1
 }
 
-# echo to stdout
-echoo()
-{
-    printf "$*\n"
-}
-
 # echo to stderr
 echoe()
 {
     printf "$*\n" 1>&2
-}
-
-# $1: installDir
-install()
-{
-    installDir="/usr/bin"
-    if [ $# -ge 1 ]; then
-        installDir="$1"
-    fi
-        
-    cp "$0" "${installDir}"
-    ret=$?
-    if [ "${ret}" = 0 ]; then
-        echoo "Install $PROGRAM_NAME finished."
-    fi
-    exit "${ret}"
 }
 
 executeCommand()
@@ -39,11 +17,11 @@ executeCommand()
     local _isQuiet="$3"
     local _isStop="$4"
     
-    [ "$_isQuiet" != 1 ] && echoo "Executing command \`${_command}' ..."
+    [ "$_isQuiet" != 1 ] && echo "Executing command \`${_command}' ..."
     if [ "${_isExecute}" != "0" ]; then
         eval "${_command}"
         if [ $? != 0 ]; then
-            echoo "Execute command \`${_command}' failed."
+            echoe "Execute command \`${_command}' failed."
             if [ "$_isStop" = 1 ]; then
                 exit 1
             fi

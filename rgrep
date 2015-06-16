@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# Time-stamp: <2015-06-16 11:39:46 Tuesday by ahei>
+
+# @file rgrep.sh
+# @version 1.0
+# @author ahei
+
+readonly PROGRAM_NAME="rgrep.sh"
+readonly PROGRAM_VERSION="1.0.0"
+
+home=`cd $(dirname "$0") && pwd`
+
+. "$home"/common.sh
+
+usage()
+{
+    local code=1
+    local redirect
+    
+    if [ $# -gt 0 ]; then
+        code="$1"
+    fi
+
+    if [ "$code" != 0 ]; then
+        redirect="1>&2"
+    fi
+
+    eval cat "$redirect" << EOF
+usage: ${PROGRAM_NAME} [OPTIONS] <CLUSTER> <PATTERN> <OTHER_GREP_OPTIONS>
+
+Options:
+    -o REMOTE_OPTIONS
+        Set remote options.
+    -v  Output version info.
+    -h  Output this help.
+EOF
+
+    exit "$code"
+}
+
+optInd=1
+
+while getopts ":hvo:" OPT; do
+    case "$OPT" in
+        o)
+            remoteOptions="$OPTARG"
+            let optInd+=2
+            ;;
+        
+        v)
+            version
+            ;;
+
+        h)
+            usage 0
+            ;;
+
+        :)
+            case "${OPTARG}" in
+                ?)
+                    echoe "Option \`-${OPTARG}' need argument.\n"
+                    usage
+            esac
+            ;;
+
+        ?)
+            echoe "Invalid option \`-${OPTARG}'.\n"
+            usage
+            ;;
+    esac
+done
+
+shift $((optInd - 1))
+
+if [ $# -lt 2 ]; then
+    usage
+fi
+
+cluster=$1
+pattern=$2
+shift 2
+
+[ -z "$GREP" ] && GREP=grep
+remote $remoteOptions "$cluster" "$GREP --color=always '$pattern' $@"

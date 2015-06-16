@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-06-03 10:58:15 Wednesday by ahei>
+# Time-stamp: <2015-06-16 11:18:22 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -18,8 +18,8 @@ alias asmth='luit -encoding gb18030 ssh bbs.newsmth.net -lahei0802'
 alias e='emacsclient -n'
 alias ec='emacsclient -nc'
 alias cp='cp -r'
-alias grep='egrep --color'
-alias fgrep='fgrep --color'
+alias grep='egrep -r --color'
+alias fgrep='fgrep -r --color'
 alias mysql='mysql --pager=more --prompt="\u@\h:\d>\_"'
 alias watch='watch -n 1 -d'
 alias man='LESS=-X man -M /usr/share/man/'
@@ -48,6 +48,7 @@ function mcd()
 }
 alias tmuxr='tmux attach || tmux new'
 alias rcp='remote -c'
+alias ngrep='ngrep -q -W byline'
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
@@ -109,7 +110,7 @@ if `colordiff -v &>/dev/null`; then
 fi
 
 # url encode
-alias url='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.quote(\"\".join(a), \":/@\")"'
+alias url='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.quote(\"\".join(a), \":/@?=+%&\")"'
 # url decode
 alias unurl='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.unquote(\"\".join(a))"'
 svnt()
@@ -438,3 +439,6 @@ runjava()
 
     $command $@
 }
+
+alias rfgrep='GREP=fgrep rgrep'
+alias regrep='GREP=egrep rgrep'
