@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-16 11:39:46 Tuesday by ahei>
+# Time-stamp: <2015-06-30 11:04:05 Tuesday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
 # @author ahei
 
-readonly PROGRAM_NAME="rgrep.sh"
+readonly PROGRAM_NAME="rgrep"
 readonly PROGRAM_VERSION="1.0.0"
 
 home=`cd $(dirname "$0") && pwd`
@@ -27,32 +27,69 @@ usage()
     fi
 
     eval cat "$redirect" << EOF
-usage: ${PROGRAM_NAME} [OPTIONS] <CLUSTER> <PATTERN> <OTHER_GREP_OPTIONS>
+usage: ${PROGRAM_NAME} [OPTIONS] <CLUSTER> <PATTERN> <FILES> [<OTHER_GREP_OPTIONS>]
+       ${PROGRAM_NAME} [OPTIONS] -a <CLUSTER> <PATTERN> [<OTHER_GREP_OPTIONS>]
 
 Options:
+    -a Automatic get files to grep by <CLUSTER> or current host.
     -o REMOTE_OPTIONS
         Set remote options.
+    GERP
+        Environment variable used to specify which grep to use.
+    -h <HOUR>
+        Set which hour log to grep.
+    -d <DAY>
+        Set which day log to grep.
     -v  Output version info.
-    -h  Output this help.
+    -H  Output this help.
 EOF
 
     exit "$code"
 }
 
+# $1 cluster
+getLogFiles()
+{
+    local cluster=$1
+
+    for key in "${!clusterLogs[@]}"; do
+        if grep -qx "$key" <<< "$cluster"; then
+            echo -n "${clusterLogs[$key]}"
+        fi
+    done
+
+    echo -n
+}
+
 optInd=1
 
-while getopts ":hvo:" OPT; do
+while getopts ":h:d:vo:aH" OPT; do
     case "$OPT" in
         o)
             remoteOptions="$OPTARG"
             let optInd+=2
             ;;
-        
+
+        a)
+            automaticGetFiles=1
+            let optInd++
+            ;;
+
+        h)
+            hour="$OPTARG"
+            let optInd+=2
+            ;;
+            
+        d)
+            day="$OPTARG"
+            let optInd+=2
+            ;;
+
         v)
             version
             ;;
 
-        h)
+        H)
             usage 0
             ;;
 
@@ -73,13 +110,45 @@ done
 
 shift $((optInd - 1))
 
+[ -z "$GREP" ] && GREP=grep
+
+if [ ! "$automaticGetFiles" ]; then
+    if [ $# -lt 3 ]; then
+        usage
+    fi
+
+    cluster=$1
+    pattern=$2
+    shift 2
+    
+    remote $remoteOptions "$cluster" "$GREP --color=always '$pattern' $@"
+    exit $?
+fi
+
 if [ $# -lt 2 ]; then
     usage
 fi
+
+declare -A clusterLogs
+. ~/.rgreprc 2>/dev/null
 
 cluster=$1
 pattern=$2
 shift 2
 
-[ -z "$GREP" ] && GREP=grep
-remote $remoteOptions "$cluster" "$GREP --color=always '$pattern' $@"
+files=$(getLogFiles "$cluster")
+if [ ! "$files" ]; then
+    echoe "No log files specified for cluster $cluster!"
+    usage
+fi
+
+if [ "$day" ]; then
+    files=$(sed -r "s/%d|%e/$day/g" <<< "$files")
+fi
+if [ "$hour" ]; then
+    files=$(sed -r "s/%H|%I|%k|%l/$hour/g" <<< "$files")
+    files=$(sed -r "s/%H|%I|%k|%l/$hour/g" <<< "$files")
+fi
+
+files=$(date +"$files")
+remote $remoteOptions "$cluster" "$GREP --color=always '$pattern' $files $@"

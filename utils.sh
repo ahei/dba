@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-06-16 11:18:22 Tuesday by ahei>
+# Time-stamp: <2015-07-03 20:17:15 Friday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -48,7 +48,14 @@ function mcd()
 }
 alias tmuxr='tmux attach || tmux new'
 alias rcp='remote -c'
+alias lgrep='rgrep -a'
 alias ngrep='ngrep -q -W byline'
+
+unpack()
+{
+    struct=$1
+    python -c "import struct; import sys; print(struct.unpack('$struct', sys.stdin.read()))"
+}
 
 alias apt-get='apt-get -y'
 alias aptg='apt-get'
@@ -113,6 +120,10 @@ fi
 alias url='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.quote(\"\".join(a), \":/@?=+%&\")"'
 # url decode
 alias unurl='python -c "import urllib; import sys; a=(len(sys.argv)>1 and sys.argv[1:] or sys.stdin); print urllib.unquote(\"\".join(a))"'
+
+alias int2ip='python -c "import sys; import socket; import struct; print socket.inet_ntoa(struct.pack(\"I\",socket.htonl(int(len(sys.argv) > 1 and sys.argv[1] or sys.stdin.read()))))"'
+alias ip2int='python -c "import sys; import socket; import struct; print socket.ntohl(struct.unpack(\"I\",socket.inet_aton(len(sys.argv) > 1 and sys.argv[1] or sys.stdin.read()))[0])"'
+
 svnt()
 {
     file="$@"
