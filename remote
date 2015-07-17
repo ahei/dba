@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-30 10:18:06 Tuesday by ahei>
+# Time-stamp: <2015-07-17 11:33:39 Friday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -230,7 +230,7 @@ if [ -z "$copyMode" ]; then
     if [ -z "$secondsWait" ]; then
         wait
     else
-        sleep "$secondsWait"
+        (( isExecute != 0 )) && sleep "$secondsWait"
         over
     fi
     
@@ -286,6 +286,6 @@ done
 if [ -z "$secondsWait" ]; then
     wait
 else
-    sleep "$secondsWait"
+    (( isExecute != 0 )) && sleep "$secondsWait"
     over
 fi
