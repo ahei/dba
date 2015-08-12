@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-06-30 11:04:05 Tuesday by ahei>
+# Time-stamp: <2015-07-17 14:40:35 Friday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -36,6 +36,8 @@ Options:
         Set remote options.
     GERP
         Environment variable used to specify which grep to use.
+    -C
+        No color display.
     -h <HOUR>
         Set which hour log to grep.
     -d <DAY>
@@ -62,9 +64,15 @@ getLogFiles()
 }
 
 optInd=1
+colorOption=--color=always
 
-while getopts ":h:d:vo:aH" OPT; do
+while getopts ":h:d:vo:aHC" OPT; do
     case "$OPT" in
+        C)
+            colorOption=
+            let optInd++
+            ;;
+            
         o)
             remoteOptions="$OPTARG"
             let optInd+=2
@@ -121,7 +129,7 @@ if [ ! "$automaticGetFiles" ]; then
     pattern=$2
     shift 2
     
-    remote $remoteOptions "$cluster" "$GREP --color=always '$pattern' $@"
+    remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $@"
     exit $?
 fi
 
@@ -151,4 +159,4 @@ if [ "$hour" ]; then
 fi
 
 files=$(date +"$files")
-remote $remoteOptions "$cluster" "$GREP --color=always '$pattern' $files $@"
+remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $files $@"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-07-17 11:33:39 Friday by ahei>
+# Time-stamp: <2015-08-10 15:30:34 Monday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -45,6 +45,8 @@ Options:
     -C  When execute command on remote server, force change directory to work directory on current host.
     -W <SECONDS>
         Only wait time user specified for command finish.
+    -t <SECONDS>
+        Time to sleep when execute command on next host.
     -P  When output, do not insert host prefix.
     -v  Output version info.
     -h  Output this help.
@@ -85,7 +87,7 @@ isQuiet=0
 . ~/.remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 
-while getopts ":hvH:f:l:Vqsigo:NcCnW:P" OPT; do
+while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts $OPTARG"
@@ -146,6 +148,10 @@ while getopts ":hvH:f:l:Vqsigo:NcCnW:P" OPT; do
 
         P)
             noHostPrefix=1
+            ;;
+
+        t)
+            timeSleep="$OPTARG"
             ;;
         
         v)
@@ -210,6 +216,7 @@ if [ -z "$copyMode" ]; then
     fi
 
     commandEscaped=$(echo "$command" | sed 's/"/\\"/g')
+    first=1
     
     for i in $hosts; do
         [ -n "$user" ] && login=" -l $user"
@@ -219,6 +226,11 @@ if [ -z "$copyMode" ]; then
                 continue
             fi
         fi
+
+        if [ ! "$first" ] && [ "$timeSleep" ]; then
+            sleep "$timeSleep"
+        fi
+        first=
         
         command="$ssh $i$login \"$commandEscaped\" 2>&1"
         if [ -z "$noHostPrefix" ]; then
