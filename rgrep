@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-07-17 14:40:35 Friday by ahei>
+# Time-stamp: <2015-09-05 18:53:51 Saturday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -42,6 +42,12 @@ Options:
         Set which hour log to grep.
     -d <DAY>
         Set which day log to grep.
+    -s
+        Sort files by date time you specified.
+    -B <TIME_BEGIN>
+        Set time begin string on every line.
+    -E <TIME_END>
+        Set time end string on every line.
     -v  Output version info.
     -H  Output this help.
 EOF
@@ -63,10 +69,25 @@ getLogFiles()
     echo -n
 }
 
+sortFiles()
+{
+    cat | awk -v timeBegin="$timeBegin" -v timeEnd="$timeEnd" '{
+prefix = ":[m[K"; # grep maybe have color output
+begin = index($ 0, prefix timeBegin);
+if (begin == 0) {begin = index($ 0, timeBegin);}
+else {timeBegin = prefix timeBegin;}
+end = index($ 0, timeEnd);
+timeStr = substr($ 0, begin + length(timeBegin), end - begin - length(timeBegin));
+results[timeStr] = $ 0;
+} END {
+size = asorti(results, sortedResults);
+for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
+}
+
 optInd=1
 colorOption=--color=always
 
-while getopts ":h:d:vo:aHC" OPT; do
+while getopts ":h:d:vo:aHCsB:E:" OPT; do
     case "$OPT" in
         C)
             colorOption=
@@ -83,6 +104,21 @@ while getopts ":h:d:vo:aHC" OPT; do
             let optInd++
             ;;
 
+        s)
+            sortByTime=1
+            let optInd++
+            ;;
+
+        B)
+            timeBegin="$OPTARG"
+            let optInd+=2;
+            ;;
+
+        E)
+            timeEnd="$OPTARG"
+            let optInd+=2;
+            ;;
+        
         h)
             hour="$OPTARG"
             let optInd+=2
@@ -120,6 +156,11 @@ shift $((optInd - 1))
 
 [ -z "$GREP" ] && GREP=grep
 
+if [ "$timeBegin" ] && [ "$timeEnd" ]; then
+    sortByTime=1
+fi
+[ "$sortByTime" ] && sortCommand=" | sortFiles"
+
 if [ ! "$automaticGetFiles" ]; then
     if [ $# -lt 3 ]; then
         usage
@@ -129,7 +170,7 @@ if [ ! "$automaticGetFiles" ]; then
     pattern=$2
     shift 2
     
-    remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $@"
+    eval remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $@" $sortCommand
     exit $?
 fi
 
@@ -151,12 +192,13 @@ if [ ! "$files" ]; then
 fi
 
 if [ "$day" ]; then
-    files=$(sed -r "s/%d|%e/$day/g" <<< "$files")
+    files=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$files")
+    files=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$files")
 fi
 if [ "$hour" ]; then
-    files=$(sed -r "s/%H|%I|%k|%l/$hour/g" <<< "$files")
-    files=$(sed -r "s/%H|%I|%k|%l/$hour/g" <<< "$files")
+    files=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$files")
+    files=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$files")
 fi
 
 files=$(date +"$files")
-remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $files $@"
+eval remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' \"$files\" $@" $sortCommand
