@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-09-05 18:53:51 Saturday by ahei>
+# Time-stamp: <2015-09-16 11:27:03 Wednesday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -33,7 +33,7 @@ usage: ${PROGRAM_NAME} [OPTIONS] <CLUSTER> <PATTERN> <FILES> [<OTHER_GREP_OPTION
 Options:
     -a Automatic get files to grep by <CLUSTER> or current host.
     -o REMOTE_OPTIONS
-        Set remote options.
+        Set remote's options.
     GERP
         Environment variable used to specify which grep to use.
     -C
@@ -71,6 +71,11 @@ getLogFiles()
 
 sortFiles()
 {
+    if [ ! "$sortByTime" ]; then
+        cat
+        return
+    fi
+    
     cat | awk -v timeBegin="$timeBegin" -v timeEnd="$timeEnd" '{
 prefix = ":[m[K"; # grep maybe have color output
 begin = index($ 0, prefix timeBegin);
@@ -78,7 +83,8 @@ if (begin == 0) {begin = index($ 0, timeBegin);}
 else {timeBegin = prefix timeBegin;}
 end = index($ 0, timeEnd);
 timeStr = substr($ 0, begin + length(timeBegin), end - begin - length(timeBegin));
-results[timeStr] = $ 0;
+if (timeStr == "") print;
+else results[timeStr] = $ 0;
 } END {
 size = asorti(results, sortedResults);
 for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
@@ -159,7 +165,6 @@ shift $((optInd - 1))
 if [ "$timeBegin" ] && [ "$timeEnd" ]; then
     sortByTime=1
 fi
-[ "$sortByTime" ] && sortCommand=" | sortFiles"
 
 if [ ! "$automaticGetFiles" ]; then
     if [ $# -lt 3 ]; then
@@ -170,7 +175,7 @@ if [ ! "$automaticGetFiles" ]; then
     pattern=$2
     shift 2
     
-    eval remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $@" $sortCommand
+    remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $@" | sortFiles
     exit $?
 fi
 
@@ -195,10 +200,15 @@ if [ "$day" ]; then
     files=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$files")
     files=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$files")
 fi
-if [ "$hour" ]; then
-    files=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$files")
-    files=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$files")
+if [ "$hour" ] ; then
+    if [ "$hour" != '*' ]; then
+        files=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$files")
+        files=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$files")
+    else
+        files=$(sed -r "s/%H|%I/$hour/g" <<< "$files")
+        files=$(sed -r "s/%k|%l/$hour/g" <<< "$files")
+    fi
 fi
 
 files=$(date +"$files")
-eval remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' \"$files\" $@" $sortCommand
+remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $files $@" | sortFiles
