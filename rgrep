@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-09-30 15:46:31 Wednesday by ahei>
+# Time-stamp: <2015-09-30 16:51:15 Wednesday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -110,7 +110,7 @@ if (begin == 0) {begin = index($ 0, timeBegin);}
 else {timeBegin = prefix timeBegin;}
 end = index($ 0, timeEnd);
 timeStr = substr($ 0, begin + length(timeBegin), end - begin - length(timeBegin));
-if (timeStr == "") print;
+if (length(timeStr) < 10) print;
 else results[timeStr] = $ 0;
 } END {
 size = asorti(results, sortedResults);
