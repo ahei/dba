@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-09-16 13:21:57 Wednesday by ahei>
+# Time-stamp: <2015-09-30 11:30:55 Wednesday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -27,11 +27,11 @@ usage()
     fi
 
     eval cat "$redirect" << EOF
-usage: ${PROGRAM_NAME} [OPTIONS] <CLUSTER> <PATTERN> <FILES> [<OTHER_GREP_OPTIONS>]
+usage: ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | -f <HOSTS_FILE> | <CLUSTER>) <PATTERN> <FILES> [<OTHER_GREP_OPTIONS>]
        ${PROGRAM_NAME} [OPTIONS] -a <CLUSTER> <PATTERN> [<OTHER_GREP_OPTIONS>]
 
 Options:
-    -a Automatic get files to grep by <CLUSTER> or current host.
+    -a Automatic get files to grep by <CLUSTER>, when set this option, must specify cluster.
     -o REMOTE_OPTIONS
         Set remote's options.
     GERP
@@ -51,7 +51,6 @@ Options:
     -E <TIME_END>
         Set time end string on every line.
     -v  Output version info.
-    -H  Output this help.
 EOF
 
     exit "$code"
@@ -95,8 +94,13 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 optInd=1
 colorOption=--color=always
 
-while getopts ":h:d:vo:aHCsB:E:D:" OPT; do
+while getopts ":h:d:vo:aH:CsB:E:D:" OPT; do
     case "$OPT" in
+        H)
+            hosts="$hosts $OPTARG"
+            let optInd+=2
+            ;;
+
         C)
             colorOption=
             let optInd++
@@ -147,10 +151,6 @@ while getopts ":h:d:vo:aHCsB:E:D:" OPT; do
             version
             ;;
 
-        H)
-            usage 0
-            ;;
-
         :)
             case "${OPTARG}" in
                 ?)
@@ -175,15 +175,24 @@ if [ "$timeBegin" ] && [ "$timeEnd" ]; then
 fi
 
 if [ ! "$automaticGetFiles" ]; then
-    if [ $# -lt 3 ]; then
-        usage
+    if [ "$hosts" ]; then
+        if [ $# -lt 2 ]; then
+            usage
+        fi
+    else
+        if [ $# -lt 3 ]; then
+            usage
+        fi
     fi
-
-    cluster=$1
-    pattern=$2
-    shift 2
     
-    remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $@" | sortFiles
+    if [ ! "$hosts" ]; then
+        cluster=$1
+        shift
+    fi
+    pattern=$1
+    shift
+    
+    remote $remoteOptions -H "$hosts" $cluster "$GREP $colorOption '$pattern' $@" | sortFiles
     exit $?
 fi
 

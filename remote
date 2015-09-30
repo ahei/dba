@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-08-10 15:30:34 Monday by ahei>
+# Time-stamp: <2015-09-30 11:29:13 Wednesday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -90,7 +90,9 @@ isQuiet=0
 while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:" OPT; do
     case "$OPT" in
         H)
-            hosts="$hosts $OPTARG"
+            if [ "$OPTARG" ]; then
+                hosts="$hosts $OPTARG"
+            fi
             ;;
 
         f)
