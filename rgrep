@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-09-30 11:30:55 Wednesday by ahei>
+# Time-stamp: <2015-09-30 15:46:31 Wednesday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -50,6 +50,7 @@ Options:
         Set time begin string on every line.
     -E <TIME_END>
         Set time end string on every line.
+    -n  Do not really execute command, only print command to execute.
     -v  Output version info.
 EOF
 
@@ -57,17 +58,42 @@ EOF
 }
 
 # $1 cluster
+# $2 day
+# $3 hour
 getLogFiles()
 {
     local cluster=$1
+    local day=$2
+    local hour=$3
+    local files
 
     for key in "${!clusterLogs[@]}"; do
         if grep -qx "$key" <<< "$cluster"; then
-            echo -n "${clusterLogs[$key]}"
+            files="${clusterLogs[$key]}"
         fi
     done
 
-    echo -n
+    if [ ! "$files" ]; then
+        echo -n "$files"
+        return
+    fi
+
+    if [ "$day" ]; then
+        files=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$files")
+        files=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$files")
+    fi
+    if [ "$hour" ] ; then
+        if [ "$hour" != '*' ]; then
+            files=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$files")
+            files=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$files")
+        else
+            files=$(sed -r "s/%H|%I/$hour/g" <<< "$files")
+            files=$(sed -r "s/%k|%l/$hour/g" <<< "$files")
+        fi
+    fi
+
+    files=$(date +"$files")
+    echo -n "$files"
 }
 
 sortFiles()
@@ -94,7 +120,7 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 optInd=1
 colorOption=--color=always
 
-while getopts ":h:d:vo:aH:CsB:E:D:" OPT; do
+while getopts ":h:d:vo:aH:CsB:E:D:n" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts $OPTARG"
@@ -109,6 +135,11 @@ while getopts ":h:d:vo:aH:CsB:E:D:" OPT; do
         o)
             remoteOptions="$OPTARG"
             let optInd+=2
+            ;;
+
+        n)
+            remoteOptions="$remoteOptions -n -V"
+            let optInd++
             ;;
 
         a)
@@ -207,25 +238,10 @@ cluster=$1
 pattern=$2
 shift 2
 
-files=$(getLogFiles "$cluster")
+files=$(getLogFiles "$cluster" "$day" "$hour")
 if [ ! "$files" ]; then
     echoe "No log files specified for cluster $cluster!"
     usage
 fi
 
-if [ "$day" ]; then
-    files=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$files")
-    files=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$files")
-fi
-if [ "$hour" ] ; then
-    if [ "$hour" != '*' ]; then
-        files=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$files")
-        files=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$files")
-    else
-        files=$(sed -r "s/%H|%I/$hour/g" <<< "$files")
-        files=$(sed -r "s/%k|%l/$hour/g" <<< "$files")
-    fi
-fi
-
-files=$(date +"$files")
 remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $files $@" | sortFiles
