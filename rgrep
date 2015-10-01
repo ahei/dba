@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-09-30 15:46:31 Wednesday by ahei>
+# Time-stamp: <2015-10-01 12:42:07 Thursday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -66,7 +66,18 @@ getLogFiles()
     local day=$2
     local hour=$3
     local files
-
+    local month
+    
+    if (( day < 0 )); then
+        month=$(date -d "$((-day)) days ago" +%m)
+        month=${month#0}
+        day=$(date -d "$((-day)) days ago" +%d)
+        day=${day#0}
+    fi
+    if (( hour < 0 )); then
+        hour=$(printf "%1d" $(date -d "$((-hour)) hours ago" +%k))
+    fi
+    
     for key in "${!clusterLogs[@]}"; do
         if grep -qx "$key" <<< "$cluster"; then
             files="${clusterLogs[$key]}"
@@ -78,6 +89,9 @@ getLogFiles()
         return
     fi
 
+    if [ "$month" ]; then
+        files=$(sed -r "s/%m/$(printf %02d $month)/g" <<< "$files")
+    fi
     if [ "$day" ]; then
         files=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$files")
         files=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$files")
@@ -110,7 +124,7 @@ if (begin == 0) {begin = index($ 0, timeBegin);}
 else {timeBegin = prefix timeBegin;}
 end = index($ 0, timeEnd);
 timeStr = substr($ 0, begin + length(timeBegin), end - begin - length(timeBegin));
-if (timeStr == "") print;
+if (length(timeStr) < 10) print;
 else results[timeStr] = $ 0;
 } END {
 size = asorti(results, sortedResults);
