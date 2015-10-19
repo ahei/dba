@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-10-19 13:28:33 Monday by ahei>
+# Time-stamp: <2015-10-19 13:31:33 Monday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -134,7 +134,7 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 optInd=1
 colorOption=--color=always
 
-options=":h:d:vo:H:CsB:E:D:n"
+options=":h:d:vo:H:CsB:E:D:ng:"
 eval set -- $(getopt -o "$options" -- "$@")
 while getopts "$options" OPT; do
     case "$OPT" in
