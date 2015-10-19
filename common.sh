@@ -76,3 +76,26 @@ toAbsPath()
 
     normalizePath "$path"
 }
+
+isIp()
+{
+    local ip=$1
+    grep -q -E "([0-9]{1,3}\.){3}[0-9]{1,3}" <<< "$ip"
+}
+
+ip2Host()
+{
+    local ip=$1
+    local host=$(host $ip)
+
+    if ! isIp "$ip"; then
+        echo "$ip"
+        return
+    fi
+    
+    if grep -q "not found" <<< "$host"; then
+        echo $ip
+    else
+        echo $host | awk '{print $ NF}' | sed 's/.$//g'
+    fi
+}

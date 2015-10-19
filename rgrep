@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-09-30 16:51:15 Wednesday by ahei>
+# Time-stamp: <2015-10-19 13:25:31 Monday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -27,13 +27,13 @@ usage()
     fi
 
     eval cat "$redirect" << EOF
-usage: ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | -f <HOSTS_FILE> | <CLUSTER>) <PATTERN> <FILES> [<OTHER_GREP_OPTIONS>]
-       ${PROGRAM_NAME} [OPTIONS] -a <CLUSTER> <PATTERN> [<OTHER_GREP_OPTIONS>]
+usage: ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | <CLUSTER>) <PATTERN> [<FILES>]
 
 Options:
-    -a Automatic get files to grep by <CLUSTER>, when set this option, must specify cluster.
     -o REMOTE_OPTIONS
         Set remote's options.
+    -g GREP_OPTIONS
+        Set grep's options.
     GERP
         Environment variable used to specify which grep to use.
     -C
@@ -120,64 +120,55 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 optInd=1
 colorOption=--color=always
 
-while getopts ":h:d:vo:aH:CsB:E:D:n" OPT; do
+options=":h:d:vo:H:CsB:E:D:n"
+eval set -- $(getopt -o "$options" -- "$@")
+while getopts "$options" OPT; do
     case "$OPT" in
         H)
             hosts="$hosts $OPTARG"
-            let optInd+=2
             ;;
 
         C)
             colorOption=
-            let optInd++
             ;;
             
         o)
             remoteOptions="$OPTARG"
-            let optInd+=2
             ;;
 
         n)
             remoteOptions="$remoteOptions -n -V"
-            let optInd++
-            ;;
-
-        a)
-            automaticGetFiles=1
-            let optInd++
             ;;
 
         s)
             sortByTime=1
-            let optInd++
             ;;
 
         B)
             timeBegin="$OPTARG"
-            let optInd+=2;
             ;;
 
         E)
             timeEnd="$OPTARG"
-            let optInd+=2;
             ;;
         
         h)
             hour="$OPTARG"
-            let optInd+=2
             ;;
             
         d)
             day="$OPTARG"
-            let optInd+=2
             ;;
 
         D)
             day="$OPTARG"
             hour='*'
-            let optInd+=2
             ;;
 
+        g)
+            grepOptions="$OPTARG"
+            ;;
+        
         v)
             version
             ;;
@@ -197,7 +188,7 @@ while getopts ":h:d:vo:aH:CsB:E:D:n" OPT; do
     esac
 done
 
-shift $((optInd - 1))
+shift $((OPTIND - 1))
 
 [ -z "$GREP" ] && GREP=grep
 
@@ -205,38 +196,31 @@ if [ "$timeBegin" ] && [ "$timeEnd" ]; then
     sortByTime=1
 fi
 
-if [ ! "$automaticGetFiles" ]; then
-    if [ "$hosts" ]; then
-        if [ $# -lt 2 ]; then
-            usage
-        fi
-    else
-        if [ $# -lt 3 ]; then
-            usage
-        fi
+if [ ! "$hosts" ]; then
+    cluster=$1
+    if [ ! "$cluster" ]; then
+        echoe "Must specify cluster!"
+        usage
     fi
     
-    if [ ! "$hosts" ]; then
-        cluster=$1
-        shift
-    fi
-    pattern=$1
     shift
+fi
     
-    remote $remoteOptions -H "$hosts" $cluster "$GREP $colorOption '$pattern' $@" | sortFiles
-    exit $?
+if [ $# -lt 1 ]; then
+    echoe "Must specify pattern!"
+    usage
 fi
 
-if [ $# -lt 2 ]; then
-    usage
+pattern=$1
+shift
+
+if [ $# -ge 1 ]; then
+    remote $remoteOptions -H "$hosts" $cluster "$GREP $grepOptions $colorOption '$pattern' $@" | sortFiles
+    exit $?
 fi
 
 declare -A clusterLogs
 . ~/.rgreprc 2>/dev/null
-
-cluster=$1
-pattern=$2
-shift 2
 
 files=$(getLogFiles "$cluster" "$day" "$hour")
 if [ ! "$files" ]; then
@@ -244,4 +228,4 @@ if [ ! "$files" ]; then
     usage
 fi
 
-remote $remoteOptions "$cluster" "$GREP $colorOption '$pattern' $files $@" | sortFiles
+remote $remoteOptions "$cluster" "$GREP $grepOptions $colorOption '$pattern' $files" | sortFiles
