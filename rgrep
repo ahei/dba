@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-10-19 13:31:33 Monday by ahei>
+# Time-stamp: <2015-10-22 11:34:33 Thursday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -74,7 +74,7 @@ getLogFiles()
         day=$(date -d "$((-day)) days ago" +%d)
         day=${day#0}
     fi
-    if (( hour < 0 )); then
+    if [ "$hour" != '*' ] && (( hour < 0 )); then
         hour=$(printf "%1d" $(date -d "$((-hour)) hours ago" +%k))
     fi
     
