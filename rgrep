@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-10-22 11:34:33 Thursday by ahei>
+# Time-stamp: <2015-10-23 17:23:40 Friday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -44,8 +44,8 @@ Options:
         Set which day log to grep.
     -D <DAY>
         Search all logs about this day.
-    -s
-        Sort files by date time you specified.
+    -S
+        Do not sort files by date time you specified.
     -B <TIME_BEGIN>
         Set time begin string on every line.
     -E <TIME_END>
@@ -112,7 +112,7 @@ getLogFiles()
 
 sortFiles()
 {
-    if [ ! "$sortByTime" ]; then
+    if [ "$sortByTime" = 0 ]; then
         cat
         return
     fi
@@ -134,7 +134,7 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 optInd=1
 colorOption=--color=always
 
-options=":h:d:vo:H:CsB:E:D:ng:"
+options=":h:d:vo:H:CSB:E:D:ng:"
 eval set -- $(getopt -o "$options" -- "$@")
 while getopts "$options" OPT; do
     case "$OPT" in
@@ -154,8 +154,8 @@ while getopts "$options" OPT; do
             remoteOptions="$remoteOptions -n -V"
             ;;
 
-        s)
-            sortByTime=1
+        S)
+            sortByTime=0
             ;;
 
         B)
@@ -206,7 +206,7 @@ shift $((OPTIND - 1))
 
 [ -z "$GREP" ] && GREP=grep
 
-if [ "$timeBegin" ] && [ "$timeEnd" ]; then
+if [ ! "$sortByTime" ] && [ "$timeBegin" ] && [ "$timeEnd" ]; then
     sortByTime=1
 fi
 
