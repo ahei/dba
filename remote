@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-10-09 15:44:45 Friday by ahei>
+# Time-stamp: <2016-03-03 15:18:15 Thursday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -84,6 +84,8 @@ isExecute=1
 background="&"
 isQuiet=0
 
+. /etc/remoterc 2>/dev/null
+. /etc/remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 

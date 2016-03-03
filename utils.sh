@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2015-09-05 18:44:25 Saturday by ahei>
+# Time-stamp: <2016-01-14 18:48:28 Thursday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -315,6 +315,7 @@ alias rcd='cd .. && cd - &>/dev/null'
 alias install-font='mkfontscale && mkfontdir && fc-cache'
 
 alias all='awk "{sum += $ 0}END{print sum}"'
+alias max='awk "{if ($ 0 > a){a = $ 0}}END{print a}"'
 
 if uname -a | grep gentoo >/dev/null; then
     command_not_found_handle()
