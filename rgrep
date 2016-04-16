@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-16 22:57:42 Saturday by ahei>
+# Time-stamp: <2016-04-16 23:05:45 Saturday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -151,6 +151,7 @@ while getopts "$options" OPT; do
 
         n)
             remoteOptions="$remoteOptions -n -V"
+            isExecute=0
             ;;
 
         S)
@@ -250,7 +251,11 @@ fi
 
 command="$GREP $grepOptions $colorOption '$pattern' $files"
 if [ "$searchLocal" = 1 ]; then
-    $command
+    if [ "$isExecute" = 0 ]; then
+        echo "$command"
+    else
+        eval "$command"
+    fi
     exit
 fi
 
