@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-16 22:38:04 Saturday by ahei>
+# Time-stamp: <2016-04-16 22:57:42 Saturday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -77,9 +77,9 @@ getFiles()
         hour=$(printf "%1d" $(date -d "$((-hour)) hours ago" +%k))
     fi
     
-    for key in "${!clustesFiles[@]}"; do
+    for key in "${!clusterFiles[@]}"; do
         if grep -qx "$key" <<< "$cluster"; then
-            files="${clustesFiles[$key]}"
+            files="${clusterFiles[$key]}"
         fi
     done
 
@@ -239,7 +239,7 @@ else
         usage
     fi
     
-    declare -A clustesFiles
+    declare -A clusterFiles
     . ~/.rgreprc 2>/dev/null
     files=$(getFiles "$cluster" "$day" "$hour")
     if [ ! "$files" ]; then
