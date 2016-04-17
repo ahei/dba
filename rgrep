@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-17 11:50:48 Sunday by ahei>
+# Time-stamp: <2016-04-17 20:19:45 Sunday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -253,6 +253,7 @@ else
     fi
     
     declare -A clusterFiles
+    . /etc/rgreprc 2>/dev/null
     . ~/.rgreprc 2>/dev/null
     files=$(getFiles "$cluster" "$month" "$day" "$hour")
     if [ ! "$files" ]; then
