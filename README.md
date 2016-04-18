@@ -15,11 +15,12 @@ remote命令原理很简单, 就是for循环ssh到每台机器上执行命令, �
 
 使用方法
 ------
-
 ```
 remote 可选选项 机器列表 命令
 ```
+
 机器列表有三种指定办法:
+
 * 提供集群名, 集群配置文件为/etc/remoterc和~/.remoterc, /etc/remtoerc为全局配置文件,           当同一个集群同时出现在全局配置文件和用户配置文件中时, 优先使用用户配置文件. 
   上述配置文件其实都是shell脚本, 集群名为shell变量, 比如 redis=“redis0 redis1 redis2”, 则表示集群redis有三台机器组成. 该办法是比较方便的最常用的指定机器列表的方法.
 * -f 机器列表文件
@@ -54,7 +55,6 @@ rcp
 
 使用方法
 ------
-
 ```
 rcp 机器列表 本地文件 远程机器上的位置(可选, 可以是目录, 也可以是文件名)
 ```
@@ -77,11 +77,11 @@ rgrep
 
 使用方法
 ------
-
 ```
 rgrep 可选选项 机器列表 PATTERN 待grep的文件(可选)
 ```
 如果没有指定待grep的文件, 将会从配置文件/etc/rgreprc和~/.rgreprc中读取, 优先使用~/.rgreprc, 配置文件语法如下:
+
 ```
 clusterFiles=([redis.*]=/data/logs/redis.log.%Y%m%d%H
              [php.*]=/data/logs/php.log.%Y-%m-%d.%H)
@@ -135,7 +135,7 @@ rls
 
 `rls 可选选项 集群名 文件 ls选项(可选)`
 
-rls redis test.sh
+`rls redis test.sh`
 
 
 
@@ -145,4 +145,16 @@ rps
 
 `rps 可选选项 集群名 PATTERN`
 
-rps redis crond
+`rps redis crond`
+
+
+
+psgrep
+======
+ps -ef | grep PATTERN
+
+
+
+netgrep
+=======
+netstat -nap | grep PATTERN
