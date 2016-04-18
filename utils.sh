@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2016-01-14 18:48:28 Thursday by ahei>
+# Time-stamp: <2016-04-16 22:30:41 Saturday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -48,7 +48,7 @@ function mcd()
 }
 alias tmuxr='tmux attach || tmux new'
 alias rcp='remote -c'
-alias lgrep='rgrep -a -B "[" -E "]" -o "-q"'
+alias lgrep='rgrep -B "[" -E "]" -o "-q"'
 alias ngrep='ngrep -q -W byline'
 
 unpack()

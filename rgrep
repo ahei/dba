@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2015-10-23 17:23:40 Friday by ahei>
+# Time-stamp: <2016-04-17 20:19:45 Sunday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -30,26 +30,27 @@ usage()
 usage: ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | <CLUSTER>) <PATTERN> [<FILES>]
 
 Options:
-    -o REMOTE_OPTIONS
-        Set remote's options.
-    -g GREP_OPTIONS
-        Set grep's options.
-    GERP
-        Environment variable used to specify which grep to use.
-    -C
-        No color display.
     -h <HOUR>
-        Set which hour log to grep.
+        Set which hour file to grep.
     -d <DAY>
-        Set which day log to grep.
+        Set which day file to grep.
     -D <DAY>
-        Search all logs about this day.
-    -S
-        Do not sort files by date time you specified.
+        Search all files about this day.
+    -m <MONTH>
+        Set which month file to grep.
+    -S  Do not sort files by date time you specified.
     -B <TIME_BEGIN>
         Set time begin string on every line.
     -E <TIME_END>
         Set time end string on every line.
+    GERP
+        Environment variable used to specify which grep to use.
+    -C  No color display.
+    -l  Only search current host.
+    -g GREP_OPTIONS
+        Set grep's options.
+    -o REMOTE_OPTIONS
+        Set remote's options.
     -n  Do not really execute command, only print command to execute.
     -v  Output version info.
 EOF
@@ -60,17 +61,23 @@ EOF
 # $1 cluster
 # $2 day
 # $3 hour
-getLogFiles()
+getFiles()
 {
     local cluster=$1
-    local day=$2
-    local hour=$3
+    local month=$2
+    local day=$3
+    local hour=$4
     local files
-    local month
     
-    if (( day < 0 )); then
-        month=$(date -d "$((-day)) days ago" +%m)
+    if (( month < 0 )); then
+        month=$(date -d "$((-month)) months ago" +%m)
         month=${month#0}
+    fi
+    if (( day < 0 )); then
+        if [ ! "$month" ]; then
+            month=$(date -d "$((-day)) days ago" +%m)
+            month=${month#0}
+        fi
         day=$(date -d "$((-day)) days ago" +%d)
         day=${day#0}
     fi
@@ -78,9 +85,9 @@ getLogFiles()
         hour=$(printf "%1d" $(date -d "$((-hour)) hours ago" +%k))
     fi
     
-    for key in "${!clusterLogs[@]}"; do
+    for key in "${!clusterFiles[@]}"; do
         if grep -qx "$key" <<< "$cluster"; then
-            files="${clusterLogs[$key]}"
+            files="${clusterFiles[$key]}"
         fi
     done
 
@@ -134,7 +141,7 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 optInd=1
 colorOption=--color=always
 
-options=":h:d:vo:H:CSB:E:D:ng:"
+options=":h:d:vo:H:CSB:E:D:ng:lm:"
 eval set -- $(getopt -o "$options" -- "$@")
 while getopts "$options" OPT; do
     case "$OPT" in
@@ -152,6 +159,7 @@ while getopts "$options" OPT; do
 
         n)
             remoteOptions="$remoteOptions -n -V"
+            isExecute=0
             ;;
 
         S)
@@ -179,8 +187,16 @@ while getopts "$options" OPT; do
             hour='*'
             ;;
 
+        m)
+            month="$OPTARG"
+            ;;
+        
         g)
             grepOptions="$OPTARG"
+            ;;
+
+        l)
+            searchLocal=1
             ;;
         
         v)
@@ -229,17 +245,31 @@ pattern=$1
 shift
 
 if [ $# -ge 1 ]; then
-    remote $remoteOptions -H "$hosts" $cluster "$GREP $grepOptions $colorOption '$pattern' $@" | sortFiles
-    exit $?
+    files="$@"
+else
+    if [ -z "$cluster" ]; then
+        echoe "No files specified, must specify cluster!"
+        usage
+    fi
+    
+    declare -A clusterFiles
+    . /etc/rgreprc 2>/dev/null
+    . ~/.rgreprc 2>/dev/null
+    files=$(getFiles "$cluster" "$month" "$day" "$hour")
+    if [ ! "$files" ]; then
+        echoe "No files specified for cluster $cluster!"
+        usage
+    fi
 fi
 
-declare -A clusterLogs
-. ~/.rgreprc 2>/dev/null
-
-files=$(getLogFiles "$cluster" "$day" "$hour")
-if [ ! "$files" ]; then
-    echoe "No log files specified for cluster $cluster!"
-    usage
+command="$GREP $grepOptions $colorOption '$pattern' $files"
+if [ "$searchLocal" = 1 ]; then
+    if [ "$isExecute" = 0 ]; then
+        echo "$command"
+    else
+        eval "$command"
+    fi
+    exit
 fi
 
-remote $remoteOptions "$cluster" "$GREP $grepOptions $colorOption '$pattern' $files" | sortFiles
+remote $remoteOptions -H "$hosts" $cluster "$command" | sortFiles
