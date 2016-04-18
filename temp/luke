@@ -1,6 +1,0 @@
-#!/bin/sh
-
-home=`dirname "$0"`
-home=`cd "$home"; pwd`
-
-java -Dswing.systemlaf=javax.swing.plaf.metal.MetalLookAndFeel -jar "$home/lukeall-0.9.2.jar"
