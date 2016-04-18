@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2016-03-15 10:20:03 Tuesday by ahei>
+# Time-stamp: <2016-03-15 10:31:24 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -96,7 +96,7 @@ ln -sf "${home}"/.screenrc ~
 ln -sf "${home}"/.xmodmap ~
 ln -sf "${home}"/.tmux.conf ~
 ln -sf "${home}"/ssh-config ~/.ssh/config
-ln -sf "${home}"/.gdbinit ~
+cp "${home}"/.gdbinit ~
 
 writeToFile ". $home/utils.sh" $profile
 writeToFile ". $home/history.sh" $profile
