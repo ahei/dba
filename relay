@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-22 17:36:40 Friday by ahei>
+# Time-stamp: <2016-04-22 19:55:49 Friday by ahei>
 
 # @file relay
 # @version 1.0
@@ -33,6 +33,8 @@ usage()
 usage: ${PROGRAM_NAME} [OPTIONS] SERVER USER LOGIN_COMMAND EXPECTED_STRING (HOST_ALIAS | HOST_NAME)
 
 Options:
+    SSH
+        Environment variable used to specify which ssh to use.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -94,4 +96,6 @@ if [ ! "$host" ]; then
     host=$hostAlias
 fi
 
-relay.exp "$server" "$user" "$login" "$expected" "$host"
+[ "$SSH" ] || SSH=ssh
+
+relay.exp "$server" "$user" "$login" "$expected" "$host" "$SSH"

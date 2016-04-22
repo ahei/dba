@@ -5,8 +5,9 @@ set user [lindex $argv 1]
 set login [lindex $argv 2]
 set expected [lindex $argv 3]
 set host [lindex $argv 4]
+set ssh [lindex $argv 5]
 
-spawn zssh $server -l $user
+spawn $ssh $server -l $user
 expect $expected
 send "$login $host\r"
 interact
