@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-22 17:19:03 Friday by ahei>
+# Time-stamp: <2016-04-22 17:36:40 Friday by ahei>
 
 # @file relay
 # @version 1.0
@@ -30,7 +30,7 @@ usage()
     fi
 
     eval cat "$redirect" << EOF
-usage: ${PROGRAM_NAME} [OPTIONS] USER (HOST_ALIAS | HOST_NAME)
+usage: ${PROGRAM_NAME} [OPTIONS] SERVER USER LOGIN_COMMAND EXPECTED_STRING (HOST_ALIAS | HOST_NAME)
 
 Options:
     -v  Output version info.
@@ -69,12 +69,15 @@ done
 
 shift $((OPTIND - 1))
 
-if [ $# -lt 2 ]; then
+if [ $# -lt 5 ]; then
     usage
 fi
 
-user=$1
-hostAlias=$2
+server=$1
+user=$2
+login=$3
+expected=$4
+hostAlias=$5
 
 # 测试hostAlias对应的value是否可能是个shell变量
 if eval $hostAlias=1 2>/dev/null; then
@@ -91,4 +94,4 @@ if [ ! "$host" ]; then
     host=$hostAlias
 fi
 
-relay.exp "$user" "$host"
+relay.exp "$server" "$user" "$login" "$expected" "$host"
