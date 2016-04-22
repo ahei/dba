@@ -5,7 +5,6 @@
 [keybindings]
   toggle_zoom = <Ctrl><Shift>u
   cycle_next = <Ctrl><Shift>i
-  paste = <Ctrl><Shift>y
   next_tab = <Ctrl><Shift>n
   new_terminator = None
   new_window = None
@@ -16,17 +15,18 @@
   new_tab = <Ctrl><Shift>m
   split_vert = <Ctrl><Shift>j
   go_next = None
-  hide_window = <Super>space
+  paste = <Ctrl><Shift>y
 [profiles]
   [[default]]
     use_system_font = False
     copy_on_selection = True
     custom_command = tmux
+    background_image = None
     cursor_color = "#00ff00"
     foreground_color = "#ffffff"
     use_custom_command = True
     show_titlebar = False
-    font = Monospace 11
+    font = Ubuntu Mono 13
     allow_bold = False
     scrollback_infinite = True
 [layouts]
