@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-17 20:56:43 Sunday by ahei>
+# Time-stamp: <2016-04-22 16:53:40 Friday by ahei>
 
 # @file ls.sh
 # @version 1.0
@@ -30,6 +30,8 @@ usage()
 usage: ${PROGRAM_NAME} [OPTIONS] CLUSTER FILES [LS_OPTIONS]
 
 Options:
+    -o REMOTE_OPTIONS
+        Set remote's options.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -37,8 +39,12 @@ EOF
     exit "$code"
 }
 
-while getopts ":hv" OPT; do
+while getopts ":hvo:" OPT; do
     case "$OPT" in
+        o)
+            remoteOptions="$OPTARG"
+            ;;
+
         v)
             version
             ;;
@@ -72,4 +78,4 @@ cluster=$1
 file=$2
 shift 2
 
-remote -q "$cluster" "ls -l $file $@"
+remote -q $remoteOptions "$cluster" "ls -l $file $@"

@@ -1,0 +1,8 @@
+#!/usr/bin/expect
+
+set user [lindex $argv 0]
+set host [lindex $argv 1]
+spawn zssh relay.xiaomi.com -l $user
+expect "taoshanwen@lg-relay01:"
+send "hd $host\r"
+interact
