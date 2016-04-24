@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-22 19:55:49 Friday by ahei>
+# Time-stamp: <2016-04-24 10:38:54 Sunday by ahei>
 
 # @file relay
 # @version 1.0
@@ -43,7 +43,11 @@ EOF
 }
 
 options=":hv"
-eval set -- $(getopt -o "$options" -- "$@")
+if [ "$(uname)" = "Darwin" ]; then
+    eval set -- $(getopt "$options" -- "$@")
+else
+    eval set -- $(getopt -o "$options" -- "$@")
+fi
 while getopts "$options" OPT; do
     case "$OPT" in
         v)
