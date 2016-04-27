@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2016-04-16 22:30:41 Saturday by ahei>
+# Time-stamp: <2016-04-27 10:04:11 Wednesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -29,9 +29,8 @@ alias trim='sed -r "s/^[[:space:]]*|[[:space:]]*$//g"'
 alias TRIM="trim | tr '[A-Z]' '[a-z]'"
 alias jip='java -javaagent:/usr/share/jip/profile/profile.jar -Dprofile.properties=/usr/share/jip/profile/profile.properties'
 alias emerge='emerge -u'
-alias psgrep='ps -ef | grep'
+alias psgrep='ps -ef | fgrep -v grep | grep'
 alias netgrep='netstat -nap | grep'
-alias nsgrep='netstat -nap | grep'
 alias scp='scp -r -o StrictHostKeyChecking=no'
 alias lld='ls -l | grep "^d"'
 alias llf='ls -l | grep "^-"'

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-24 10:38:54 Sunday by ahei>
+# Time-stamp: <2016-04-27 15:12:25 Wednesday by ahei>
 
 # @file relay
 # @version 1.0
@@ -75,7 +75,7 @@ done
 
 shift $((OPTIND - 1))
 
-if [ $# -lt 5 ]; then
+if [ $# -lt 4 ]; then
     usage
 fi
 
@@ -102,4 +102,5 @@ fi
 
 [ "$SSH" ] || SSH=ssh
 
+ssh "$server" -l "$user" -fN &>/dev/null
 relay.exp "$server" "$user" "$login" "$expected" "$host" "$SSH"
