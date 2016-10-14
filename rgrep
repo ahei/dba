@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-17 20:19:45 Sunday by ahei>
+# Time-stamp: <2016-10-14 11:21:04 Friday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -142,7 +142,7 @@ optInd=1
 colorOption=--color=always
 
 options=":h:d:vo:H:CSB:E:D:ng:lm:"
-eval set -- $(getopt -o "$options" -- "$@")
+[ ! "$NOT_ADJUST_OPTIONS" ] && eval set -- $(getopt -o "$options" -- "$@")
 while getopts "$options" OPT; do
     case "$OPT" in
         H)
