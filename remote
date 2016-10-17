@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-09-05 10:22:06 Monday by ahei>
+# Time-stamp: <2016-10-17 10:27:59 Monday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -36,6 +36,7 @@ Options:
     -t <SECONDS>
         Time to sleep when execute command on next host.
     -P  When output, do not insert host prefix.
+    -p  Delimiter when output host prefix.
     -H <HOST>
         Add host.
     -f <HOSTS_FILE>
@@ -83,13 +84,14 @@ trap over INT
 isExecute=1
 background="&"
 isQuiet=0
+prefixDelimiter=" "
 
 . /etc/remoterc 2>/dev/null
 . /etc/remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 
-while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:" OPT; do
+while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:p:" OPT; do
     case "$OPT" in
         H)
             if [ "$OPTARG" ]; then
@@ -156,6 +158,10 @@ while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:" OPT; do
 
         t)
             timeSleep="$OPTARG"
+            ;;
+
+        p)
+            prefixDelimiter="$OPTARG"
             ;;
         
         v)
@@ -241,7 +247,7 @@ if [ -z "$copyMode" ]; then
         
         command="$ssh $i$login \"$commandEscaped\" 2>&1"
         if [ -z "$noHostPrefix" ]; then
-            command="$command | sed \"s/^/$i: /\""
+            command="$command | sed \"s/^/$i:$prefixDelimiter/\""
         fi
         executeCommand "$command $background" "$isExecute" "$isQuiet" "$isStop"
     done

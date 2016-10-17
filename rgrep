@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-10-14 11:21:04 Friday by ahei>
+# Time-stamp: <2016-10-17 15:23:51 Monday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -43,6 +43,10 @@ Options:
         Set time begin string on every line.
     -E <TIME_END>
         Set time end string on every line.
+    -k FIELD_INDEX
+        Sort files by which field.
+    -t SEP
+        Set field delimiter.
     GERP
         Environment variable used to specify which grep to use.
     -C  No color display.
@@ -119,12 +123,14 @@ getFiles()
 
 sortFiles()
 {
-    if [ "$sortByTime" = 0 ]; then
+    if [ "$noSort" ] || [ "$isExecute" = 0 ]; then
         cat
         return
     fi
     
-    cat | awk -v timeBegin="$timeBegin" -v timeEnd="$timeEnd" '{
+    cat | awk -F"$fieldDelimiter" -v timeBegin="$timeBegin" -v timeEnd="$timeEnd" -v keyField="$keyField" '{
+if (keyField) {results[$ keyField FNR] = $ 0; next; }
+
 prefix = ":[m[K"; # grep maybe have color output
 begin = index($ 0, prefix timeBegin);
 if (begin == 0) {begin = index($ 0, timeBegin);}
@@ -132,7 +138,7 @@ else {timeBegin = prefix timeBegin;}
 end = index($ 0, timeEnd);
 timeStr = substr($ 0, begin + length(timeBegin), end - begin - length(timeBegin));
 if (length(timeStr) < 10) print;
-else results[timeStr] = $ 0;
+else results[timeStr FNR] = $ 0;
 } END {
 size = asorti(results, sortedResults);
 for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
@@ -140,8 +146,9 @@ for (i = 1; i <= size; i++) print results[sortedResults[i]]}'
 
 optInd=1
 colorOption=--color=always
+fieldDelimiter=" "
 
-options=":h:d:vo:H:CSB:E:D:ng:lm:"
+options=":h:d:vo:H:CSB:E:D:ng:lm:k:t:"
 [ ! "$NOT_ADJUST_OPTIONS" ] && eval set -- $(getopt -o "$options" -- "$@")
 while getopts "$options" OPT; do
     case "$OPT" in
@@ -163,7 +170,7 @@ while getopts "$options" OPT; do
             ;;
 
         S)
-            sortByTime=0
+            noSort=1
             ;;
 
         B)
@@ -198,6 +205,20 @@ while getopts "$options" OPT; do
         l)
             searchLocal=1
             ;;
+
+        k)
+            keyField="$OPTARG"
+            if [ "$keyField" ]; then
+                if ! ((keyField++)); then
+                    echoe "Invalid key field \`$OPTARG'!"
+                    exit 1
+                fi
+            fi
+            ;;
+
+        t)
+            fieldDelimiter="$OPTARG"
+            ;;
         
         v)
             version
@@ -222,8 +243,8 @@ shift $((OPTIND - 1))
 
 [ -z "$GREP" ] && GREP=grep
 
-if [ ! "$sortByTime" ] && [ "$timeBegin" ] && [ "$timeEnd" ]; then
-    sortByTime=1
+if { [ ! "$timeBegin" ] || [ ! "$timeEnd" ]; } && [ ! "$keyField" ]; then
+    noSort=1
 fi
 
 if [ ! "$hosts" ]; then
@@ -272,4 +293,4 @@ if [ "$searchLocal" = 1 ]; then
     exit
 fi
 
-remote $remoteOptions -H "$hosts" $cluster "$command" | sortFiles
+remote $remoteOptions -H "$hosts" -p "$fieldDelimiter" $cluster "$command" | sortFiles
