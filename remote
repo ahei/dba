@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-10-17 10:27:59 Monday by ahei>
+# Time-stamp: <2016-11-11 18:13:42 Friday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -21,7 +21,7 @@ usage()
     fi
 
     eval cat "$redirect" << EOF
-usage: ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | -f <HOSTS_FILE> | <CLUSTER>) <COMMAND>
+usage: ${PROGRAM_NAME} [OPTIONS] (-H <HOST> | -f <HOSTS_FILE> | <CLUSTER>) [<COMMAND>]
        ${PROGRAM_NAME} [OPTIONS] -c (-H <HOST> | -f <HOSTS_FILE> | <CLUSTER>) <FILE> [<DST_FILE>]
 
 Options:
@@ -44,11 +44,11 @@ Options:
     -F <LOCAL_FILE>
         Add the local file to copy.
     -s  When execute commands failed, stop execute other commands and exit.
-    -o SSH_OPTIONS
+    -o SSH_OPTIONS | SCP_OPTIONS
         Set ssh options.
     -C  When execute command on remote server, force change directory to work directory on current host.
     -W <SECONDS>
-        Only wait time user specified for command finish.
+        Wait time which user specified when execute command on next host.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -213,6 +213,14 @@ if [ -z "$copyMode" ]; then
     fi
     
     if [ "$#" -lt 1 ]; then
+        hostNum=0
+        for i in $hosts; do
+            let hostNum++
+        done
+        if ((hostNum == 1)); then
+            $ssh $i$login
+            exit
+        fi
         for i in $hosts; do
             ip2Host $i
         done

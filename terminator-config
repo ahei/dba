@@ -24,7 +24,7 @@
     background_image = None
     cursor_color = "#00ff00"
     foreground_color = "#ffffff"
-    use_custom_command = True
+    #use_custom_command = True
     show_titlebar = False
     font = Ubuntu Mono 13
     allow_bold = False
