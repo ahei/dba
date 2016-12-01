@@ -99,3 +99,52 @@ ip2Host()
         echo $host | awk '{print $ NF}' | sed 's/.$//g'
     fi
 }
+
+# $1: pattern
+# $2: month
+# $3: day
+# $4: hour
+getTimeStr()
+{
+    local pattern=$1
+    local month=$2
+    local day=$3
+    local hour=$4
+    local timeStr="$pattern"
+    
+    if (( month < 0 )); then
+        month=$(date -d "$((-month)) months ago" +%m)
+        month=${month#0}
+    fi
+    if (( day < 0 )); then
+        if [ ! "$month" ]; then
+            month=$(date -d "$((-day)) days ago" +%m)
+            month=${month#0}
+        fi
+        day=$(date -d "$((-day)) days ago" +%d)
+        day=${day#0}
+    fi
+    if [ "$hour" != '*' ] && (( hour < 0 )); then
+        hour=$(printf "%1d" $(date -d "$((-hour)) hours ago" +%k))
+    fi
+    
+    if [ "$month" ]; then
+        timeStr=$(sed -r "s/%m/$(printf %02d $month)/g" <<< "$timeStr")
+    fi
+    if [ "$day" ]; then
+        timeStr=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$timeStr")
+        timeStr=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$timeStr")
+    fi
+    if [ "$hour" ] ; then
+        if [ "$hour" != '*' ]; then
+            timeStr=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$timeStr")
+            timeStr=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$timeStr")
+        else
+            timeStr=$(sed -r "s/%H|%I/$hour/g" <<< "$timeStr")
+            timeStr=$(sed -r "s/%k|%l/$hour/g" <<< "$timeStr")
+        fi
+    fi
+
+    timeStr=$(date +"$timeStr")
+    echo -n "$timeStr"
+}

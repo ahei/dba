@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2016-04-20 15:16:32 Wednesday by ahei>
+# Time-stamp: <2016-11-16 14:52:12 Wednesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -95,7 +95,7 @@ ln -sf "${home}"/.toprc ~
 ln -sf "${home}"/.screenrc ~
 ln -sf "${home}"/.xmodmap ~
 ln -sf "${home}"/.tmux.conf ~
-cp "${home}"/ssh-config ~/.ssh/config
+# cp "${home}"/ssh-config ~/.ssh/config
 chmod 600 ~/.ssh/config
 cp "${home}"/.gdbinit ~
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-10-17 15:23:51 Monday by ahei>
+# Time-stamp: <2016-12-01 16:05:22 Thursday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -73,22 +73,6 @@ getFiles()
     local hour=$4
     local files
     
-    if (( month < 0 )); then
-        month=$(date -d "$((-month)) months ago" +%m)
-        month=${month#0}
-    fi
-    if (( day < 0 )); then
-        if [ ! "$month" ]; then
-            month=$(date -d "$((-day)) days ago" +%m)
-            month=${month#0}
-        fi
-        day=$(date -d "$((-day)) days ago" +%d)
-        day=${day#0}
-    fi
-    if [ "$hour" != '*' ] && (( hour < 0 )); then
-        hour=$(printf "%1d" $(date -d "$((-hour)) hours ago" +%k))
-    fi
-    
     for key in "${!clusterFiles[@]}"; do
         if grep -qx "$key" <<< "$cluster"; then
             files="${clusterFiles[$key]}"
@@ -100,25 +84,7 @@ getFiles()
         return
     fi
 
-    if [ "$month" ]; then
-        files=$(sed -r "s/%m/$(printf %02d $month)/g" <<< "$files")
-    fi
-    if [ "$day" ]; then
-        files=$(sed -r "s/%d/$(printf %02d $day)/g" <<< "$files")
-        files=$(sed -r "s/%e/$(printf %2d $day)/g" <<< "$files")
-    fi
-    if [ "$hour" ] ; then
-        if [ "$hour" != '*' ]; then
-            files=$(sed -r "s/%H|%I/$(printf %02d $hour)/g" <<< "$files")
-            files=$(sed -r "s/%k|%l/$(printf %2d $hour)/g" <<< "$files")
-        else
-            files=$(sed -r "s/%H|%I/$hour/g" <<< "$files")
-            files=$(sed -r "s/%k|%l/$hour/g" <<< "$files")
-        fi
-    fi
-
-    files=$(date +"$files")
-    echo -n "$files"
+    getTimeStr "$files" "$month" "$day" "$hour"
 }
 
 sortFiles()
