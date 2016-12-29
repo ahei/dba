@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-11-11 18:13:42 Friday by ahei>
+# Time-stamp: <2016-12-08 18:21:04 Thursday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -48,7 +48,7 @@ Options:
         Set ssh options.
     -C  When execute command on remote server, force change directory to work directory on current host.
     -W <SECONDS>
-        Wait time which user specified when execute command on next host.
+        Wait time which user specified when exit.
     -v  Output version info.
     -h  Output this help.
 EOF
