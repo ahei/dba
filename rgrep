@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-12-06 16:57:57 Tuesday by ahei>
+# Time-stamp: <2017-05-27 10:51:17 Saturday by ahei>
 
 # @file rgrep.sh
 # @version 1.0
@@ -175,12 +175,6 @@ while getopts "$options" OPT; do
 
         k)
             keyField="$OPTARG"
-            if [ "$keyField" ]; then
-                if ! ((keyField++)); then
-                    echoe "Invalid key field \`$OPTARG'!"
-                    exit 1
-                fi
-            fi
             ;;
 
         t)
@@ -189,6 +183,7 @@ while getopts "$options" OPT; do
         
         P)
             remoteOptions="$remoteOptions -P"
+            noPrefix=1
             ;;
         
         v)
@@ -213,6 +208,15 @@ done
 shift $((OPTIND - 1))
 
 [ -z "$GREP" ] && GREP=grep
+
+if [ "$keyField" ]; then
+    if [ ! "$noPrefix" ]; then
+        if ! ((keyField++)); then
+            echoe "Invalid key field \`$OPTARG'!"
+            exit 1
+        fi
+    fi
+fi
 
 if { [ ! "$timeBegin" ] || [ ! "$timeEnd" ]; } && [ ! "$keyField" ]; then
     noSort=1

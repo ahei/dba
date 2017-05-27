@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-12-08 18:21:04 Thursday by ahei>
+# Time-stamp: <2017-03-15 16:27:33 Wednesday by ahei>
 
 readonly PROGRAM_NAME="remote"
 readonly PROGRAM_VERSION="1.0"
@@ -49,6 +49,7 @@ Options:
     -C  When execute command on remote server, force change directory to work directory on current host.
     -W <SECONDS>
         Wait time which user specified when exit.
+    -L Do not login remote machine when cluster only contain one machine.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -91,7 +92,7 @@ prefixDelimiter=" "
 . ~/.remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 
-while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:p:" OPT; do
+while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:p:L" OPT; do
     case "$OPT" in
         H)
             if [ "$OPTARG" ]; then
@@ -163,6 +164,10 @@ while getopts ":hvH:f:l:Vqsigo:NcCnW:Pt:p:" OPT; do
         p)
             prefixDelimiter="$OPTARG"
             ;;
+
+        L)
+            noLogin=1
+            ;;
         
         v)
             version
@@ -217,7 +222,7 @@ if [ -z "$copyMode" ]; then
         for i in $hosts; do
             let hostNum++
         done
-        if ((hostNum == 1)); then
+        if ((hostNum == 1)) && [ ! "$noLogin" ]; then
             $ssh $i$login
             exit
         fi
