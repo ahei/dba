@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2016-11-11 18:11:03 Friday by ahei>
+# Time-stamp: <2017-06-06 16:16:16 Tuesday by ahei>
 
 . common.sh 2>/dev/null
 
@@ -98,7 +98,7 @@ alias gitl='git log --name-status'
 alias gitp='git pull'
 alias gitd='git diff'
 alias gitb='git branch'
-alias gitr='git checkout -- .'
+alias gitr='git checkout -- '
 alias gstash='git stash'
 alias gstashp='git stash pop'
 alias pushm='git push origin ahei'
