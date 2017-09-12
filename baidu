@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Time-stamp: <2010-10-12 23:16:19 Tuesday by taoshanwen>
-
-# @version 1.0
-# @author ahei
-
-chrome http://baidu.com

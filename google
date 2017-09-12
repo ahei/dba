@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Time-stamp: <2012-03-06 18:32:49 Tuesday by taoshanwen>
-
-# @version 1.0
-# @author ahei
-
-chrome https://google.com.hk

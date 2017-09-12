@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Time-stamp: <2011-01-20 16:26:41 Thursday by taoshanwen>
-
-# @version 1.0
-# @author ahei
-
-chrome https://pbsz.ebank.cmbchina.com/CmbBank_GenShell/UI/GenShellPC/Login/Login.aspx
