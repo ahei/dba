@@ -1,0 +1,3 @@
+[submodule "remote-tools"]
+	path = remote-tools
+	url = https://github.com/ahei/remote

@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Time-stamp: <2016-11-16 14:52:12 Wednesday by ahei>
+# Time-stamp: <2017-09-12 11:29:52 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
-
-HOSTS_FILE=/etc/hosts
 
 home=`dirname "$0"`
 home=`cd "$home"; pwd`
@@ -85,10 +83,9 @@ done
 
 shift $((OPTIND - 1))
 
-installDir="/usr/bin"
-if [ $# -ge 1 ]; then
-    installDir="$1"
-fi
+git submodule update --init --recursive
+(cd remote-tools && git pull origin master)
+$home/remote-tools/install.sh
 
 ln -sf "${home}"/.mostrc ~
 ln -sf "${home}"/.toprc ~
