@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2017-09-12 11:29:52 Tuesday by ahei>
+# Time-stamp: <2017-09-13 10:51:45 Wednesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -29,6 +29,7 @@ INSTALL_DIR default is /usr/bin.
 Options:
     -p <PROFILE>
         PROFILE defualt is /etc/profile.
+    -C  Do not update submodules.
     -v  Output version info.
     -h  Output this help.
 EOF
@@ -52,12 +53,16 @@ else
     profile=~/.bashrc
 fi
 
-while getopts ":hvp:" OPT; do
+while getopts ":hvp:C" OPT; do
     case "$OPT" in            
         p)
             profile="$OPTARG"
             ;;
-            
+
+        C)
+            updateSub=0
+            ;;
+        
         v)
             version
             ;;
@@ -83,8 +88,10 @@ done
 
 shift $((OPTIND - 1))
 
-git submodule update --init --recursive
-(cd remote-tools && git pull origin master)
+if [ "$updateSub" != 0 ]; then
+    git submodule update --init --recursive
+    (cd remote-tools && git pull origin master)
+fi
 $home/remote-tools/install.sh
 
 ln -sf "${home}"/.mostrc ~
