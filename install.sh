@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2017-11-07 12:59:14 Tuesday by ahei>
+# Time-stamp: <2017-11-07 13:04:43 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -114,3 +114,5 @@ fi
 
 mkdir -p ~/.config/terminator/
 ln -sf "${home}"/terminator-config ~/.config/terminator/config
+
+echo "Install dba done, relogin terminal please"
