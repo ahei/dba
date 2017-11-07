@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2017-11-07 12:55:48 Tuesday by ahei>
+# Time-stamp: <2017-11-07 12:59:14 Tuesday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -89,7 +89,7 @@ done
 shift $((OPTIND - 1))
 
 if [ "$updateSub" != 0 ]; then
-    git submodule update --init --recursive
+    (cd $home && git submodule update --init --recursive)
     (cd $home/remote-tools && git pull origin master)
 fi
 $home/remote-tools/install.sh
