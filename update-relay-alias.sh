@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-# Time-stamp: <2017-11-12 21:35:41 Sunday by ahei>
+# Time-stamp: <2017-11-12 22:58:43 Sunday by ahei>
 
 # @file update-relay-alias.sh
 # @version 1.0
@@ -64,7 +64,7 @@ update()
     
     local key
     for i in $(grep -vE "^[[:space:]]*#" "$file" |
-                      awk -F= '$1 && $2 && $2 ~ /[^ ]+/ {printf "alias %s=\"hd %s\"\n", $1, $2}'); do
+                      awk -F= '$1 && $2 && $2 ~ /^[^ ]+$/ {printf "alias %s=\"hd %s\"\n", $1, $2}'); do
         key=$(echo "$i" | awk -F"[ =]" '{print $2}')
         if ! type "$key" &>/dev/null && [ "$key" ]; then
             writeToFile "$i" "$file".alias
