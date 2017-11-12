@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Time-stamp: <2017-11-07 13:04:43 Tuesday by ahei>
+# Time-stamp: <2017-11-12 16:51:57 Sunday by ahei>
 
 readonly PROGRAM_NAME="install.sh"
 readonly PROGRAM_VERSION="1.0"
@@ -36,22 +36,6 @@ EOF
 
     exit "$code"
 }
-
-writeToFile()
-{
-    line="$1"
-    dst="$2"
-
-    if ! grep -qFx "${line}" "$dst"; then
-        printf "\n$line" >> "$dst"
-    fi
-}
-
-if [ "$USER" = root ]; then
-    profile="/etc/profile"
-else
-    profile=~/.bashrc
-fi
 
 while getopts ":hvp:C" OPT; do
     case "$OPT" in            

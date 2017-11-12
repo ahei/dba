@@ -148,3 +148,21 @@ getTimeStr()
     timeStr=$(date +"$timeStr")
     echo -n "$timeStr"
 }
+
+writeToFile()
+{
+    local line="$1"
+    local dst="$2"
+
+    if [ ! "$dst" ]; then
+        if [ "$USER" = root ]; then
+            dst="/etc/profile"
+        else
+            dst=~/.bashrc
+        fi
+    fi
+    
+    if ! grep -qFx "${line}" "$dst"; then
+        printf "\n$line" >> "$dst"
+    fi
+}
