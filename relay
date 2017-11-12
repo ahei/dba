@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2016-04-27 15:12:25 Wednesday by ahei>
+# Time-stamp: <2017-11-12 15:06:57 Sunday by ahei>
 
 # @file relay
 # @version 1.0
@@ -43,9 +43,7 @@ EOF
 }
 
 options=":hv"
-if [ "$(uname)" = "Darwin" ]; then
-    eval set -- $(getopt "$options" -- "$@")
-else
+if [ "$(uname)" != "Darwin" ]; then
     eval set -- $(getopt -o "$options" -- "$@")
 fi
 while getopts "$options" OPT; do
@@ -90,8 +88,8 @@ if eval $hostAlias=1 2>/dev/null; then
     maybeVar=1
 fi
 
-. /etc/relayrc 2>/dev/null
-. ~/.relayrc 2>/dev/null
+. /etc/remoterc 2>/dev/null
+. ~/.remoterc 2>/dev/null
 
 if [ "$maybeVar" ]; then
     host="$(eval echo \$$hostAlias)"
