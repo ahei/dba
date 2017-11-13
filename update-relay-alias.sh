@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-# Time-stamp: <2017-11-12 22:58:43 Sunday by ahei>
+# Time-stamp: <2017-11-13 14:31:41 Monday by ahei>
 
 # @file update-relay-alias.sh
 # @version 1.0
@@ -51,7 +51,7 @@ update()
     
     for i in $(awk '$1 == "." && NF == 2{print $2}' "$file"); do
         full=$i
-        if [[ "${path:0:1}" != "/" ]]; then
+        if [[ "${full:0:1}" != "/" ]]; then
             full=$(joinPath $(dirname "$file") "$i")
         fi
         update "$full"
@@ -71,6 +71,10 @@ update()
         fi
     done
 
+    if [ ! -f "$file.alias" ]; then
+        return
+    fi
+    
     IFS="$oldIfs"
     writeToFile ". $file.alias 2>/dev/null" "$profile"
 }
