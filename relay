@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2017-11-12 15:06:57 Sunday by ahei>
+# Time-stamp: <2017-11-17 16:44:35 Friday by ahei>
 
 # @file relay
 # @version 1.0
@@ -85,9 +85,11 @@ hostAlias=$5
 
 # 测试hostAlias对应的value是否可能是个shell变量
 if eval $hostAlias=1 2>/dev/null; then
+    eval $hostAlias=
     maybeVar=1
 fi
 
+declare -A clusterFiles
 . /etc/remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 
