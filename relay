@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Time-stamp: <2017-11-17 16:44:35 Friday by ahei>
+# Time-stamp: <2019-04-26 09:57:43 Friday by ahei>
 
 # @file relay
 # @version 1.0
@@ -42,12 +42,18 @@ EOF
     exit "$code"
 }
 
-options=":hv"
+port=22
+
+options=":hvp:"
 if [ "$(uname)" != "Darwin" ]; then
     eval set -- $(getopt -o "$options" -- "$@")
 fi
 while getopts "$options" OPT; do
     case "$OPT" in
+        p)
+            port="$OPTARG"
+            ;;
+        
         v)
             version
             ;;
@@ -89,7 +95,9 @@ if eval $hostAlias=1 2>/dev/null; then
     maybeVar=1
 fi
 
-declare -A clusterFiles
+if [ "$(uname)" != "Darwin" ]; then
+    declare -A clusterFiles
+fi
 . /etc/remoterc 2>/dev/null
 . ~/.remoterc 2>/dev/null
 
@@ -102,5 +110,8 @@ fi
 
 [ "$SSH" ] || SSH=ssh
 
-ssh "$server" -l "$user" -fN &>/dev/null
-relay.exp "$server" "$user" "$login" "$expected" "$host" "$SSH"
+result=$(ps -ef | grep "$server -l $user -p$port -fN" | grep -v grep)
+if [ ! "$result" ]; then
+    ssh "$server" -l "$user" -p$port -fN
+fi
+relay.exp "$server" "$user" "$login" "$expected" "$host" "$SSH" "$port"

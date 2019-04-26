@@ -1,7 +1,7 @@
 #!/usr/bin/expect
 
-if {$argc < 5} {
-    send_user "usage: relay.exp SERVER USER LOGIN_COMMAND EXPECTED_STRING HOST SSH\n"
+if {$argc < 7} {
+    send_user "usage: relay.exp SERVER USER LOGIN_COMMAND EXPECTED_STRING HOST SSH PORT\n"
     exit
 }
 
@@ -11,8 +11,9 @@ set login [lindex $argv 2]
 set expected [lindex $argv 3]
 set host [lindex $argv 4]
 set ssh [lindex $argv 5]
+set port [lindex $argv 6]
 
-spawn $ssh $server -l $user
+spawn $ssh $server -l $user -p$port
 expect $expected
 if {$host != ""} {
     send "$login $host\r"
